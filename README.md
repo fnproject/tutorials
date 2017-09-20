@@ -2,7 +2,7 @@
 Fn tutorials ranging from getting started to more advanced topics. 
 
 ## Introduction to Fn
-Install Fn and deploy your first functions.
+[Install Fn and deploy your first functions.](Introduction/README.md)
 
 ## Developing Java Functions
 Use the Java FDK to write functions and unit test them with the JUnit test harness.

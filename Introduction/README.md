@@ -122,7 +122,9 @@ Copy/past the following Go code into a file named `func.go`.
 >```
 
 This function just prints "Hello from Fn!" to standard output.  It takes
-no arguments and returns no results so it's as simple as possible.
+no arguments and returns no results so it's as simple as possible.  Of
+course, you can write functions that accept a number of different types
+of arguments and this is explored in other Fn tutorials.
 
 
 #### Initializing your Function Configuration

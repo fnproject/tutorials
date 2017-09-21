@@ -5,7 +5,7 @@ Fn tutorials ranging from getting started to more advanced topics.
 [Install Fn and deploy your first functions.](Introduction/README.md)
 
 ## Developing Java Functions
-Use the Java FDK to write functions and unit test them with the JUnit test harness.
+[Use the Java FDK to write functions and unit test them with the JUnit test harness.](JavaFDKIntroduction//README.md)
 
 ## Introduction to Hot Functions
 

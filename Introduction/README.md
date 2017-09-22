@@ -3,7 +3,7 @@
 Fn is a lightweight Docker-based serverless functions platform you can
 run on your laptop, server, or cloud.  In this introductory tutorial
 we'll walk through installing Fn, develop functions using a number of
-programming langauges (without installing a bunch of runtimes!) and
+programming languages (without installing a bunch of runtimes!) and
 deploy them to a local Fn server.  We'll also learn about the core Fn
 concepts like applications and routes.
 
@@ -27,12 +27,11 @@ installed and running.
 
 
 > __NOTE__ In this tutorial we'll work in a purely local development
-mode but when deploying functions to a remote Fn server a Docker Hub
-(or other Docker registry) account is required.
+mode.  However, when deploying functions to a remote Fn server, a Docker
+Hub (or other Docker registry) account is required.
 
-That's it--although you may want to have your favourite IDE installed
-to help you with function development but isn't necessary for this
-tutorial.
+That's it.  You can use your favorite IDE for function development.
+However, for this tutorial, an IDE isn't necessary.
 
 
 ### Downloading and Installing Fn
@@ -55,9 +54,9 @@ fn version 0.3.89
 The final install step is to start the Fn server.  Since Fn runs on
 Docker it'll need to be up and running.
 
-To start Fn you can use the `fn` cli.  Type the following but note that
-the process will run in the foreground so that it's easy to stop with
- Ctrl-C:
+To start Fn you can use the `fn` command line interface (cli).  Type the
+following but note that the process will run in the foreground so that
+it's easy to stop with Ctrl-C:
 
 ![user input](images/userinput.png)
 >`fn start`
@@ -76,12 +75,12 @@ time="2017-09-18T14:37:13Z" level=info msg="Serving Functions API on address `:8
   /_/   /_/ /_/
 ```
 
-That's it!  The fn cli is now installed and an fn server instance
+That's it!  The Fn cli is now installed and an Fn server instance
 is up and running.
 
 ## Your First Function
 
-Let's start with a very simple "hello world" function writen in
+Let's start with a very simple "hello world" function written in
 [Go](https://golang.org/). Don't worry, you don't need to know Go!  In
 fact you don't even need to have Go installed on your development
 machine as Fn provides the necessary Go compiler and tools as a Docker
@@ -90,9 +89,9 @@ with the process and how Fn supports development.
 
 But before we start developing we need to set the `FN_REGISTRY`
 environment variable.  Normally, it is set to your Docker repository and
-username.  However in this tutorial we'll work in local development mode
-so we can set the `FN_REGISTRY` variable to an invented value.
-Let's use `fndemouser`.
+Docker Hub username.  However in this tutorial we'll work in local
+development mode so we can set the `FN_REGISTRY` variable to an invented
+ value. Let's use `fndemouser`.
 
 ![user input](images/userinput.png)
 >`export FN_REGISTRY=fndemouser`
@@ -106,7 +105,7 @@ into it:
 >
 >`cd hello`
 
-Copy/past the following Go code into a file named `func.go`.
+Copy and paste the following Go code into a file named `func.go`.
 
 ![user input](images/userinput.png)
 >```go
@@ -122,7 +121,7 @@ Copy/past the following Go code into a file named `func.go`.
 >```
 
 This function just prints "Hello from Fn!" to standard output.  It takes
-no arguments and returns no results so it's as simple as possible.  Of
+no arguments and returns no results. So it's as simple as possible.  Of
 course, you can write functions that accept a number of different types
 of arguments and this is explored in other Fn tutorials.
 

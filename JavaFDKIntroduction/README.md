@@ -90,7 +90,7 @@ qualified name of the function class and the method that should be
 invoked when your `javafn` function is called.
 
 The Java function init also generates a Maven `pom.xml` file to build
-and test your function.  It includes the Fn Java FDK runtime
+and test your function.  The pom includes the Fn Java FDK runtime
 and test libraries your function needs.
 
 # Running your Function
@@ -253,7 +253,7 @@ the function code.
 
 `fn init` also generated a JUnit test for the function which uses the
 Java FDK's function test framework.  With this framework you can setup
-test fixtures with various function input values and assert the results.
+test fixtures with various function input values and verify the results.
 
 The generated test confirms that when no input is provided the function
 returns "Hello, world!".

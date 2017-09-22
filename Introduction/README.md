@@ -2,8 +2,8 @@
 
 Fn is a lightweight Docker-based serverless functions platform you can
 run on your laptop, server, or cloud.  In this introductory tutorial
-we'll walk through installing Fn, develop functions using a number of
-programming languages (without installing a bunch of runtimes!) and
+we'll walk through installing Fn, develop a function using the Go
+programming languages (without installing any Go tools!) and
 deploy them to a local Fn server.  We'll also learn about the core Fn
 concepts like applications and routes.
 
@@ -52,7 +52,7 @@ fn version 0.3.89
 ### Starting Fn Server
 
 The final install step is to start the Fn server.  Since Fn runs on
-Docker it'll need to be up and running.
+Docker it'll need to be up and running too.
 
 To start Fn you can use the `fn` command line interface (cli).  Type the
 following but note that the process will run in the foreground so that
@@ -128,7 +128,7 @@ of arguments and this is explored in other Fn tutorials.
 
 #### Initializing your Function Configuration
 
-Let's use `fn` to initialize this function's configuration.
+Let's use the `fn` CLI to initialize this function's configuration.
 
 ![user input](images/userinput.png)
 > `fn init`
@@ -168,7 +168,9 @@ this example.
 
 With the `hello` directory containing `func.go` and `func.yaml` you've
 got everything you need to run the function.  So let's run it and
-observe the output.
+observe the output.  Note that the first time you build a
+function of a particular language it takes longer as Fn downloads
+the necessary Docker images.
 
 ![user input](images/userinput.png)
 > `fn run`
@@ -208,7 +210,7 @@ by the Go statement `fmt.Println("Hello from Fn!")`.
 
 ### Understanding fn run
 
-If you use Docker the output of `fn run` should look
+If you have used Docker before the output of `fn run` should look
 familiar--it looks like the output you see when running `docker build`
 with a Dockerfile.  Of course this is exactly what's happening!  When
 you run a function like this Fn is dynamically generating a Dockerfile
@@ -241,7 +243,7 @@ fndemouser/hello                               0.0.1               d64b4a1a15b9 
 
 ## Deploying Your First Function
 
-When we used `fn run` your function was ran in your local environment.
+When we used `fn run` your function was run in your local environment.
 Now let's deploy your function to the Fn server we started previously.
 This server could be running in the cloud, in your datacenter, or on
 your local machine like we're doing here.
@@ -302,7 +304,7 @@ Once again you see output from the underlying Docker build but you also
 see Fn related messages like
 `Updating route /hello using image fndemouser/hello:0.0.2`. This
 let's us know that the function packaged in the image
-"fndemouser/hello:0.0.2" has been bound by the server to the route
+"fndemouser/hello:0.0.2" has been bound by the Fn server to the route
 "/hello".  We'll see how to use the route below.
 
 ## Calling Your Deployed Function

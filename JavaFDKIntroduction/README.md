@@ -243,7 +243,7 @@ public class HelloFunction {
 ```
 
 This function returns the string "Hello, world!" unless an input string
-is provided in which case it returns "Hello, <input string>!".  We saw
+is provided in which case it returns "Hello, \<input string\>!".  We saw
 this previously when we piped "Bob" into the function.   Notice that
 the Java FDK reads from standard input and automatically puts the
 content into the string passed to the function.  This greatly simplifies
@@ -395,10 +395,10 @@ Tests run: 2, Failures: 0, Errors: 2, Skipped: 0
 [ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.12.4:test (default-test) on project hello: There are test failures.
 ```
 
-Ah as we can see this function build has fail due to test failures--we
+Oops! as we can see this function build has fail due to test failures--we
 changed the code significantly but didn't update our tests!  We really
 should be doing test driven development and updating the test first but
-at least our bad behavior has been flagged.  Let's update the tests
+at least our bad behavior has been caught.  Let's update the tests
 to reflect our new expected results.  Replace the definition of
 `HelloFunctionTest` with:
 
@@ -466,8 +466,8 @@ Successfully tagged fndemouser/javafn:0.0.2
 Updating route /javafn using image fndemouser/javafn:0.0.2...
 ```
 
-Review the last line of the deploy output.  When deployed a function
-it's Docker image is associated with the route specified in the
+Review the last line of the deploy output.  When deployed a function's
+Docker image is associated with the route specified in the
 `func.yaml` which defaults to the containing directory name.  In this
 case the route is `/javafn`.
 
@@ -489,8 +489,8 @@ Finally you might notice that the function call takes a few hundred
 milliseconds.  By default, fn will start a new container (and therefore
 a new JVM) for each invocation.
 
-This may be what you want - as each function call will run in its own 
-isolated container and process, but if you want lower latency you can 
+This may be what you want--as each function call will run in its own
+isolated container and process.  But you can
 configure the function to re-use the same JVM for multiple events,
 thus reducing latency.  This is called a 'Hot Function'. We can turn
 our function into a Hot Function by changing the format on the route:
@@ -504,17 +504,17 @@ Try calling it:
 
 
 ![](images/userinput.png)
->`curl --data'{"name":"Tom"}' http://localhost:8080/r/myapp/javafn`
+>`curl --data '{"name":"Tom"}' http://localhost:8080/r/myapp/javafn`
 
->`curl --data'{"name":"Dick"}' http://localhost:8080/r/myapp/javafn`
+>`curl --data '{"name":"Dick"}' http://localhost:8080/r/myapp/javafn`
 
->`curl --data'{"name":"Harry"}' http://localhost:8080/r/myapp/javafn`
+>`curl --data '{"name":"Harry"}' http://localhost:8080/r/myapp/javafn`
 
 # Wrapping Up
 
 Congratulations! You've just completed an introduction to the Fn Java
-FDK.  There's so much more in the FDK than we can cover in a short
-tutorial but we'll go deeper in subsequent tutorials.
+FDK.  There's so much more in the FDK than we can cover in a brief
+introduction but we'll go deeper in subsequent tutorials.
 
 
 

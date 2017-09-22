@@ -252,7 +252,7 @@ accessible to other users and systems.
 In your terminal type the following:
 
 ![user input](images/userinput.png)
-> `fn deploy --app myapp --local`.
+> `fn deploy --app myapp --local`
 
 You should see output similar to:
 
@@ -332,7 +332,7 @@ using the application and route as path elements.
 Use curl to invoke the function:
 
 ![user input](images/userinput.png)
->`curl http://localhost:8080/r/myapp/hello`.
+>`curl http://localhost:8080/r/myapp/hello`
 
 The result is once again the same.
 
@@ -345,3 +345,9 @@ Hello from Fn!
 Congratulations!  In this tutorial you've accomplished a lot.  You've
 installed Fn, started up an Fn server, created your first function,
 run it locally, and then deployed it where it can be invoked over HTTP.
+
+In the next tutorial you'll learn about Fn's Java FDK (Function
+Development Kit) and build and test a function with the FDK's JUnit
+support.
+
+**Go to:** [Java FDK Introduction](../JavaFDKIntroduction/README.md)

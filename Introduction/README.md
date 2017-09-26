@@ -9,7 +9,7 @@ concepts like applications and routes.
 
 So let's get started!
 
-As you make your way throught this tutorial, look out for this icon.
+As you make your way through this tutorial, look out for this icon.
 ![](images/userinput.png) Whenever you see it, it's time for you to
 perform an action.
 

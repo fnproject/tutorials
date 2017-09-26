@@ -8,7 +8,7 @@ This tutorial takes you through the Fn developer experience for building
 Java functions. It shows how easy it is to build, deploy and test
 functions written in Java.
 
-As you make your way throught this tutorial, look out for this icon.
+As you make your way through this tutorial, look out for this icon.
 ![](images/userinput.png) Whenever you see it, it's time for you to
 perform an action.
 
@@ -29,7 +29,7 @@ following:
 
 > `cd javafn`
 
->`fn init --runtime java`
+>`fn init --runtime java8`
 
 The output will be:
 ```sh
@@ -525,7 +525,3 @@ format change:
 Congratulations! You've just completed an introduction to the Fn Java
 FDK.  There's so much more in the FDK than we can cover in a brief
 introduction but we'll go deeper in subsequent tutorials.
-
-
-
-

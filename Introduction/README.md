@@ -9,6 +9,11 @@ concepts like applications and routes.
 
 So let's get started!
 
+As you make your way throught this tutorial, look out for this icon.
+![](images/userinput.png) Whenever you see it, it's time for you to
+perform an action.
+
+
 ## Installing Fn
 
 Setting up a working Fn install is a two-step process.  First you need
@@ -87,8 +92,11 @@ machine as Fn provides the necessary Go compiler and tools as a Docker
 container.  Let's walk through your first function to become familiar
 with the process and how Fn supports development.
 
-But before we start developing we need to set the `FN_REGISTRY`
-environment variable.  Normally, it is set to your Docker repository and
+Open a new terminal window and leave the Fn server running in the first
+terminal.
+
+Before we start developing we need to set the `FN_REGISTRY`
+environment variable.  Normally, it's set to your Docker repository and
 Docker Hub username.  However in this tutorial we'll work in local
 development mode so we can set the `FN_REGISTRY` variable to an invented
  value. Let's use `fndemouser`.

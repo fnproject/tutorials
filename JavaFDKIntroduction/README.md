@@ -352,7 +352,7 @@ public class HelloFunction {
 ```
 
 We've created a couple of simple Pojos to bind the JSON input and output
-to and and changed the function signature to use these Pojos.  The
+to and changed the function signature to use these Pojos.  The
 Java FDK will automatically bind input data based on the Java arguments
 to the function. JSON support is built-in but input and output binding
 is extensible and you could (for instance) plug in marshallers for other
@@ -484,29 +484,41 @@ Success!
 # Improving Performance
 
 Finally you might notice that the function call takes a few hundred
-milliseconds.  By default, fn will start a new container (and therefore
-a new JVM) for each invocation.
+milliseconds.  Try calling the function three times
+in a row paying attention to how long it takes to complete each call:
 
-This may be what you want--as each function call will run in its own
+![](images/userinput.png)
+>`curl --data '{"name":"Tom"}' http://localhost:8080/r/myapp/javafn`
+
+>`curl --data '{"name":"Tom"}' http://localhost:8080/r/myapp/javafn`
+
+>`curl --data '{"name":"Tom"}' http://localhost:8080/r/myapp/javafn`
+
+
+By default, fn will start a new container (and therefore
+a new JVM) for each invocation. This may be what you want--as each
+function call will run in its own
 isolated container and process.  But you can
-configure the function to re-use the same JVM for multiple events,
-thus reducing latency.  This is called a 'Hot Function'. We can turn
-our function into a Hot Function by changing the format on the route:
+configure the function to re-use the same container and JVM for multiple
+invocations, thus reducing latency.  This is called a 'Hot Function'.
+We can turn our function into a Hot Function by changing the format on
+the route:
 
 ![](images/userinput.png)
 >`fn routes update myapp /javafn --format http`
 
-Now if we call it again, the first call still takes a few hundred
-milliseconds to start up the JVM but subsequent calls are super fast.
-Try calling it:
+Now if we call it again the first call still takes a few hundred
+milliseconds to start up the container but subsequent calls are super
+fast. Try calling the function repeatedly now that you've made the
+format change:
 
 
 ![](images/userinput.png)
 >`curl --data '{"name":"Tom"}' http://localhost:8080/r/myapp/javafn`
 
->`curl --data '{"name":"Dick"}' http://localhost:8080/r/myapp/javafn`
+>`curl --data '{"name":"Tom"}' http://localhost:8080/r/myapp/javafn`
 
->`curl --data '{"name":"Harry"}' http://localhost:8080/r/myapp/javafn`
+>`curl --data '{"name":"Tom"}' http://localhost:8080/r/myapp/javafn`
 
 # Wrapping Up
 

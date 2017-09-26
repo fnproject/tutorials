@@ -217,9 +217,7 @@ from standard input and returned "Hello, Bob!".
 # Exploring the Code
 
 We've generated, compiled, and run the Java function so let's take a
-look at the code.  You may want to open the code in your favourite IDE
-to edit and test but it isn't necessary and you can use
-whatever text editor you prefer.
+look at the code.  You may want to open the code in your favorite IDE or editor.
 
 Below is the generated `com.example.fn.HelloFunction` class.  As you can
 see the function is just a method on a POJO that takes a string value

@@ -3,7 +3,7 @@
 Fn is a lightweight Docker-based serverless functions platform you can
 run on your laptop, server, or cloud.  In this introductory tutorial
 we'll walk through installing Fn, develop a function using the Go
-programming languages (without installing any Go tools!) and
+programming language (without installing any Go tools!) and
 deploy them to a local Fn server.  We'll also learn about the core Fn
 concepts like applications and routes.
 
@@ -81,7 +81,9 @@ time="2017-09-18T14:37:13Z" level=info msg="Serving Functions API on address `:8
 ```
 
 That's it!  The Fn cli is now installed and an Fn server instance
-is up and running.
+is up and running. 
+
+Now open a new console to continue. 
 
 ## Your First Function
 

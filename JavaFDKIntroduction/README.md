@@ -29,7 +29,7 @@ following:
 
 > `cd javafn`
 
->`fn init --runtime java8`
+>`fn init --runtime java`
 
 The output will be:
 ```sh

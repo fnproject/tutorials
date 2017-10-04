@@ -98,6 +98,27 @@ PASSED -    ( 1.449515441s )
 2 tests passed, 0 tests failed.
 ```
 
+## Add another test
+
+Let's add another test to show you how it's done. Add the following test to `test.json` and save it:
+
+```json
+{
+    "input": {
+        "body": {
+            "name": "Oracle"
+        }
+    },
+    "output": {
+        "body": {
+            "message": "Hello Oracle"
+        }
+    }
+}
+```
+
+Now run `fn test` again. That's it!
+
 ## Wrapping Up
 
 Congratulations! In this tutorial you learned how to write function tests to ensure you don't break your function contract.

@@ -58,8 +58,8 @@ fn deploy --all --local
 
 Once the command is done, let's surf to our application:
 
-* Root function at: https://localhost:8080/r/myapp2/
-* And the hello function at: https://localhost:8080/r/myapp2/hello
+* Root function at: http://localhost:8080/r/myapp2/
+* And the hello function at: http://localhost:8080/r/myapp2/hello
 
 ## Wrapping Up
 

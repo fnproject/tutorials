@@ -22,7 +22,8 @@ can find instructions in the
 # Getting Started
 
 Let's start by creating a new function.  In a terminal type the
-following:
+following and note the runtime value is **java8**, not just java.  "java"
+defaults to Java 9 but this lab uses Java 8.
 
 ![](images/userinput.png)
 >`mkdir javafn`
@@ -33,9 +34,16 @@ following:
 
 The output will be:
 ```sh
-Runtime: java
-function boilerplate generated.
-func.yaml created
+
+        ______
+       / ____/___
+      / /_  / __ \
+     / __/ / / / /
+    /_/   /_/ /_/
+
+Runtime: java8
+Function boilerplate generated.
+func.yaml created.
 ```
 
 `fn init` creates an simple function with a bit of boilerplate to get you
@@ -79,10 +87,13 @@ Take a look at the contents of the generated func.yaml file.
 >`cat func.yaml`
 
 ```sh
-name: javafn
 version: 0.0.1
-runtime: java
+runtime: java8
 cmd: com.example.fn.HelloFunction::handleRequest
+build_image: ""
+run_image: ""
+expects:
+  config: []
 ```
 
 In the case of a Java function, the `cmd` property is set to the fully
@@ -464,9 +475,9 @@ Successfully tagged fndemouser/javafn:0.0.2
 Updating route /javafn using image fndemouser/javafn:0.0.2...
 ```
 
-Review the last line of the deploy output.  When deployed a function's
-Docker image is associated with the route specified in the
-`func.yaml` which defaults to the containing directory name.  In this
+Review the last line of the deploy output.  When deployed, a function's
+Docker image is associated with a route which is the function's name and
+the function's name is taken from the containing directory.  In this
 case the route is `/javafn`.
 
 We can use the route to invoke the function via curl and passing the
@@ -501,11 +512,18 @@ function call will run in its own
 isolated container and process.  But you can
 configure the function to re-use the same container and JVM for multiple
 invocations, thus reducing latency.  This is called a 'Hot Function'.
+
 We can turn our function into a Hot Function by changing the format on
-the route:
+the route.  
 
 ![](images/userinput.png)
->`fn routes update myapp /javafn --format http`
+>Edit the func.yaml and add the line `format: http`
+
+Redeploy the function with the new configuration:
+
+![](images/userinput.png)
+>`fn deploy --local --app myapp`
+
 
 Now if we call it again the first call still takes a few hundred
 milliseconds to start up the container but subsequent calls are super

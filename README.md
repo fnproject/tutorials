@@ -19,13 +19,4 @@ Fn has an easy way to write tests for any language, that can ensure you don't br
 
 ## Applications
 
-Grouping your functions into an application/API and deploying them together. 
-
-## Event Driven Functions
-
-Since Functions are invocable by HTTP they are easy to incorporate into an event driven architecture.  Learn how to trigger function invocation using WebHooks in this tutorial.
-
-[Triggering functions from other services](Triggers/README.md)
-
-## Introduction to Hot Functions
-
+[Learn how to group your functions into an application/API and deploy them together.](Apps/README.md) 

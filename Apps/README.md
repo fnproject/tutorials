@@ -1,111 +1,69 @@
-# Aynchronous Functions
+# Fn Applications
 
-Asynchronous functions are queued up and run at some point in the future. Great for expensive
-or bulk operations.
+Fn supports grouping functions into a set that defines an application (or API), making it easy to organize and deploy.
 
-## Writing Async Functions
+## Create an app
 
-When writing functions, the only differences between an async function and a sync function are:
-
-1. There is no immediate response, output goes to the logs instead.
-1. The response when calling a function returns a JSON object containing the `call_id`.
-
-Response:
-
-```json
-{"call_id":"01BVJ2NZ1N07WGA00000000000"}
-```
-
-You can then use this `call_id` to retrieve information later.
-
-## Create a Function
-
-Let's create a function and make it async:
+This part is easy, just create an `app.yaml` file and put a name in it:
 
 ![user input](../images/userinput.png)
 
 ```sh
-fn init --runtime go async
-cd async
+mkdir myapp2
+cd myapp2
+echo 'name: myapp2' > app.yaml
 ```
 
-Now open `func.yaml` and add `type: async`, for example:
+This directory will be the root of your application.
 
-```yaml
-type: async
-version: 0.0.1
-runtime: go
-entrypoint: ./func
-```
+## Create a root function
 
-Now let's deploy it:
+The root function will be available at `/` on your application.
 
 ![user input](../images/userinput.png)
 
 ```sh
-fn deploy --local --app myapp
+fn init --runtime ruby
 ```
 
-Now we've deployed it as an `async` function so when we call it, it will be queued up to run later.
+Now we have a Ruby function alongside our `app.yaml`.
 
-And call the async function:
+## Create a sub route
+
+Now let's create a sub route at `/hello`:
+
+```sh
+fn init --runtime go hello
+```
+
+Now we have two functions in our app. Run:
 
 ![user input](../images/userinput.png)
 
 ```sh
-fn call myapp async
+ls
 ```
 
-Now you'll get a response like:
+To see our root function, our `app.yaml` and a directory named `hello`.
 
-```json
-{"call_id":"01BVJ5T7CA07WGE00000000000"}
-```
+## Deploy the entire app
 
-## Check Status and Get Logs
-
-We can retrieve the function call status by checking the status endpoint in the API.
-
-Using the CLI, try running the following, replacing `CALL_ID` with the `call_id` returned above.
+Now we can deploy the entire application with one command:
 
 ![user input](../images/userinput.png)
 
 ```sh
-fn calls get myapp CALL_ID
+fn deploy --all --local
 ```
 
-You'll get something like the following:
+Once the command is done, let's surf to our application:
 
-```
-ID: 01BVJ5T7CA07WGE00000000000
-App: myapp
-Route: /async
-Created At: 2017-10-03T22:31:01.258Z
-Started At: 2017-10-03T22:31:01.908Z
-Completed At: 2017-10-03T22:31:02.615Z
-Status: success
-```
-
-We can see that the Status is `success` which means the call finished properly. And you can see the time it started and completed.
-
-But how do we check the logs to debug and ensure things ran properly? There's a `log` endpoint to allow you to check this and you can 
-access it via the CLI with:
-
-![user input](../images/userinput.png)
-
-```sh
-fn logs get myapp CALL_ID
-```
-
-For this function, the logs will contain:
-
-```json
-{"message":"Hello World"}
-```
+* Root function at: https://localhost:8080/r/myapp2/
+* And the hello function at: https://localhost:8080/r/myapp2/hello
 
 ## Wrapping Up
 
-Congratulations! In this tutorial you learned how to create and setup an async function. It's not much different
-than a synchronous function as you learned, but it's a powerful difference for expensive, long running or batch operations.
+Congratulations! In this tutorial you learned how to group functions into an application and deploy them
+with a single command.
 
 **Go:** [Back to Contents](../README.md)

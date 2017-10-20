@@ -1,0 +1,5 @@
+name: hotel-cancel
+version: 0.0.81
+runtime: ruby
+entrypoint: ruby func.rb
+path: /hotel/cancel

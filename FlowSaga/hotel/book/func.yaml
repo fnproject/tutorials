@@ -1,0 +1,5 @@
+name: hotel-book
+version: 0.0.83
+runtime: ruby
+entrypoint: ruby func.rb
+path: /hotel/book

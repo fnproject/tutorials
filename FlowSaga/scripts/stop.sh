@@ -1,3 +1,3 @@
 #! /usr/bin/env bash
 
-docker rm -f functions completer bristol flowui fnui
+docker rm -f functions flow bristol flowui fnui

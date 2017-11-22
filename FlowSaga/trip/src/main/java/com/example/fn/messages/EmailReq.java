@@ -1,5 +1,8 @@
 package com.example.fn.messages;
 
+import com.fnproject.fn.api.flow.Flow;
+import com.fnproject.fn.api.flow.Flows;
+
 import java.io.Serializable;
 
 public class EmailReq implements Serializable {
@@ -19,5 +22,14 @@ public class EmailReq implements Serializable {
         EmailReq result = new EmailReq();
         result.message = "We failed to book your trip, sorry.";
         return result;
+    }
+
+    public static void sendFailEmail(Flow f) {
+        f.invokeFunction("./email", composeFailEmail());
+    }
+
+    public static void sendSuccessMail(BookingRes flightRes, BookingRes hotelRes, BookingRes carRes) {
+        EmailReq message = composeSuccessEmail(flightRes, hotelRes, carRes);
+        Flows.currentFlow().invokeFunction("./email", message);
     }
 }

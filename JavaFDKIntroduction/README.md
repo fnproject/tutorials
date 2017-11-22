@@ -90,10 +90,7 @@ Take a look at the contents of the generated func.yaml file.
 version: 0.0.1
 runtime: java8
 cmd: com.example.fn.HelloFunction::handleRequest
-build_image: ""
-run_image: ""
-expects:
-  config: []
+format: http
 ```
 
 In the case of a Java function, the `cmd` property is set to the fully
@@ -492,32 +489,32 @@ JSON input as the body of the call.
 
 Success!
 
-# Improving Performance
+# Hot Functions
 
-Finally you might notice that the function call takes a few hundred
-milliseconds.  Try calling the function three times
-in a row paying attention to how long it takes to complete each call:
-
-![](images/userinput.png)
->`curl --data '{"name":"Tom"}' http://localhost:8080/r/myapp/javafn`
-
->`curl --data '{"name":"Tom"}' http://localhost:8080/r/myapp/javafn`
-
->`curl --data '{"name":"Tom"}' http://localhost:8080/r/myapp/javafn`
-
-
-By default, fn will start a new container (and therefore
-a new JVM) for each invocation. This may be what you want--as each
-function call will run in its own
-isolated container and process.  But you can
-configure the function to re-use the same container and JVM for multiple
-invocations, thus reducing latency.  This is called a 'Hot Function'.
-
-We can turn our function into a Hot Function by changing the format on
-the route.  
+Finally you might notice that the first function call takes a few hundred
+milliseconds but subsequent ones are very fast.  Try calling the function 
+three times in a row paying attention to how long it takes to complete 
+each call:
 
 ![](images/userinput.png)
->Edit the func.yaml and add the line `format: http`
+>`curl --data '{"name":"Tom"}' http://localhost:8080/r/myapp/javafn`
+
+>`curl --data '{"name":"Tom"}' http://localhost:8080/r/myapp/javafn`
+
+>`curl --data '{"name":"Tom"}' http://localhost:8080/r/myapp/javafn`
+
+
+By default, `fn init` adds `format: http` to your `func.yaml`. This makes 
+your function a 'Hot Function'. This tells Fn to re-use the same container 
+and JVM for multiple invocations, thus reducing latency.  
+
+In some cases you might want to have a new container and JVM for each
+invocation instead of re-using existing ones. In this case each function
+call will run in its own isolated container and process. We can stop our
+function from being hot like so:
+
+![](images/userinput.png)
+>Edit the func.yaml and remove the line `format: http`
 
 Redeploy the function with the new configuration:
 
@@ -525,9 +522,9 @@ Redeploy the function with the new configuration:
 >`fn deploy --local --app myapp`
 
 
-Now if we call it again the first call still takes a few hundred
-milliseconds to start up the container but subsequent calls are super
-fast. Try calling the function repeatedly now that you've made the
+Now if we call it again the first call still takes a few hundred 
+milliseconds to start up the container but now subsequent calls do
+as well. Try calling the function repeatedly now that you've made the
 format change:
 
 

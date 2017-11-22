@@ -56,7 +56,7 @@ public class TripFunction implements Serializable {
                 .exceptionallyCompose( (e) -> cancel("./hotel/cancel", input.hotel, e) )
         )
         .exceptionallyCompose( (e) -> cancel("./flight/cancel", input.flight, e) )
-        .exceptionally( (err) -> {EmailReq.sendFailEmail(f); return null;} );
+        .exceptionally( (err) -> {EmailReq.sendFailEmail(); return null;} );
     }
 
     private static FlowFuture<BookingRes> cancel(String cancelFn, Object input, Throwable e) {
@@ -88,7 +88,7 @@ public class TripFunction implements Serializable {
                 .exceptionallyCompose( (e) -> retryCancel("./hotel/cancel", input.hotel, e) )
         )
         .exceptionallyCompose( (e) -> retryCancel("./flight/cancel", input.flight, e) )
-        .exceptionally( (err) -> {EmailReq.sendFailEmail(f); return null;} );
+        .exceptionally( (err) -> {EmailReq.sendFailEmail(); return null;} );
     }
 
     private static FlowFuture<BookingRes> retryCancel(String cancelFn, Object input, Throwable e) {

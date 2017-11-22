@@ -15,13 +15,13 @@ public class TripFunction implements Serializable {
         Flow f = Flows.currentFlow();
 
         FlowFuture<BookingRes> flightFuture =
-                f.invokeFunction("./flight/book", input.flight, BookingRes.class);
+            f.invokeFunction("./flight/book", input.flight, BookingRes.class);
 
         FlowFuture<BookingRes> hotelFuture =
-                f.invokeFunction("./hotel/book", input.hotel, BookingRes.class);
+            f.invokeFunction("./hotel/book", input.hotel, BookingRes.class);
 
         FlowFuture<BookingRes> carFuture =
-                f.invokeFunction("./car/book", input.carRental, BookingRes.class);
+            f.invokeFunction("./car/book", input.carRental, BookingRes.class);
 
         flightFuture.thenCompose(
             (flightRes) -> hotelFuture.thenCompose(
@@ -38,22 +38,22 @@ public class TripFunction implements Serializable {
         Flow f = Flows.currentFlow();
 
         FlowFuture<BookingRes> flightFuture =
-                f.invokeFunction("./flight/book", input.flight, BookingRes.class);
+            f.invokeFunction("./flight/book", input.flight, BookingRes.class);
 
         FlowFuture<BookingRes> hotelFuture =
-                f.invokeFunction("./hotel/book", input.hotel, BookingRes.class);
+            f.invokeFunction("./hotel/book", input.hotel, BookingRes.class);
 
         FlowFuture<BookingRes> carFuture =
-                f.invokeFunction("./car/book", input.carRental, BookingRes.class);
+            f.invokeFunction("./car/book", input.carRental, BookingRes.class);
 
         flightFuture.thenCompose(
-                (flightRes) -> hotelFuture.thenCompose(
-                        (hotelRes) -> carFuture.whenComplete(
-                                (carRes, e) -> EmailReq.sendSuccessMail(flightRes, hotelRes, carRes)
-                        )
-                                .exceptionallyCompose( (e) -> cancel("./car/cancel", input.carRental, e) )
+            (flightRes) -> hotelFuture.thenCompose(
+                (hotelRes) -> carFuture.whenComplete(
+                    (carRes, e) -> EmailReq.sendSuccessMail(flightRes, hotelRes, carRes)
                 )
-                .exceptionallyCompose( (e) -> cancel("./hotel/cancel", input.hotel, e) )
+                .exceptionallyCompose( (e) -> cancel("./car/cancel", input.carRental, e) )
+            )
+            .exceptionallyCompose( (e) -> cancel("./hotel/cancel", input.hotel, e) )
         )
         .exceptionallyCompose( (e) -> cancel("./flight/cancel", input.flight, e) )
         .exceptionally( (err) -> {EmailReq.sendFailEmail(); return null;} );
@@ -70,22 +70,22 @@ public class TripFunction implements Serializable {
         Flow f = Flows.currentFlow();
 
         FlowFuture<BookingRes> flightFuture =
-                f.invokeFunction("./flight/book", input.flight, BookingRes.class);
+            f.invokeFunction("./flight/book", input.flight, BookingRes.class);
 
         FlowFuture<BookingRes> hotelFuture =
-                f.invokeFunction("./hotel/book", input.hotel, BookingRes.class);
+            f.invokeFunction("./hotel/book", input.hotel, BookingRes.class);
 
         FlowFuture<BookingRes> carFuture =
-                f.invokeFunction("./car/book", input.carRental, BookingRes.class);
+            f.invokeFunction("./car/book", input.carRental, BookingRes.class);
 
         flightFuture.thenCompose(
-                (flightRes) -> hotelFuture.thenCompose(
-                        (hotelRes) -> carFuture.whenComplete(
-                                (carRes, e) -> EmailReq.sendSuccessMail(flightRes, hotelRes, carRes)
-                        )
-                        .exceptionallyCompose( (e) -> retryCancel("./car/cancel", input.carRental, e) )
+            (flightRes) -> hotelFuture.thenCompose(
+                (hotelRes) -> carFuture.whenComplete(
+                    (carRes, e) -> EmailReq.sendSuccessMail(flightRes, hotelRes, carRes)
                 )
-                .exceptionallyCompose( (e) -> retryCancel("./hotel/cancel", input.hotel, e) )
+                .exceptionallyCompose( (e) -> retryCancel("./car/cancel", input.carRental, e) )
+            )
+            .exceptionallyCompose( (e) -> retryCancel("./hotel/cancel", input.hotel, e) )
         )
         .exceptionallyCompose( (e) -> retryCancel("./flight/cancel", input.flight, e) )
         .exceptionally( (err) -> {EmailReq.sendFailEmail(); return null;} );
@@ -93,7 +93,7 @@ public class TripFunction implements Serializable {
 
     private static FlowFuture<BookingRes> retryCancel(String cancelFn, Object input, Throwable e) {
         Retry.exponentialWithJitter(
-                () -> Flows.currentFlow().invokeFunction(cancelFn, input, BookingRes.class));
+            () -> Flows.currentFlow().invokeFunction(cancelFn, input, BookingRes.class));
         return Flows.currentFlow().failedFuture(e);
     }
 }

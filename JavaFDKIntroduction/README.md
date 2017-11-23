@@ -1,7 +1,8 @@
 # Introduction
 
-This tutorial introduces the Fn Java FDK (Function Development Kit). If
-you haven't completed the [Introduction to Fn](../Introduction/README.md)
+This tutorial introduces the 
+[Fn Java FDK (Function Development Kit)](https://github.com/fnproject/fdk-java). 
+If you haven't completed the [Introduction to Fn](../Introduction/README.md)
 tutorial you should head over there before you proceed.
 
 This tutorial takes you through the Fn developer experience for building
@@ -30,27 +31,22 @@ defaults to Java 9 but this lab uses Java 8.
 
 > `cd javafn`
 
->`fn init --runtime java8`
+>`fn init --runtime java`
 
 The output will be:
 ```sh
-
-        ______
-       / ____/___
-      / /_  / __ \
-     / __/ / / / /
-    /_/   /_/ /_/
-
-Runtime: java8
+Runtime: java
 Function boilerplate generated.
 func.yaml created.
 ```
 
 `fn init` creates an simple function with a bit of boilerplate to get you
 started. The `--runtime` option is used to indicate that the function
-we're going to develop will be written in Java.  A number of other
-runtimes are also supported.  If you have the `tree` utility installed
-you can see the directory structure that the init command has created.
+we're going to develop will be written in Java 9, the default version 
+as of this writing. A number of other runtimes are also supported.  
+
+If you have the `tree` utility installed
+you can see the directory structure that the `init` command has created.
 
 ![](images/userinput.png)
 >`tree`
@@ -88,12 +84,9 @@ Take a look at the contents of the generated func.yaml file.
 
 ```sh
 version: 0.0.1
-runtime: java8
+runtime: java
 cmd: com.example.fn.HelloFunction::handleRequest
-build_image: ""
-run_image: ""
-expects:
-  config: []
+format: http
 ```
 
 In the case of a Java function, the `cmd` property is set to the fully
@@ -366,10 +359,10 @@ We've created a couple of simple Pojos to bind the JSON input and output
 to and changed the function signature to use these Pojos.  The
 Java FDK will automatically bind input data based on the Java arguments
 to the function. JSON support is built-in but input and output binding
-is extensible and you could (for instance) plug in marshallers for other
+is extensible and you could plug in marshallers for other
 data formats like protobuf, avro or xml.
 
-Let's build the updated function.
+Let's build the updated function:
 
 ![](images/userinput.png)
 >`fn build`
@@ -404,7 +397,7 @@ Tests run: 2, Failures: 0, Errors: 2, Skipped: 0
 [ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.12.4:test (default-test) on project hello: There are test failures.
 ```
 
-Oops! as we can see this function build has fail due to test failures--we
+Oops! as we can see this function build has failed due to test failures--we
 changed the code significantly but didn't update our tests!  We really
 should be doing test driven development and updating the test first but
 at least our bad behavior has been caught.  Let's update the tests
@@ -491,52 +484,6 @@ JSON input as the body of the call.
 ```
 
 Success!
-
-# Improving Performance
-
-Finally you might notice that the function call takes a few hundred
-milliseconds.  Try calling the function three times
-in a row paying attention to how long it takes to complete each call:
-
-![](images/userinput.png)
->`curl --data '{"name":"Tom"}' http://localhost:8080/r/myapp/javafn`
-
->`curl --data '{"name":"Tom"}' http://localhost:8080/r/myapp/javafn`
-
->`curl --data '{"name":"Tom"}' http://localhost:8080/r/myapp/javafn`
-
-
-By default, fn will start a new container (and therefore
-a new JVM) for each invocation. This may be what you want--as each
-function call will run in its own
-isolated container and process.  But you can
-configure the function to re-use the same container and JVM for multiple
-invocations, thus reducing latency.  This is called a 'Hot Function'.
-
-We can turn our function into a Hot Function by changing the format on
-the route.  
-
-![](images/userinput.png)
->Edit the func.yaml and add the line `format: http`
-
-Redeploy the function with the new configuration:
-
-![](images/userinput.png)
->`fn deploy --local --app myapp`
-
-
-Now if we call it again the first call still takes a few hundred
-milliseconds to start up the container but subsequent calls are super
-fast. Try calling the function repeatedly now that you've made the
-format change:
-
-
-![](images/userinput.png)
->`curl --data '{"name":"Tom"}' http://localhost:8080/r/myapp/javafn`
-
->`curl --data '{"name":"Tom"}' http://localhost:8080/r/myapp/javafn`
-
->`curl --data '{"name":"Tom"}' http://localhost:8080/r/myapp/javafn`
 
 # Wrapping Up
 

@@ -51,10 +51,10 @@ From a terminal type the following:
 >`curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh`
 
 Once installed you'll see the Fn version printed out.  You should see
-something similar to the following displayed:
+something similar to the following displayed (although likely with a later version number):
 
 ```sh
-fn version 0.3.89
+fn version 0.4.23
 ```
 
 ### Starting Fn Server
@@ -161,21 +161,26 @@ runtime: go
 entrypoint: ./func
 ```
 
+You can see the file contents by typing:
+
+![user input](images/userinput.png)
+>cat func.yaml
+
+
 #### Understanding func.yaml
 
 The generated `func.yaml` file contains metadata about your function and
 declares a number of properties including:
 
-* the name of your function--taken from the containing directory
-name
 * the version--automatically starting at 0.0.1
 * the name of the runtime/language--which was set
 automatically based on the presence of `func.go`
-* the name of the function to invoke--in this case `./func` which will
-be the name of the compiled Go file.
+* the name of the executable to invoke when your function is called--in this case `./func` 
 
 There are other user specifiable properties but these will suffice for
-this example.
+this example.  Note that the name of your function is taken from the containing folder
+name.  We'll see this come into play later on.
+
 
 ### Running Your First Function
 
@@ -235,7 +240,8 @@ image packages only the generated binary and any necessary language
 runtime components. Using this strategy, the final function image size
 can be kept as small as possible.  Smaller Docker images are naturally
 faster to push and pull from a repository which improves overall
-performance.
+performance.  For more details on this technique see [Multi-Stage Docker
+Builds for Creating Tiny Go Images](https://medium.com/travis-on-docker/multi-stage-docker-builds-for-creating-tiny-go-images-e0e1867efe5a).
 
 `fn run` is a local operation.  It builds and packages your function
 into a container image which resides on your local machine.  As Fn is
@@ -319,6 +325,9 @@ see Fn related messages like
 let's us know that the function packaged in the image
 "fndemouser/hello:0.0.2" has been bound by the Fn server to the route
 "/hello".  We'll see how to use the route below.
+
+Note that the containing folder name 'hello' was used as name of the
+generated function container and as the route that container was bound to.
 
 ## Calling Your Deployed Function
 

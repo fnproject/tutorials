@@ -106,12 +106,12 @@ Let's add another test to show you how it's done. Add the following test to `tes
 {
     "input": {
         "body": {
-            "name": "Oracle"
+            "name": "Jane"
         }
     },
     "output": {
         "body": {
-            "message": "Hello Oracle"
+            "message": "Hello Jane"
         }
     }
 }

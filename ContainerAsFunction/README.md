@@ -23,7 +23,7 @@ help with Fn installation you can find instructions in the
 
 # Getting Started
 
-Before we can get starting there are a couple of configuration step to take
+Before we can get starting there are a couple of configuration steps to take
 care of.
 
 ## Login to Docker Hub
@@ -47,7 +47,7 @@ your docker user id:
    ![](images/userinput.png)
    >`export FN_REGISTRY=<yourdockerid>`
 
-2. Start the Fn server using the fn cli:
+2. Start the Fn server using the `fn` cli:
 
    ![](images/userinput.png)
    >`fn start`

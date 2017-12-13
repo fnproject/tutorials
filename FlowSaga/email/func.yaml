@@ -1,5 +1,5 @@
 name: email
-version: 0.0.88
+version: 0.0.92
 runtime: node
 entrypoint: node func.js
 path: /email

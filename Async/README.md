@@ -23,38 +23,36 @@ You can then use this `call_id` to retrieve information later.
 Let's create a function and make it async:
 
 ![user input](../images/userinput.png)
-
-```sh
-fn init --runtime go async
-cd async
+>```sh
+>fn init --runtime go async
+>cd async
 ```
 
 Now open `func.yaml` and add `type: async`, for example:
 
-```yaml
-type: async
-version: 0.0.1
-runtime: go
-entrypoint: ./func
+![user input](../images/userinput.png)
+>```yaml
+>type: async
+>version: 0.0.1
+>runtime: go
+>entrypoint: ./func
 ```
 
 Now let's deploy it:
 
 ![user input](../images/userinput.png)
-
-```sh
-fn deploy --local --app myapp
-```
+>```sh
+>fn deploy --local --app myapp
+>```
 
 Now we've deployed it as an `async` function so when we call it, it will be queued up to run later.
 
 And call the async function:
 
 ![user input](../images/userinput.png)
-
-```sh
-fn call myapp async
-```
+>```sh
+>fn call myapp async
+>```
 
 Now you'll get a response like:
 
@@ -69,10 +67,9 @@ We can retrieve the function call status by checking the status endpoint in the 
 Using the CLI, try running the following, replacing `CALL_ID` with the `call_id` returned above.
 
 ![user input](../images/userinput.png)
-
-```sh
-fn calls get myapp CALL_ID
-```
+>```sh
+>fn calls get myapp CALL_ID
+>```
 
 You'll get something like the following:
 
@@ -92,10 +89,9 @@ But how do we check the logs to debug and ensure things ran properly? There's a 
 access it via the CLI with:
 
 ![user input](../images/userinput.png)
-
-```sh
-fn logs get myapp CALL_ID
-```
+>```sh
+>fn logs get myapp CALL_ID
+>```
 
 For this function, the logs will contain:
 

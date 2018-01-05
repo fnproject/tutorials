@@ -69,22 +69,18 @@ and compare them against the expected outputs. If they don't match, it will fail
 ## Let's Try It
 
 ![user input](../images/userinput.png)
-
-```
-fn init --runtime go tester
-cd tester
-cat test.json
-```
+>```sh
+>fn init --runtime go tester
+>cd tester
+>cat test.json
+>```
 
 You'll see the same file as above. 
 
 Now run:
 
 ![user input](../images/userinput.png)
-
-```sh
-fn test
-```
+> `fn test`
 
 You should see the following results:
 

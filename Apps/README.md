@@ -7,12 +7,11 @@ Fn supports grouping functions into a set that defines an application (or API), 
 This part is easy, just create an `app.yaml` file and put a name in it:
 
 ![user input](../images/userinput.png)
+> `mkdir myapp2`
 
-```sh
-mkdir myapp2
-cd myapp2
-echo 'name: myapp2' > app.yaml
-```
+> `cd myapp2`
+
+> `echo 'name: myapp2' > app.yaml`
 
 This directory will be the root of your application.
 
@@ -21,10 +20,7 @@ This directory will be the root of your application.
 The root function will be available at `/` on your application.
 
 ![user input](../images/userinput.png)
-
-```sh
-fn init --runtime ruby
-```
+> `fn init --runtime ruby`
 
 Now we have a Ruby function alongside our `app.yaml`.
 
@@ -32,17 +28,13 @@ Now we have a Ruby function alongside our `app.yaml`.
 
 Now let's create a sub route at `/hello`:
 
-```sh
-fn init --runtime go hello
-```
+![user input](../images/userinput.png)
+>`fn init --runtime go hello`
 
 Now we have two functions in our app. Run:
 
 ![user input](../images/userinput.png)
-
-```sh
-ls
-```
+> `ls`
 
 To see our root function, our `app.yaml` and a directory named `hello`.
 
@@ -51,12 +43,33 @@ To see our root function, our `app.yaml` and a directory named `hello`.
 Now we can deploy the entire application with one command:
 
 ![user input](../images/userinput.png)
+> `fn deploy --all --local`
 
-```sh
-fn deploy --all --local
+Once the command is done we can examine the structure of the `myapp2`
+application.  First we can get a list of deployed applications.  The
+`fn apps` command accepts either `l` or `list` to display the list of
+applications:
+
+![user input](../images/userinput.png)
+> `fn apps list`
+
+You should see `myapp2` in the list of deployed applications.  We can
+then list application's routes using the `fn routes` command:
+
+![user input](../images/userinput.png)
+> `fn routes l myapp2`
+
 ```
+/       myapp2-root:0.0.2 localhost:8080/r/myapp2
+/hello  hello:0.0.2       localhost:8080/r/myapp2/hello
+```
+Once again `l` is a valid abbreviation for `list` followed by the name
+of the application who's routes should be displayed.  We can see there
+are two routes `/` and `/hello` with two different Docker images
+assocated with them.
 
-Once the command is done, let's surf to our application:
+Let's surf to our application.  Open in a browser or use curl to call each
+of the functions.
 
 * Root function at: http://localhost:8080/r/myapp2/
 * And the hello function at: http://localhost:8080/r/myapp2/hello

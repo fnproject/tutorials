@@ -28,11 +28,7 @@ Before we can install Fn you'll need:
 easiest thing to do is install [VirtualBox](https://www.virtualbox.org/)
 and run a free Linux virtual machine.
 2. [Docker](https://www.docker.com/) 17.05 (or higher) needs to be
-installed and running. You can install Docker with:
-
-```sh
-curl -fsSL https://get.docker.com/ | sudo sh
-```
+installed and running. 
 
 > __NOTE__ In this tutorial we'll work in a purely local development
 mode.  However, when deploying functions to a remote Fn server, a Docker

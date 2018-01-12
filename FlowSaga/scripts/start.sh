@@ -1,8 +1,6 @@
 #! /usr/bin/env bash
 
-(fn start > /dev/null 2>&1 &)
-
-sleep 5
+fn start -d
 
 DOCKER_LOCALHOST=$(docker inspect --type container -f '{{.NetworkSettings.Gateway}}' fnserver)
 

@@ -142,7 +142,7 @@ terminal type:
 
 ![](images/userinput.png)
 >```sh
->`echo -n "Bob" | fn run`
+> echo -n "Bob" | fn run
 >```
 
 returns:
@@ -368,13 +368,13 @@ public class HelloFunctionTest {
 In the new `shouldReturnGreeting()` test method we're passing in the
 JSON document
 
-```json
+```js
 {
     "name": "Bob"
 }
 ```
 and expecting a result of
-```json
+```js
 {
     "salutation": "Hello Bob"
 }
@@ -415,7 +415,7 @@ JSON input as the body of the call.
 
 returns:
 
-```sh
+```js
 {"salutation":"Hello Bob"}
 ```
 

@@ -1,7 +1,7 @@
 # Introduction
 
-This tutorial introduces the 
-[Fn Java FDK (Function Development Kit)](https://github.com/fnproject/fdk-java). 
+This tutorial introduces the
+[Fn Java FDK (Function Development Kit)](https://github.com/fnproject/fdk-java).
 If you haven't completed the [Introduction to Fn](../Introduction/README.md)
 tutorial you should head over there before you proceed.
 
@@ -40,9 +40,9 @@ Function boilerplate generated.
 func.yaml created.
 ```
 
-`fn init` creates an simple function with a bit of boilerplate to get you
+The `fn init` command creates an simple function with a bit of boilerplate to get you
 started. The `--runtime` option is used to indicate that the function
-we're going to develop will be written in Java 9, the default version 
+we're going to develop will be written in Java 9, the default version
 as of this writing. A number of other runtimes are also supported.  
 
 If you have the `tree` utility installed
@@ -82,20 +82,26 @@ Take a look at the contents of the generated func.yaml file.
 ![](images/userinput.png)
 >`cat func.yaml`
 
-```sh
+```yaml
 version: 0.0.1
 runtime: java
 cmd: com.example.fn.HelloFunction::handleRequest
+build_image: fnproject/fn-java-fdk-build:jdk9-1.0.56
+run_image: fnproject/fn-java-fdk:jdk9-1.0.56
 format: http
 ```
 
-In the case of a Java function, the `cmd` property is set to the fully
-qualified name of the function class and the method that should be
-invoked when your `javafn` function is called.
+In the case of a Java function, the following properties are created:
 
-The Java function init also generates a Maven `pom.xml` file to build
-and test your function.  The pom includes the Fn Java FDK runtime
-and test libraries your function needs.
+* **version:** the version of the function.
+* **runtime:** the language used for this function.
+* **cmd:** the `cmd` property is set to the fully
+qualified name of the function class and the method that should be invoked when your `javafn` function is called.
+* **build_image:** the image used to build your function's image.
+* **run_image:** the image your function runs in.
+* **format:** the input/output formate used by the function to communication. The default is to use `http` headers.
+
+The Java function init also generates a Maven `pom.xml` file to build and test your function.  The pom includes the Fn Java FDK runtime and test libraries your function needs.
 
 # Running your Function
 
@@ -105,7 +111,9 @@ Hub. So before we build let's set `FN_REGISTRY` to a local-only registry
 username like `fndemouser`.
 
 ![](images/userinput.png)
->`export FN_REGISTRY=fndemouser`
+>```sh
+> export FN_REGISTRY=fndemouser
+>```
 
 Now we're ready to run.  Depending on whether this is your first time
 developing a Java function you may or may not see Docker images being
@@ -119,104 +127,31 @@ run a function and trigger a build.
 ![](images/userinput.png)
 >`fn run`
 
-Here's what the abbreviated output will look like:
+Here's what the output looks like:
 
 ```sh
-Building image fndemouser/javafn:0.0.1
-Sending build context to Docker daemon  28.67kB
-Step 1/11 : FROM fnproject/fn-java-fdk-build:latest as build-stage
-latest: Pulling from fnproject/fn-java-fdk-build
-...
-Step 2/11 : WORKDIR /function
- ---> 8ed38772a9e4
-Removing intermediate container 9c3957272448
-Step 3/11 : ENV MAVEN_OPTS -Dhttp.proxyHost= -Dhttp.proxyPort= -Dhttps.proxyHost= -Dhttps.proxyPort= -Dhttp.nonProxyHosts= -Dmaven.repo.local=/usr/share/maven/ref/repository
- ---> Running in 7a2e1ec6d8a5
- ---> 345e102442d0
-Removing intermediate container 7a2e1ec6d8a5
-Step 4/11 : ADD pom.xml /function/pom.xml
- ---> 7bd708b005e9
-Step 5/11 : RUN mvn package dependency:copy-dependencies -DincludeScope=runtime -DskipTests=true -Dmdep.prependGroupId=true -DoutputDirectory=target --fail-never
- ---> Running in 51427fd1c021
-[INFO] Scanning for projects...
-Downloading: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-deploy-plugin/2.7/maven-deploy-plugin-2.7.pom
-Downloaded: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-deploy-plugin/2.7/maven-deploy-plugin-2.7.pom (5.6 kB at 8.4 kB/s)
-Downloading: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-deploy-plugin/2.7/maven-deploy-plugin-2.7.jar
-Downloaded: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-deploy-plugin/2.7/maven-deploy-plugin-2.7.jar (27 kB at 188 kB/s)
-[INFO]
-[INFO] ------------------------------------------------------------------------
-[INFO] Building hello 1.0.0
-[INFO] ------------------------------------------------------------------------
-...
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time: 7.853 s
-[INFO] Finished at: 2017-09-20T13:50:55Z
-[INFO] Final Memory: 19M/121M
-[INFO] ------------------------------------------------------------------------
- ---> c010a22244a1
-Removing intermediate container 51427fd1c021
-Step 6/11 : ADD src /function/src
- ---> e9dd4ad1fb0c
-Step 7/11 : RUN mvn package
- ---> Running in 74da2bfc5f1b
-[INFO] Scanning for projects...
-[INFO]
-[INFO] ------------------------------------------------------------------------
-[INFO] Building hello 1.0.0
-[INFO] ------------------------------------------------------------------------
-...
--------------------------------------------------------
- T E S T S
--------------------------------------------------------
-Running com.example.fn.HelloFunctionTest
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.371 sec
-
-Results :
-
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-
-[INFO]
-[INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ hello ---
-[INFO] Building jar: /function/target/hello-1.0.0.jar
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS
-...
-Removing intermediate container 74da2bfc5f1b
-Step 8/11 : FROM fnproject/fn-java-fdk:latest
- ---> 3518e302e29e
-Step 9/11 : WORKDIR /function
- ---> Using cache
- ---> 2d31a347b567
-Step 10/11 : COPY --from=build-stage /function/target/*.jar /function/app/
- ---> 28f86279daf1
-Step 11/11 : CMD com.example.fn.HelloFunction::handleRequest
- ---> Running in 12dd9351221a
- ---> 7617229106a0
-Removing intermediate container 12dd9351221a
-Successfully built 7617229106a0
-Successfully tagged fndemouser/javafn:0.0.1
+Building image fndemouser/javafn:0.0.1 ....................
 Hello, world!
-
 ```
 
-In the output you can see Maven compiling the code and running
-the test, the function packaged into a container, and then run locally
-to produce the output "Hello, world!".
+In the background, Maven compiles the code and runs any
+tests, the function is packaged into a container, and then the function is run locally to produce the output "Hello, world!".
 
 Let's try one more thing and pipe some input into the function.  In your
 terminal type:
 
 ![](images/userinput.png)
->`echo -n "Bob" | fn run`
+>```sh
+> echo -n "Bob" | fn run
+>```
+
+returns:
 
 ```sh
 Hello, Bob!
 ```
 
-Instead of "Hello, world!" the function has read the input string "Bob"
-from standard input and returned "Hello, Bob!".
+Instead of "Hello, world!" the function has read the input string "Bob" from standard input and returned "Hello, Bob!".
 
 # Exploring the Code
 
@@ -245,7 +180,7 @@ public class HelloFunction {
 ```
 
 This function returns the string "Hello, world!" unless an input string
-is provided in which case it returns "Hello, \<input string\>!".  We saw
+is provided in which case it returns "Hello, &lt;input string&gt;!".  We saw
 this previously when we piped "Bob" into the function.   Notice that
 the Java FDK reads from standard input and automatically puts the
 content into the string passed to the function.  This greatly simplifies
@@ -253,12 +188,11 @@ the function code.
 
 # Testing with JUnit
 
-`fn init` also generated a JUnit test for the function which uses the
+The `fn init` command also generated a JUnit test for the function which uses the
 Java FDK's function test framework.  With this framework you can setup
 test fixtures with various function input values and verify the results.
 
-The generated test confirms that when no input is provided the function
-returns "Hello, world!".
+The generated test confirms that when no input is provided the function returns "Hello, world!".
 
 ```java
 package com.example.fn;
@@ -312,19 +246,7 @@ opened the code in an IDE you can run the tests directly from there.
 >`fn build`
 
 ```sh
-...
--------------------------------------------------------
- T E S T S
--------------------------------------------------------
-Running com.example.fn.HelloFunctionTest
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.508 sec
-
-Results :
-
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
-...
-Successfully built 85fb9b00348e
-Successfully tagged fndemouser/javafn:0.0.1
+Building image fndemouser/javafn:0.0.1 .......
 Function fndemouser/javafn:0.0.1 built successfully.
 ```
 
@@ -366,6 +288,19 @@ Let's build the updated function:
 
 ![](images/userinput.png)
 >`fn build`
+
+returns:
+
+```sh
+Building image fndemouser/javafn:0.0.1 ......
+Error during build. Run with `--verbose` flag to see what went wrong. eg: `fn --verbose CMD`
+ERROR: error running docker build: exit status 1
+```
+
+To find out what happened build with the verbose switch:
+
+![](images/userinput.png)
+>`fn -v build`
 
 ```sh
 ...
@@ -433,19 +368,19 @@ public class HelloFunctionTest {
 In the new `shouldReturnGreeting()` test method we're passing in the
 JSON document
 
-```json
+```js
 {
     "name": "Bob"
 }
 ```
 and expecting a result of
-```json
+```js
 {
     "salutation": "Hello Bob"
 }
 ```
 
-If you re-run the test via `fn build` we can see that it now passes.
+If you re-run the test via `fn -v build` we can see that it now passes.
 
 # Deploying your Java Function
 
@@ -462,9 +397,6 @@ option.
 Deploying javafn to app: myapp at path: /javafn
 Bumped to version 0.0.2
 Building image fndemouser/javafn:0.0.2
-...
-Successfully built 406b44a45821
-Successfully tagged fndemouser/javafn:0.0.2
 Updating route /javafn using image fndemouser/javafn:0.0.2...
 ```
 
@@ -477,9 +409,13 @@ We can use the route to invoke the function via curl and passing the
 JSON input as the body of the call.
 
 ![](images/userinput.png)
-> `curl --data '{"name": "Bob"}' http://localhost:8080/r/myapp/javafn`
+>```sh
+> curl --data '{"name": "Bob"}' http://localhost:8080/r/myapp/javafn
+>```
 
-```sh
+returns:
+
+```js
 {"salutation":"Hello Bob"}
 ```
 

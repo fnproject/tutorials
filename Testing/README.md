@@ -1,12 +1,15 @@
 # Testing Functions
 
-Of course you can test your code in your usual language specific ways, but we've also created a way to
-both define and test your functions, regardless of how or what language it is implemented in. This works
-by defining a series of inputs and expected outputs, essentially creating a contract for your function.
+Of course you can test your code in your usual language specific ways, but
+we've also created a way to both define and test your functions, regardless
+of how or what language it is implemented in. This works by defining a series
+of inputs and expected outputs, essentially creating a contract for your
+function.
 
 ## Test Format
 
-The test format is simply a json file with an array if inputs and expected outputs. For example:
+The test format is simply a json file with an array of inputs and expected 
+outputs. For example:
 
 ```json
 {

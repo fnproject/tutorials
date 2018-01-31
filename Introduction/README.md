@@ -151,7 +151,6 @@ func.yaml created
 contents that should look like:
 
 ```yaml
-name: hello
 version: 0.0.1
 runtime: go
 entrypoint: ./func
@@ -190,37 +189,49 @@ the necessary Docker images.
 > `fn run`
 
 ```sh
-Building image fndemouser/hello:0.0.1
-Sending build context to Docker daemon  4.096kB
-Step 1/8 : FROM funcy/go:dev as build-stage
- ---> 4cccab7fc828
-Step 2/8 : WORKDIR /function
- ---> Using cache
- ---> 617fce473c5b
-Step 3/8 : ADD . /go/src/func/
- ---> 7d74280c46eb
-Step 4/8 : RUN cd /go/src/func/ && go build -o func
- ---> Running in bd63803dffd5
- ---> e528f3d33dde
-Removing intermediate container bd63803dffd5
-Step 5/8 : FROM funcy/go
- ---> 573e8a7edc05
-Step 6/8 : WORKDIR /function
- ---> Using cache
- ---> d8c99b2722e4
-Step 7/8 : COPY --from=build-stage /go/src/func/func /function/
- ---> Using cache
- ---> ca329aa33fbe
-Step 8/8 : ENTRYPOINT ./func
- ---> Using cache
- ---> e309b9711693
-Successfully built e309b9711693
-Successfully tagged fndemouser/hello:0.0.1
+Building image fndemouser/hello:0.0.1 ...
 Hello from Fn!
 ```
 
 The last line of output should be "Hello from Fn!" that was produced
 by the Go statement `fmt.Println("Hello from Fn!")`.
+
+If you ever want more details on what a given fn command is doing behind you can
+add the `--verbose` switch.  Let's rerun with verbose output enabled.
+
+![user input](images/userinput.png)
+> `fn --verbose run`
+
+```sh
+Building image fndemouser/hello:0.0.1
+Sending build context to Docker daemon  4.096kB
+Step 1/8 : FROM fnproject/go:dev as build-stage
+ ---> 57ed8b626466
+Step 2/8 : WORKDIR /function
+ ---> Using cache
+ ---> 8ad76b29ee3c
+Step 3/8 : ADD . /go/src/func/
+ ---> 06933e7075cd
+Step 4/8 : RUN cd /go/src/func/ && go build -o func
+ ---> Running in 4a2c8e77aa59
+Removing intermediate container 4a2c8e77aa59
+ ---> b905acf8480d
+Step 5/8 : FROM fnproject/go
+ ---> 10f82b0de851
+Step 6/8 : WORKDIR /function
+ ---> Using cache
+ ---> 670d3653760d
+Step 7/8 : COPY --from=build-stage /go/src/func/func /function/
+ ---> Using cache
+ ---> c1d9cc37e6cd
+Step 8/8 : ENTRYPOINT ["./func"]
+ ---> Using cache
+ ---> a1bae1313f8e
+Successfully built a1bae1313f8e
+Successfully tagged fndemouser/hello:0.0.1
+
+Hello from Fn!
+```
 
 ### Understanding fn run
 
@@ -274,38 +285,12 @@ In your terminal type the following:
 You should see output similar to:
 
 ```sh
-bumping version in func file at:  /Users/shaun/hello/func.yaml
+Deploying hello to app: myapp at path: /hello
 Bumped to version 0.0.2
-Building image fndemouser/hello:0.0.2
-Sending build context to Docker daemon  75.26kB
-Step 1/8 : FROM funcy/go:dev as build-stage
- ---> 4cccab7fc828
-Step 2/8 : WORKDIR /function
- ---> Using cache
- ---> 617fce473c5b
-Step 3/8 : ADD . /go/src/func/
- ---> 83e541ea8cea
-Step 4/8 : RUN cd /go/src/func/ && go build -o func
- ---> Running in ebcd32b6b6a4
- ---> 566b8929732c
-Removing intermediate container ebcd32b6b6a4
-Step 5/8 : FROM funcy/go
- ---> 573e8a7edc05
-Step 6/8 : WORKDIR /function
- ---> Using cache
- ---> d8c99b2722e4
-Step 7/8 : COPY --from=build-stage /go/src/func/func /function/
- ---> Using cache
- ---> aef557ab859a
-Step 8/8 : ENTRYPOINT ./func
- ---> Using cache
- ---> d64b4a1a15b9
-Successfully built d64b4a1a15b9
-Successfully tagged fndemouser/hello:0.0.2
+Building image fndemouser/hello:0.0.2 ..
 Updating route /hello using image fndemouser/hello:0.0.2...
 
 ```
-
 
 Functions are grouped into applications so by specifying `--app myapp`
 we're implicitly creating the application "myapp" and associating our
@@ -315,15 +300,15 @@ Specifying `--local` does the deployment to the local server but does
 not push the function image to a registry--which would be necessary if
 we were deploying to a remote Fn server.
 
-Once again you see output from the underlying Docker build but you also
-see Fn related messages like
-`Updating route /hello using image fndemouser/hello:0.0.2`. This
+The output message
+`Updating route /hello using image fndemouser/hello:0.0.2`
 let's us know that the function packaged in the image
 "fndemouser/hello:0.0.2" has been bound by the Fn server to the route
 "/hello".  We'll see how to use the route below.
 
-Note that the containing folder name 'hello' was used as name of the
-generated function container and as the route that container was bound to.
+Note that the containing folder name 'hello' was used as the name of the
+generated function container and used as the name of the route that 
+container was bound to.
 
 ## Calling Your Deployed Function
 
@@ -366,8 +351,4 @@ Congratulations!  In this tutorial you've accomplished a lot.  You've
 installed Fn, started up an Fn server, created your first function,
 run it locally, and then deployed it where it can be invoked over HTTP.
 
-In the next tutorial you'll learn about Fn's Java FDK (Function
-Development Kit) and build and test a function with the FDK's JUnit
-support.
-
-**Go to:** [Java FDK Introduction](../JavaFDKIntroduction/README.md)
+**Go:** [Back to Contents](../README.md)

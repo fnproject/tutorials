@@ -292,15 +292,15 @@ Let's build the updated function:
 returns:
 
 ```sh
-Building image fndemouser/javafn:0.0.1 ......
+Building image fndemouser/javafn:0.0.1 .......
 Error during build. Run with `--verbose` flag to see what went wrong. eg: `fn --verbose CMD`
 ERROR: error running docker build: exit status 1
 ```
 
-To find out what happened build with the verbose switch:
+To find out what happened rerun build with the verbose switch:
 
 ![](images/userinput.png)
->`fn -v build`
+>`fn --verbose build`
 
 ```sh
 ...
@@ -380,7 +380,11 @@ and expecting a result of
 }
 ```
 
-If you re-run the test via `fn -v build` we can see that it now passes.
+If you re-run the test via `fn -verbose build` we can see that it now passes:
+
+![](images/userinput.png)
+>`fn --verbose build`
+
 
 # Deploying your Java Function
 

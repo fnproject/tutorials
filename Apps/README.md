@@ -31,12 +31,27 @@ Now let's create a sub route at `/hello`:
 ![user input](../images/userinput.png)
 >`fn init --runtime go hello`
 
-Now we have two functions in our app. Run:
+Now we have two functions in our app--one directly in the root folder
+and one in the `hello` folder.  _If_ you have the `tree` utility installed
+run:
 
 ![user input](../images/userinput.png)
-> `ls`
+> `tree`
 
-To see our root function, our `app.yaml` and a directory named `hello`.
+This will show the structure we've created which looks like this:
+
+```sh
+.
+├── Gemfile
+├── app.yaml
+├── func.rb
+├── func.yaml
+├── hello
+│   ├── func.go
+│   ├── func.yaml
+│   └── test.json
+└── test.json
+```
 
 ## Deploy the entire app
 
@@ -59,10 +74,15 @@ then list application's routes using the `fn routes` command:
 ![user input](../images/userinput.png)
 > `fn routes l myapp2`
 
+If you have previously set the `FN_REGISTRY` registry environment variable
+your Docker image names will be prefixed by it. Otherwise your output will look
+like:
+
 ```
 /       myapp2-root:0.0.2 localhost:8080/r/myapp2
 /hello  hello:0.0.2       localhost:8080/r/myapp2/hello
 ```
+
 Once again `l` is a valid abbreviation for `list` followed by the name
 of the application who's routes should be displayed.  We can see there
 are two routes `/` and `/hello` with two different Docker images
@@ -76,7 +96,6 @@ of the functions.
 
 ## Wrapping Up
 
-Congratulations! In this tutorial you learned how to group functions into an application and deploy them
-with a single command.
+Congratulations! In this tutorial you learned how to group functions into an application and deploy them with a single command.
 
 **Go:** [Back to Contents](../README.md)

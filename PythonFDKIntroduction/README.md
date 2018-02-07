@@ -33,59 +33,7 @@ Fn will serve the requests through STDIN and wait on STDOUT for the response and
 In order to make a developer’s life simpler, the Fn team developed a set of libraries for different programming languages like Java, Python, Node, and Go. 
 The main goal of the FDK is to let developers focus on their functions and hide all routine complexities underneath.
 
-## How to develop with Python's FDK?
-
-Let’s take a look at the echo function that uses the HTTP format:
-```python
-import fdk
-
-from fdk import response
-
-@fdk.coerce_input_to_content_type
-def handler(context, data=None, loop=None):
-    return response.RawResponse(
-        context,
-        status_code=200, 
-        headers={}, 
-        response_data=data
-    )
-
-
-if __name__ == "__main__":
-    fdk.handle(handler)
-```
-
-Getting the FDK is easy because the Fn team is responsible for the FDKs distribution. 
-With Python 3 (no more support for Python 2, hooray!!!) specifically, the Fn team published a consumable wheel distribution which you can find in the Warehouse. 
-So the bare minimum requirement here is to write a function with exactly the same signature:
-```
-def handler(context, data=None, loop=None)
-```
-
-That’s it! Simple, isn’t it? It takes only a couple of minutes from the idea of the function to its execution. Here are some tips:
-
-   * handle function can be a coroutine (see Python 3 async/await syntax), this is very useful if you prefer async programming over sync
-
-```python
-import asyncio
-import fdk
-
-
-@fdk.coerce_input_to_content_type
-async def handler(context, data=None, loop=None):
-    return data
-
-if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    fdk.handle(handler, loop=loop)
-
-```
-
-   * through the context developers can access request headers, Fn application and route config as well as format-specific attributes like HTTP version, HTTP request method, etc.
-
-You can find more information and code samples here and read more about Fn formats [here](https://github.com/fnproject/fn/blob/master/docs/function-format.md).
-
-# Getting Started
+# Create function's boilerplate
 
 >`mkdir pythonfn`
 
@@ -124,7 +72,7 @@ if __name__ == "__main__":
    * `requirements.txt`
  
 ```text
-fdk==0.0.5
+fdk==0.0.6
 ```
 
 Before running your function it's recommended to adjust `func.yaml` by adding the following definition:
@@ -134,6 +82,58 @@ build_image: python:3.6
 ```
 
 Done! Your very simple echo function is ready to be deployed and executed!
+
+## How to develop with Python's FDK?
+
+Let’s take a look at the echo function that uses the HTTP format:
+```python
+import fdk
+
+from fdk import response
+
+@fdk.coerce_input_to_content_type
+def handler(context, data=None, loop=None):
+    return response.RawResponse(
+        context,
+        status_code=200, 
+        headers={}, 
+        response_data=data
+    )
+
+
+if __name__ == "__main__":
+    fdk.handle(handler)
+```
+
+Getting the FDK is easy because the Fn team is responsible for the FDKs distribution. 
+With Python 3.5 or greater (no more support for Python 2, hooray!!!) specifically, the Fn team published a consumable wheel distribution which you can find in the Warehouse. 
+So the bare minimum requirement here is to write a function with exactly the same signature:
+```
+def handler(context, data=None, loop=None)
+```
+
+That’s it! Simple, isn’t it? It takes only a couple of minutes from the idea of the function to its execution. Here are some tips:
+
+   * handle function can be a coroutine (see Python 3 async/await syntax), this is very useful if you prefer async programming over sync
+
+```python
+import asyncio
+import fdk
+
+
+@fdk.coerce_input_to_content_type
+async def handler(context, data=None, loop=None):
+    return data
+
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    fdk.handle(handler, loop=loop)
+
+```
+
+   * through the context developers can access request headers, Fn application and route config as well as format-specific attributes like HTTP version, HTTP request method, etc.
+
+You can find more information and code samples here and read more about Fn formats [here](https://github.com/fnproject/fn/blob/master/docs/function-format.md).
 
 # Running your Function
 
@@ -214,6 +214,6 @@ Success!
 
 # Wrapping Up
 
-Congratulations! You've just completed an introduction to the Fn Python
-FDK.  There's so much more in the FDK than we can cover in a brief
+Congratulations! You've just completed an introduction to the Fn Python FDK.
+There's so much more in the FDK than we can cover in a brief
 introduction but we'll go deeper in subsequent tutorials.

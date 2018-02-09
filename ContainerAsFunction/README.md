@@ -32,7 +32,7 @@ To make it possible to push images you need to authenticate yourself with your
 Docker repository (default is Docker Hub).
 
 ![](images/userinput.png)
->`docker login <yourdockerid>`
+>`docker login`
 
 ## Start Fn Server
 

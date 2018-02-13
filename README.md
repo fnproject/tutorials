@@ -32,6 +32,13 @@ define an Fn function using a custom built Docker containeer.](ContainerAsFuncti
 
 [Use the Java FDK to write functions and unit test them with the JUnit test harness.](JavaFDKIntroduction//README.md)
 
+## Troubleshooting Fn
+
+Sometimes things aren't working just how you'd like them and you'd like to
+figure out what's going on.  This tutorial focuses on [troubleshooting
+techniques](Troubleshooting/README.md) you can use to resolve issues at both 
+development and deployment time.
+
 ## Introducing Flow
 
 Get started with Flow with [Flow 101](https://mjg123.github.io/2017/10/10/FnProject-Flow-101.html) & [Flow 102](https://mjg123.github.io/2017/10/11/FnProject-Flow-102.html)

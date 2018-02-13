@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
 
-DOCKER_LOCALHOST=$(docker inspect --type container -f '{{.NetworkSettings.Gateway}}' fnserver)
+DOCKER_LOCALHOST=$(docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}')
 
 fn apps config set travel COMPLETER_BASE_URL "http://$DOCKER_LOCALHOST:8081"
 

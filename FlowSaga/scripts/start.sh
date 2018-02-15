@@ -9,6 +9,7 @@ docker run --rm  \
        -d \
        -e API_URL="http://$DOCKER_LOCALHOST:8080/r" \
        -e no_proxy=$DOCKER_LOCALHOST \
+       -e LOG_LEVEL=debug \
        --name flow \
        fnproject/flow:latest
 
@@ -31,5 +32,5 @@ docker run --rm \
        -p 4000:4000 \
        -d \
        --name fnui \
-       -e API_URL=http://$DOCKER_LOCALHOST:8080 \
+       -e FN_API_URL=http://$DOCKER_LOCALHOST:8080 \
        fnproject/ui

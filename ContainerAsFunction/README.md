@@ -32,12 +32,13 @@ To make it possible to push images you need to authenticate yourself with your
 Docker repository (default is Docker Hub).
 
 ![](images/userinput.png)
->`docker login <yourdockerid>`
+>`docker login`
 
 ## Start Fn Server
 
-Next you need to start the Fn server.  We'll run it in the foreground to let
-us see the server log messages so let's open a new terminal for this.
+Next, if it isn't already running, you'll need to start the Fn server.  We'll
+run it in the foreground to let us see the server log messages so let's open a
+new terminal for this.
 
 1. Define the FN_REGISTRY environment variable to point the Fn server to where
 it should pull function images from. If using the default Docker Hub registry 
@@ -83,7 +84,11 @@ console.log("Hello", name, "from Node!");
 The `Dockerfile` for our function is also very simple.  It starts with
 a light alpine Node.js base image, copies the `func.js` into the image,
 and sets the entrypoint so that when the container is started the 
-`func.js` is run.
+`func.js` is run.  
+
+NOTE: `func.js` has no required Node modules but if there were
+you would have to run `npm install` to download them to `node_modules` and
+ then use `ADD` in the Dockerfile to include them in the generated image file.
 
 ```dockerfile
 FROM node:8-alpine
@@ -161,7 +166,7 @@ that application:
    Successfully created app:  demoapp
    ```
 
-2. We then manually create a route that uses our manually built container image:
+2. We then create a route that uses our manually built container image:
 
    ![](images/userinput.png)
    >`fn routes create demoapp /hello -i <yourdockerid>/node-hello:0.0.1`
@@ -183,8 +188,8 @@ defined for an application:
    /hello  <yourdockerid>/node-hello:0.0.1  localhost:8080/r/demoapp/hello
    ```
 
-Note that at this point all the Fn server has is essentially configuration
-metadata.  It has the name of an application and a function route that is part
+At this point all the Fn server has is configuration metadata.
+It has the name of an application and a function route that is part
 of that application that points to a named and tagged Docker image.  It's
 not until that route is invoked that this metadata is used.
 
@@ -233,5 +238,4 @@ Having completed this tutorial you've successfully built a Docker image,
 defined a function as implemented by that image, and invoked the function
 resulting in the creation of a container using that image.  Congratulations!
 
-For more hands on fun checkout the other [Fn Tutorials](../README.md)!
-   
+**Go:** [Back to Contents](../README.md)

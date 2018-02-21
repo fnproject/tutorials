@@ -47,7 +47,7 @@ Internally the `Flow` class submits each stage in this workflow to the Flow Serv
 
 This example could easily be written without Flow but it's good to start simple.
 
-## Running your first Flow
+## Before you begin
 
 Currently FnProject is available to download, to experiment with, and to run on your private cloud. A managed service by Oracle is in the works. To play with Flow at the moment you will need to run everything locally, but it's not hard. We need **`fn`**, the **Fn server**, the **Flow Server** and not necessary but nice-to-have is the Flow Server **UI**. These run on ports 8080, 8081 and 3002 respectively so you might need to configure firewalls to allow access.
 
@@ -69,7 +69,7 @@ Then start the **Fn server**:
 >fn start
 >```
 
-The output looks something like this. The version number below is old. You should see the latest version number in your case.
+The output looks something like the following. The version number below is old. You should see the latest version number in your case.
 
 ```
 ...
@@ -122,6 +122,12 @@ Create a new function:
 >![user input](../images/userinput.png)
 >```shell
 >fn init --runtime=java simple-flow
+>```
+
+Change directory:
+
+>![user input](../images/userinput.png)
+>```shell
 >cd simple-flow
 >```
 
@@ -157,11 +163,17 @@ public class HelloFunction {
 }
 ```
 
-Then deploy this to an app which we call `flow101` on the local Fn server, and configure the function to talk to the Flow Server.
+Then deploy this to an app which we call `flow101` on the local Fn server.
 
 >![user input](../images/userinput.png)
 >```shell
 >fn deploy --app flow101 --local
+>```
+
+Then configure the function to talk to the Flow Server.
+
+>![user input](../images/userinput.png)
+>```shell
 >fn apps config set flow101 COMPLETER_BASE_URL "http://$DOCKER_LOCALHOST:8081"
 >```
 
@@ -170,6 +182,11 @@ You can now invoke the function using `fn call`:
 ![user input](../images/userinput.png)
 >```shell
 >echo 2 | fn call flow101 /simple-flow
+>```
+
+The output looks something like the following:
+
+>```
 >Your number is 4
 >```
 
@@ -178,6 +195,11 @@ or equivalently with `curl`:
 ![user input](../images/userinput.png)
 >```shell
 >curl -d "2" http://localhost:8080/r/flow101/simple-flow
+>```
+
+The output looks something like the following:
+
+>```
 >Your number is 4
 >```
 
@@ -185,7 +207,7 @@ or equivalently with `curl`:
 
 Browsing to [http://localhost:3002](http://localhost:3002) you should see something like this:
 
-![flow-ui]({{ "assets/simple-flow-ui.png" | relative_url }})
+![flow-ui]({{ "images/simple-flow-ui.png" | relative_url }})
 
 Which is showing us 3 function invocations:
 
@@ -197,7 +219,7 @@ Click on any of these and see the detail for each one expanded at the bottom of 
 
 The blue function is shown as running for the whole time that the `thenApply` stages are. Why? Because we are calling `.get()` at the end, so this is synchronously waiting for the final result of the chain. Exercise: Try removing the `.get()` from the code (you'll need to return a different String, and don't forget to re-deploy). Now it will look like:
 
-![flow-ui]({{ "assets/simple-flow-ui-async.png" | relative_url }})
+![flow-ui]({{ "images/simple-flow-ui-async.png" | relative_url }})
 
 This shows that Flow is well-suited for asynchronous functions which result in a side-effect (posting to slack, for example).
 
@@ -210,6 +232,11 @@ We think Flow hits a very sweet spot of allowing sophisticated stateful apps def
 
 ## Summary
 
-So, congratulations - we've covered a lot! You've got a Flow function running, seen how to use the API to compose simple transformations and run things in parallel. Head to the [Flow 102](/2017/10/11/FnProject-Flow-102.html) post to take your Flows to the next level.
+So, congratulations - we've covered a lot! You've got a Flow function running, seen how to use the API to compose simple transformations and run things in parallel. 
+
+
+## Learn more
+
+Head to the [Flow 102](/2017/10/11/FnProject-Flow-102.html) post to take your Flows to the next level.
 
 Any questions or comments? There is [#fn-flow](https://join.slack.com/t/fnproject/shared_invite/enQtMjIwNzc5MTE4ODg3LTdlYjE2YzU1MjAxODNhNGUzOGNhMmU2OTNhZmEwOTcxZDQxNGJiZmFiMzNiMTk0NjU2NTIxZGEyNjI0YmY4NTA) on the FnProject slack, and [our github](https://github.com/fnproject/). Or hit me up on Twitter as [@MaximumGilliard](https://twitter.com/maximumgilliard).

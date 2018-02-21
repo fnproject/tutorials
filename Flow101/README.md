@@ -207,7 +207,7 @@ Your number is 4
 
 Browsing to [http://localhost:3002](http://localhost:3002) you should see something like this:
 
-![flow-ui]({{ "images/simple-flow-ui.png" | relative_url }})
+![flow-ui](images/simple-flow-ui.png)
 
 Which is showing us 3 function invocations:
 
@@ -219,7 +219,7 @@ Click on any of these and see the detail for each one expanded at the bottom of 
 
 The blue function is shown as running for the whole time that the `thenApply` stages are. Why? Because we are calling `.get()` at the end, so this is synchronously waiting for the final result of the chain. Exercise: Try removing the `.get()` from the code (you'll need to return a different String, and don't forget to re-deploy). Now it will look like:
 
-![flow-ui]({{ "images/simple-flow-ui-async.png" | relative_url }})
+![flow-ui](images/simple-flow-ui-async.png)
 
 This shows that Flow is well-suited for asynchronous functions which result in a side-effect (posting to slack, for example).
 

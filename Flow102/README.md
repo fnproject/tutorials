@@ -23,24 +23,48 @@ In your shell, it might look something like:
 ⇒ head -n10 my_file
 ```
 
+## Before you begin
+> As you make your way through this tutorial, look out for this icon ![](../images/userinput.png). Whenever you see it, it's time for you to perform an action.
+
+
 ## Installing helper functions
 
 One of the cool things about Fn is that because it's based on Docker, functions can be written in *any* language - even Bash!
 
 Clone this repo of simple Bash functions and deploy them all:
 
-```shell
-⇒ git clone https://github.com/mjg123/fnproject-text-functions.git
-⇒ cd fnproject-text-functions
-⇒ fn deploy --local --all
-```
+>![user input](../images/userinput.png)
+>```shell
+>git clone https://github.com/mjg123/fnproject-text-functions.git
+>```
+
+Change directory:
+
+>![user input](../images/userinput.png)
+>```shell
+>cd fnproject-text-functions
+>```
+
+Deploy them all:
+
+>![user input](../images/userinput.png)
+>```shell
+>fn deploy --local --all
+>```
 
 You can test all of these individually, for example:
 
-```shell
-⇒ curl -H "Word: bar" -d $' foo \n bar \n baz' http://localhost:8080/r/flow102/grep
- bar
+>![user input](../images/userinput.png)
+>```shell
+>curl -H "Word: bar" -d $' foo \n bar \n baz' http://localhost:8080/r/flow102/grep
+>```
+
+The output looks something like the following:
+
 ```
+bar
+```
+
 
 ## Creating our Flow function
 
@@ -125,14 +149,12 @@ The first ten lines are:
 
 Check the UI on [http://localhost:3002](http://localhost:3002) and you should see something like this:
 
-![flow-ui]({{ "/assets/word-flow.png" | relative_url }})
+![flow-ui](images/word-flow.png)
 
 As you could see from the code above, the `head` and `grep` are executed in parallel, the `linecount` has to wait for the `grep`, and the `main` has to wait till everything else is finished.
 
-## Further reading
+## Learn more
 
 For a more thorough treatment of the different operations you can use to create Flows, see the [Fn Flow User Guide](https://github.com/fnproject/fdk-java/blob/master/docs/FnFlowsUserGuide.md). If you're at the top of the class, you can have a look at the [Flow - Advanced Topics](https://github.com/fnproject/fdk-java/blob/master/docs/FnFlowsAdvancedTopics.md) page. And a real example can be found in the [Asynchronous Thumbnails](https://github.com/fnproject/fdk-java/blob/master/examples/async-thumbnails/README.md) project.
 
 Finally, there is an explanation of [testing Fn Java Functions and Flows](https://github.com/fnproject/fdk-java/blob/master/docs/TestingFunctions.md)
-
-Any questions or comments? There is [#fn-flow](https://join.slack.com/t/fnproject/shared_invite/enQtMjIwNzc5MTE4ODg3LTdlYjE2YzU1MjAxODNhNGUzOGNhMmU2OTNhZmEwOTcxZDQxNGJiZmFiMzNiMTk0NjU2NTIxZGEyNjI0YmY4NTA) on the FnProject slack, and [our github](https://github.com/fnproject/). Or hit me up on Twitter as [@MaximumGilliard](https://twitter.com/maximumgilliard).

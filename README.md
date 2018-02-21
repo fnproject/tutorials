@@ -41,7 +41,10 @@ development and deployment time.
 
 ## Introducing Flow
 
-Get started with Flow with [Flow 101](https://mjg123.github.io/2017/10/10/FnProject-Flow-101.html) & [Flow 102](https://mjg123.github.io/2017/10/11/FnProject-Flow-102.html)
+Get started with Flow with 
+
+* [Flow 101](Flow101)
+* [Flow 102](Flow102)
 
 ## Fn Flow Saga Pattern
 

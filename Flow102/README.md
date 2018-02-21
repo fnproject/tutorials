@@ -70,13 +70,22 @@ bar
 
 In a new directory called `word-flow`:
 
-```shell
-⇒ fn init --runtime=java
-⇒ rm -rf src/test  ## yolo, again
-```
+>![user input](../images/userinput.png)
+>```shell
+>fn init --runtime=java
+>```
+
+Flow has a comprehensive test framework, but lets concentrate on playing with the code for the time being:
+
+>![user input](../images/userinput.png)
+>```shell
+> rm -rf src/test   ## yolo, again
+>```
+
 
 And, make `HelloFunction.java` look like this:
 
+>![user input](../images/userinput.png)
 ```java
 package com.example.fn;
 
@@ -123,22 +132,42 @@ It's worth reading this code carefully, remembering that anything returning a `F
 
 We'll want some test data:
 
-```shell
-⇒ curl http://www.gutenberg.org/files/1524/1524-0.txt > hamlet.txt
-```
+>![user input](../images/userinput.png)
+>```shell
+>curl http://www.gutenberg.org/files/1524/1524-0.txt > hamlet.txt
+>```
 
-Deploy the function, and remember to configure the app with the location of the completer:
+Set the DOCKER_LOCALHOST environment variable:
 
-```shell{% raw %}
-⇒ export DOCKER_LOCALHOST=$(docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}')
-⇒ fn apps config set flow102 COMPLETER_BASE_URL "http://$DOCKER_LOCALHOST:8081"
-⇒ fn deploy --app flow102 --local
-{% endraw %}```
+>![user input](../images/userinput.png)
+>```shell
+>export DOCKER_LOCALHOST=$(docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}')
+>```
+
+Configure the app with the location of the completer:
+
+>![user input](../images/userinput.png)
+>```shell
+>fn apps config set flow102 COMPLETER_BASE_URL "http://$DOCKER_LOCALHOST:8081"
+>```
+
+Deploy the function:
+
+>![user input](../images/userinput.png)
+>```shell
+>fn deploy --app flow102 --local
+>```
 
 And... send in the Shakespeare:
 
-```shell
-⇒ curl --data-binary @hamlet.txt http://localhost:8080/r/flow102/word-flow
+>![user input](../images/userinput.png)
+>```shell
+>curl --data-binary @hamlet.txt http://localhost:8080/r/flow102/word-flow
+>```
+
+The output looks something like the following:
+
+```
 Number of times I found 'love': 76
 
 The first ten lines are: 
@@ -157,4 +186,7 @@ As you could see from the code above, the `head` and `grep` are executed in para
 
 For a more thorough treatment of the different operations you can use to create Flows, see the [Fn Flow User Guide](https://github.com/fnproject/fdk-java/blob/master/docs/FnFlowsUserGuide.md). If you're at the top of the class, you can have a look at the [Flow - Advanced Topics](https://github.com/fnproject/fdk-java/blob/master/docs/FnFlowsAdvancedTopics.md) page. And a real example can be found in the [Asynchronous Thumbnails](https://github.com/fnproject/fdk-java/blob/master/examples/async-thumbnails/README.md) project.
 
-Finally, there is an explanation of [testing Fn Java Functions and Flows](https://github.com/fnproject/fdk-java/blob/master/docs/TestingFunctions.md)
+There is an explanation of [testing Fn Java Functions and Flows](https://github.com/fnproject/fdk-java/blob/master/docs/TestingFunctions.md)
+
+Finally, head over to [FlowSaga](/FlowSaga) - a more complex Flow tutorial where you will develop a ployglot travel booking application using Flow.
+

@@ -69,6 +69,8 @@ Then start the **Fn server**:
 >fn start
 >```
 
+The output looks something like this. The version number below is old. You should see the latest version number in your case.
+
 ```
 ...
 time="2017-10-11T13:12:44Z" level=info msg="Serving Functions API on address `:8080`"
@@ -82,14 +84,14 @@ time="2017-10-11T13:12:44Z" level=info msg="Serving Functions API on address `:8
 
 The **Flow Server** needs to know how to call the Fn server, so ask Docker which IP address to use.
 
-![user input](../images/userinput.png)
+>![user input](../images/userinput.png)
 >```shell
 >DOCKER_LOCALHOST=$(docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}')
 >```
 
 Start the **Flow Server**:
 
-![user input](../images/userinput.png)
+>![user input](../images/userinput.png)
 >```shell
 >docker run --rm -d \
 >       -p 8081:8081 \
@@ -101,7 +103,7 @@ Start the **Flow Server**:
 
 Then start the Flow **UI**:
 
-![user input](../images/userinput.png)
+>![user input](../images/userinput.png)
 >```shell
 >docker run --rm -d \
 >       -p 3002:3000 \
@@ -117,21 +119,24 @@ Now, everything's set so lets crack on!
 
 Create a new function:
 
-```shell
-⇒ fn init --runtime=java simple-flow
-⇒ cd simple-flow
-```
+>![user input](../images/userinput.png)
+>```shell
+>fn init --runtime=java simple-flow
+>cd simple-flow
+>```
 
 Flow has a comprehensive test framework, but lets concentrate on playing with the code for the time being:
 
-```shell
-⇒ rm -rf src/test   ## yolo
-```
+>![user input](../images/userinput.png)
+>```shell
+> rm -rf src/test   ## yolo
+>```
 
 Make peace with yourself after that, then let's get the code in shape.
 
 Change `HelloFunction.java` to look like this:
 
+>![user input](../images/userinput.png)
 ```java
 package com.example.fn;
 
@@ -154,24 +159,27 @@ public class HelloFunction {
 
 Then deploy this to an app which we call `flow101` on the local Fn server, and configure the function to talk to the Flow Server.
 
-```shell
-⇒ fn deploy --app flow101 --local
-⇒ fn apps config set flow101 COMPLETER_BASE_URL "http://$DOCKER_LOCALHOST:8081"
-```
+>![user input](../images/userinput.png)
+>```shell
+>fn deploy --app flow101 --local
+>fn apps config set flow101 COMPLETER_BASE_URL "http://$DOCKER_LOCALHOST:8081"
+>```
 
 You can now invoke the function using `fn call`:
 
-```shell
-⇒ echo 2 | fn call flow101 /simple-flow
-Your number is 4
-```
+![user input](../images/userinput.png)
+>```shell
+>echo 2 | fn call flow101 /simple-flow
+>Your number is 4
+>```
 
 or equivalently with `curl`:
 
-```shell
-⇒ curl -d "2" http://localhost:8080/r/flow101/simple-flow
-Your number is 4
-```
+![user input](../images/userinput.png)
+>```shell
+>curl -d "2" http://localhost:8080/r/flow101/simple-flow
+>Your number is 4
+>```
 
 ### Exploring the UI
 

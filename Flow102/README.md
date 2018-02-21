@@ -100,7 +100,7 @@ It's worth reading this code carefully, remembering that anything returning a `F
 We'll want some test data:
 
 ```shell
-⇒ curl http://www.gutenberg.org/cache/epub/1524/pg1524.txt > hamlet.txt
+⇒ curl http://www.gutenberg.org/files/1524/1524-0.txt > hamlet.txt
 ```
 
 Deploy the function, and remember to configure the app with the location of the completer:

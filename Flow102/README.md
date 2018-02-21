@@ -1,13 +1,10 @@
 # Flow 102
 
-If you haven't read [Flow 101](/2017/10/10/FnProject-Flow-101.html) yet, I encourage you to start there and get grounded in what Flow is, what it's for and how it works.
+This tutorial is based on [Matthew Gilliard's "Flow 102" blog post](https://mjg123.github.io/2017/10/11/FnProject-Flow-102.html).
 
-In this post I'll go through how to build a more complex Flow with parallelism and asynchronous chaining. I'll assume you have set up the services as described in the Flow 101.
+If you haven't read [Flow 101](Flow101) yet, we recommend you to start there to understand what Flow is, what it's used for and how it works.
 
---
-
-* TOC
-{:toc}
+In this tutorial we will go through how to build a more complex Flow with parallelism and asynchronous chaining. We will assume you have set up the services as described in the Flow 101.
 
 ## The demo Flow
 

@@ -179,29 +179,29 @@ Then configure the function to talk to the Flow Server.
 
 You can now invoke the function using `fn call`:
 
-![user input](../images/userinput.png)
+>![user input](../images/userinput.png)
 >```shell
 >echo 2 | fn call flow101 /simple-flow
 >```
 
 The output looks something like the following:
 
->```
->Your number is 4
->```
+```
+Your number is 4
+```
 
-or equivalently with `curl`:
+Alternatively, you can now invoke the function using `curl`:
 
-![user input](../images/userinput.png)
+>![user input](../images/userinput.png)
 >```shell
 >curl -d "2" http://localhost:8080/r/flow101/simple-flow
 >```
 
 The output looks something like the following:
 
->```
->Your number is 4
->```
+```
+Your number is 4
+```
 
 ### Exploring the UI
 

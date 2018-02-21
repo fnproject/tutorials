@@ -57,14 +57,14 @@ Currently FnProject is available to download, to experiment with, and to run on 
 
 Install the **`fn`** CLI tool:
 
-![user input](../images/userinput.png)
+>![user input](../images/userinput.png)
 >```shell
 >curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
 >```
 
 Then start the **Fn server**:
 
-![user input](../images/userinput.png)
+>![user input](../images/userinput.png)
 >```shell
 >fn start
 >```

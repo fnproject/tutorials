@@ -2,7 +2,7 @@
 
 This tutorial is based on [Matthew Gilliard's "Flow 102" blog post](https://mjg123.github.io/2017/10/11/FnProject-Flow-102.html).
 
-If you haven't read [Flow 101](Flow101) yet, we recommend you to start there to understand what Flow is, what it's used for and how it works.
+If you haven't read [Flow 101](../Flow101) yet, we recommend you to start there to understand what Flow is, what it's used for and how it works.
 
 In this tutorial we will go through how to build a more complex Flow with parallelism and asynchronous chaining. We will assume you have set up the services as described in the Flow 101.
 

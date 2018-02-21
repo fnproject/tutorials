@@ -237,6 +237,4 @@ So, congratulations - we've covered a lot! You've got a Flow function running, s
 
 ## Learn more
 
-Head to the [Flow 102](/2017/10/11/FnProject-Flow-102.html) post to take your Flows to the next level.
-
-Any questions or comments? There is [#fn-flow](https://join.slack.com/t/fnproject/shared_invite/enQtMjIwNzc5MTE4ODg3LTdlYjE2YzU1MjAxODNhNGUzOGNhMmU2OTNhZmEwOTcxZDQxNGJiZmFiMzNiMTk0NjU2NTIxZGEyNjI0YmY4NTA) on the FnProject slack, and [our github](https://github.com/fnproject/). Or hit me up on Twitter as [@MaximumGilliard](https://twitter.com/maximumgilliard).
+Head to the [Flow 102](../Flow102) tutorial to take your Flows to the next level.

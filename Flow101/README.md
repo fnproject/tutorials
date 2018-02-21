@@ -115,7 +115,8 @@ Then start the Flow **UI**:
 
 Now, everything's set so lets crack on!
 
-### A simple Flow function
+
+## A simple Flow function
 
 Create a new function:
 
@@ -203,7 +204,7 @@ The output looks something like the following:
 Your number is 4
 ```
 
-### Exploring the UI
+## Exploring the Flow UI
 
 Browsing to [http://localhost:3002](http://localhost:3002) you should see something like this:
 

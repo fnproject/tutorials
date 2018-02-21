@@ -51,18 +51,25 @@ This example could easily be written without Flow but it's good to start simple.
 
 Currently FnProject is available to download, to experiment with, and to run on your private cloud. A managed service by Oracle is in the works. To play with Flow at the moment you will need to run everything locally, but it's not hard. We need **`fn`**, the **Fn server**, the **Flow Server** and not necessary but nice-to-have is the Flow Server **UI**. These run on ports 8080, 8081 and 3002 respectively so you might need to configure firewalls to allow access.
 
+> As you make your way through this tutorial, look out for this icon ![](../images/userinput.png). Whenever you see it, it's time for you to perform an action.
+
 ### Setting up
 
 Install the **`fn`** CLI tool:
 
-```shell
-⇒ curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
-```
+![user input](../images/userinput.png)
+>```shell
+>curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
+>```
 
 Then start the **Fn server**:
 
-```shell
-⇒ fn start
+![user input](../images/userinput.png)
+>```shell
+>fn start
+>```
+
+```
 ...
 time="2017-10-11T13:12:44Z" level=info msg="Serving Functions API on address `:8080`"
         ______
@@ -75,31 +82,34 @@ time="2017-10-11T13:12:44Z" level=info msg="Serving Functions API on address `:8
 
 The **Flow Server** needs to know how to call the Fn server, so ask Docker which IP address to use.
 
-```shell {% raw %}
-⇒ DOCKER_LOCALHOST=$(docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}')
-{% endraw %}```
+![user input](../images/userinput.png)
+>```shell
+>DOCKER_LOCALHOST=$(docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}')
+>```
 
 Start the **Flow Server**:
 
-```shell
-⇒ docker run --rm -d \
-       -p 8081:8081 \
-       -e API_URL="http://$DOCKER_LOCALHOST:8080/r" \
-       -e no_proxy=$DOCKER_LOCALHOST \
-       --name completer \
-       fnproject/flow:latest
-```
+![user input](../images/userinput.png)
+>```shell
+>docker run --rm -d \
+>       -p 8081:8081 \
+>       -e API_URL="http://$DOCKER_LOCALHOST:8080/r" \
+>       -e no_proxy=$DOCKER_LOCALHOST \
+>       --name completer \
+>       fnproject/flow:latest
+>```
 
 Then start the Flow **UI**:
 
-```shell
-⇒ docker run --rm -d \
-       -p 3002:3000 \
-       --name flowui \
-       -e API_URL=http://$DOCKER_LOCALHOST:8080 \
-       -e COMPLETER_BASE_URL=http://$DOCKER_LOCALHOST:8081 \
-       fnproject/flow:ui
-```
+![user input](../images/userinput.png)
+>```shell
+>docker run --rm -d \
+>       -p 3002:3000 \
+>       --name flowui \
+>       -e API_URL=http://$DOCKER_LOCALHOST:8080 \
+>       -e COMPLETER_BASE_URL=http://$DOCKER_LOCALHOST:8081 \
+>       fnproject/flow:ui
+>```
 
 Now, everything's set so lets crack on!
 

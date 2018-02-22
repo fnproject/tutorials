@@ -136,6 +136,6 @@ During the execution of the docker container, a selected number of statistics fr
  
 An example dashboard `fn_grafana_dashboard3.json` in this example's directory displays the available docker statistics. Use the dropdown lists at the top of the dashboard to choose which metrics to examine.
 
-<img src="images/assets/GrafanaDashboard3.png" width="100%">
+<img src="images/GrafanaDashboard3.png" width="100%">
 
  

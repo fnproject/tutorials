@@ -38,7 +38,7 @@ We’ve provided some scripts to help us get started. The following will start a
 >./scripts/start.sh
 >```
 
-Next, we will create some functions to simulate the booking, and cancellation of the various elements of our trip: flights, hotels and car rentals. We will use the [app functionality of Fn](https://github.com/fnproject/tutorials/tree/master/Apps) to deploy many functions in one go:
+Next, we will create some functions to simulate the booking, and cancellation of the various elements of our trip: flights, hotels and car rentals. We will use the [App construct in Fn](../Apps) to deploy many functions in one go:
 
 >![user input](../images/userinput.png)
 >```shell

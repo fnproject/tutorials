@@ -193,6 +193,8 @@ Each column represents a particular call to one of our providers’ APIs. A gree
 
 ## Visualising the Fn Flow
 
+![flow-ui](images/4-flow-ui.png)
+
 >![user input](../images/userinput.png)
 >
 >Visit [http://localhost:3002](http://localhost:3002/) in a browser. 
@@ -206,7 +208,11 @@ Then re-run our trip function:
 
 We can see an experimental visualisation of the flow that we just created. Click on some of the nodes and see what happens: the stages that caused the selected stage to trigger are highlighted.
 
+![flow-ui](images/5-flow-ui.png)
+
 Scroll down: we can see logs for each of the stages.
+
+![stage-details](images/6-stage-details.png)
 
 This is super-useful for seeing what’s going on when we encounter an error.
 

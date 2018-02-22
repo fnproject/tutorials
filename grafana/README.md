@@ -1,8 +1,16 @@
 # Display runtime metrics using Prometheus and Grafana
 
-The Fn server exports metrics using [Prometheus](https://prometheus.io/). This allows [Grafana](https://grafana.com/) to be used to display these metrics graphically. 
+This tutorial is based on [Nigel Deakin's "Announcing Prometheus Metrics from Fn" blog post](https://medium.com/fnproject/announcing-prometheus-metrics-from-fn-2d0f9ddf0f09).
+
+The Fn server has support for Prometheus metrics built-in. This allows you to obtain information about the Fn server's performance and resource consumption and make this information available to other systems to display and analyse.
+
+In this tutorial we will use Prometheus and see what kind of information the Fn server makes available to it. We will briefly look at how it works before seeing how you can use Prometheus in conjunction with Grafana to display dynamic graphs that show how your Fn server is performing. 
 
 <img src="images/GrafanaDashboard.png" width="800">
+
+## Before you begin
+
+> As you make your way through this tutorial, look out for this icon ![](../images/userinput.png). Whenever you see it, it's time for you to perform an action.
 
 ## Start an Fn server and deploy some functions
 

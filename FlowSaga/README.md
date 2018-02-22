@@ -193,11 +193,11 @@ Each column represents a particular call to one of our providers’ APIs. A gree
 
 ## Visualising the Fn Flow
 
-![flow-ui](images/4-flow-ui.png)
-
 >![user input](../images/userinput.png)
 >
 >Visit [http://localhost:3002](http://localhost:3002/) in a browser. 
+
+![flow-ui](images/4-flow-ui.png)
 
 Then re-run our trip function:
 
@@ -220,28 +220,83 @@ This is super-useful for seeing what’s going on when we encounter an error.
 
 OK so we have a way to create useful long-running processes without leaving the comfort of our favourite programming language. But we need a way to deal with faults. Fn Flow provides a few more primitives to help us with this. We are going to use `exceptionallyCompose` which triggers only if the preceding stage completes with an error. By inserting these calls at the appropriate point in the DAG we can implement our compensating transactions to cancel a booking if there was a problem with a subsequent booking. The next iteration of our book function, `book2`looks like this:
 
+```
+    public void book2(TripReq input) {
+        Flow f = Flows.currentFlow();
+
+        FlowFuture<BookingRes> flightFuture =
+            f.invokeFunction("./flight/book", input.flight, BookingRes.class);
+
+        FlowFuture<BookingRes> hotelFuture =
+            f.invokeFunction("./hotel/book", input.hotel, BookingRes.class);
+
+        FlowFuture<BookingRes> carFuture =
+            f.invokeFunction("./car/book", input.carRental, BookingRes.class);
+
+        flightFuture.thenCompose(
+            (flightRes) -> hotelFuture.thenCompose(
+                (hotelRes) -> carFuture.whenComplete(
+                    (carRes, e) -> EmailReq.sendSuccessMail(flightRes, hotelRes, carRes)
+                )
+                .exceptionallyCompose( (e) -> cancel("./car/cancel", input.carRental, e) )
+            )
+            .exceptionallyCompose( (e) -> cancel("./hotel/cancel", input.hotel, e) )
+        )
+        .exceptionallyCompose( (e) -> cancel("./flight/cancel", input.flight, e) )
+        .exceptionally( (err) -> {EmailReq.sendFailEmail(); return null;} );
+    }
+
+    private static FlowFuture<BookingRes> cancel(String cancelFn, Object input, Throwable e) {
+        Flows.currentFlow().invokeFunction(cancelFn, input, BookingRes.class);
+        return Flows.currentFlow().failedFuture(e);
+    }
+```
+
 Notice that we’ve created a `cancel` function to extract some common code. This returns a `failedFuture` so that the errors propagate up the graph.
 
 First we change our `func.yaml` to point to this function instead:
 
-    cmd: com.example.fn.TripFunction::book
+>![user input](../images/userinput.png)
+>```
+>    cmd: com.example.fn.TripFunction::book2
+>```
 
-Then we can deploy and run the new function in the same way:
+Then we can deploy and run the new function in the same way.
 
-    fn deploy --app travel --local
-    
-    
-    fn call travel /trip < sample-payload.json
+Deploy the trip function:
+
+>![user input](../images/userinput.png)
+>```shell
+>fn deploy --app travel --local
+>```
+
+Invoke the trip function:
+
+>![user input](../images/userinput.png)
+>```shell
+>fn call travel /trip < sample-payload.json
+>```
 
 And it will behave the same. Check our fake SDK dashboard for the new requests:
 
+![fake-sdk-dashboard](images/7-fake-sdk-dashboard.png)
+
 The dashboard will let us inject an error. Click on the “Configure fake response” link under the “Book Car” heading, set the response code to 500 and click the “Set” button:
+
+![book-car-500](images/8-book-car-500.png)
 
 Now when we run the function we will see that the “Book Car” response shows as red because we got an error from our fake provider. We can then see the compensating transactions being issued to cancel the other bookings:
 
+![book-car-error](images/9-fake-sdk-dashboard-car-booking-error.png)
+
 Looking at this in the Flow UI we can drill in to the exception and see what caused it:
 
+![stage-details-book-car-error](images/10-stage-details-car-booking-error.png)
+
 as well as seeing the compensating transactions:
+
+![compensating-transaction](images/11-compensating-transaction.png)
+
 
 ## Try again
 

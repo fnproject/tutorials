@@ -2,9 +2,11 @@
 
 This tutorial is based on [Thom Leggett's "Serverless Sagas with Fn Flow" blog post](https://medium.com/fnproject/serverless-sagas-with-fn-flow-d8199b608b12).
 
-In this tutorial we’ll use Fn Flow with the [saga](http://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf) pattern to build a fault-tolerant, polyglot, serverless travel booking app. 
+In this tutorial we’ll use Fn Flow with the [saga pattern](http://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf) to build a fault-tolerant, polyglot, serverless travel booking app. We will write a scalable, fault-tolerant function to book a trip that consists of a flight, a hotel booking and a car rental.
 
 >If you are not familiar with the notion of a saga we encourage you to watch the brilliant talk by [Caitie McCaffrey](https://twitter.com/caitie) where she explains what a saga is and how it can help write reliable distributed systems. We’re going to borrow the travel agent example from this talk and implement it using Fn Flow.
+
+>If video is more your medium then you can watch us present [this tutorial at Java One](https://www.youtube.com/watch?v=EPhF-__p0Sk). Otherwise follow along here and enjoy!
 
 
 ## Before you begin
@@ -13,63 +15,66 @@ We recommend you go through [Flow 101](../Flow101) and [Flow 102](../Flow102) to
 
 > As you make your way through this tutorial, look out for this icon ![](../images/userinput.png). Whenever you see it, it's time for you to perform an action.
 
-
-## Ready, Set, Flow
-
-We are going to write a scalable, fault-tolerant function to book a trip that
-consists of a flight, a hotel booking and a car rental.
-
-(If video is more your medium then you can watch us present [this tutorial at
-Java One](https://www.youtube.com/watch?v=EPhF-__p0Sk). Otherwise follow along
-here and enjoy!)
-
-Before we get started we need to make sure that we have a working installation
-of the Fn CLI. Check the [introductory
-tutorial](https://github.com/fnproject/tutorials/tree/master/Introduction) for
-help.
+Before we get started we need to make sure that we have a working installation of the Fn CLI. Check the tutorial [Introduction](../Introduction).
 
 First, let’s get the code for the tutorial:
 
-    git clone 
-    cd tutorials/FlowSaga
+>![user input](../images/userinput.png)
+>```shell
+>git clone
+>```
 
-We’ve provided some scripts to help us get started. The following will start a
-Fn server, the Fn UI and the fake API dashboard that we’ll use later on:
+Change directory:
 
-    ./scripts/start.sh
+>![user input](../images/userinput.png)
+>```shell
+>cd tutorials/FlowSaga
+>```
 
-Next, we will create some functions to simulate the booking, and cancellation of
-the various elements of our trip: flights, hotels and car rentals. We will use
-the[ app functionality of
-Fn](https://github.com/fnproject/tutorials/tree/master/Apps) to deploy many
-functions in one go:
+We’ve provided some scripts to help us get started. The following will start a Fn server, the Fn UI and the fake API dashboard that we’ll use later on:
 
-    fn deploy --all --local
-    fn routes list travel
+>![user input](../images/userinput.png)
+>```shell
+>./scripts/start.sh
+>```
+
+Next, we will create some functions to simulate the booking, and cancellation of the various elements of our trip: flights, hotels and car rentals. We will use the [app functionality of Fn](https://github.com/fnproject/tutorials/tree/master/Apps) to deploy many functions in one go:
+
+>![user input](../images/userinput.png)
+>```shell
+>fn deploy --all --local
+>```
+
+List routes for the travel app:
+
+>![user input](../images/userinput.png)
+>```shell
+>fn routes list travel
+>```
 
 We also need to configure these functions:
 
-    ./scripts/configure.sh
+>![user input](../images/userinput.png)
+>```shell
+>./scripts/configure.sh
+>```
 
-<span class="figcaption_hack">We have just deployed and configured these functions. Have a look in the flight,
-hotel and car directories in our source tree.</span>
+We have just deployed and configured these functions. Have a look in the flight, hotel and car directories in our source tree.
 
 ## Getting into the Flow
 
-So we have some functions that we can call to book a flight, hotel and car
-rental. Now we will create a *trip* function that can reliably book all three.
+So we have some functions that we can call to book a flight, hotel and car rental. Now we will create a *trip* function that can reliably book all three.
 
-We have created a skeleton trip function in the `trip` directory. Open the
-`trip/src/main/java/com/example/fn/TripFunction.java` file in our favourite
-editor. We can see a `book1` method (which is referenced as the entry point for
-this function in the `func.yaml` file)
+We have created a skeleton trip function in the `trip` directory. Open the `trip/src/main/java/com/example/fn/TripFunction.java` file in our favourite editor. We can see a `book1` method (which is referenced as the entry point for this function in the `func.yaml` file)
 
+```
     public void book1(TripReq input) {
       ...
+```
 
-First familiarise ourselves with the input structure, `TripReq`. This
-corresponds to the JSON in `sample-payload.json`:
+First familiarise ourselves with the input structure, `TripReq`. This corresponds to the JSON in `sample-payload.json`:
 
+```
     {
       "flight": {
         "departureTime": "2017-10-01",
@@ -83,34 +88,29 @@ corresponds to the JSON in `sample-payload.json`:
         "model": "Tesla Model S P100D"
       }
     }
+```
 
-This contains the information about the trip that we need in order to make the
-bookings.
+This contains the information about the trip that we need in order to make the bookings.
 
-We are now going to examine the code in our `book1`function to understand the
-first implementation of the *trip* feature.
+We are now going to examine the code in our `book1`function to understand the first implementation of the *trip* feature.
 
-Each function execution within the Fn platform runs within the context of a
-flow. We can get access to the current flow like this:
+Each function execution within the Fn platform runs within the context of a flow. We can get access to the current flow like this:
 
+```
     Flow f = Flows.currentFlow();
+```
 
-The `Flow` object contains a bunch of methods for adding work to the current
-flow. We need to use a variant of the `invokeFunction` method:
+The `Flow` object contains a bunch of methods for adding work to the current flow. We need to use a variant of the `invokeFunction` method:
 
+```
     FlowFuture<BookingRes> future = f.invokeFunction("./flight/book", input.flight, BookingRes.class);
+```
 
-This tells the current flow to add an invocation of the `flight/book` function
-to the current flow and then returns a `FlowFuture` that represents the future
-value of that invocation. The `FlowFuture` itself has more methods that let us
-chain more work onto the flow following the completion of that future. Thus we
-can build up a [DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph) of
-computations that will each be executed as a separate serverless function
-invocation.
+This tells the current flow to add an invocation of the `flight/book` function to the current flow and then returns a `FlowFuture` that represents the future value of that invocation. The `FlowFuture` itself has more methods that let us chain more work onto the flow following the completion of that future. Thus we can build up a [DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph) of computations that will each be executed as a separate serverless function invocation.
 
-We are going to use the `thenCompose` method to chain the hotel booking and car
-rental booking onto the end of the flight booking call. Our full`book1` function
-looks like this:
+We are going to use the `thenCompose` method to chain the hotel booking and car rental booking onto the end of the flight booking call. Our full`book1` function looks like this:
+
+
 
 ## A Type-safe Distributed Programming Toolkit
 

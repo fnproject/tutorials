@@ -179,7 +179,10 @@ Invoke the trip function:
 So, booking a trip every time we run this tutorial would quickly get expensive. We also need a way to see what’s happening as a result of our function calls. To that end we are already running a “fake SDK dashboard” that provides a way for us to see what calls are being made to our flight, hotel and car rental booking providers. In fact all that our booking functions that we created above do is forward requests to this dashboard which will return a simple canned response.
 
 >![user input](../images/userinput.png)
->Visit [http://localhost:3000](http://localhost:3000/) in a browser. We can see a page that looks like this:
+>
+>Visit [http://localhost:3000](http://localhost:3000/) in a browser. 
+
+We can see a page that looks like this:
 
 ![fake-SDK-dashboard](images/2-fake-SDK-dashboard.png)
 
@@ -190,32 +193,28 @@ Each column represents a particular call to one of our providers’ APIs. A gree
 
 ## Visualising the Fn Flow
 
-Visit [http://localhost:3002](http://localhost:3002/) in a browser and then
-re-run our trip function:
+>![user input](../images/userinput.png)
+>
+>Visit [http://localhost:3002](http://localhost:3002/) in a browser. 
 
-    fn call travel /trip < sample-payload.json
+Then re-run our trip function:
 
-We can see an experimental visualisation of the flow that we just created. Click
-on some of the nodes and see what happens: the stages that caused the selected
-stage to trigger are highlighted.
+>![user input](../images/userinput.png)
+>```shell
+>fn call travel /trip < sample-payload.json
+>```
+
+We can see an experimental visualisation of the flow that we just created. Click on some of the nodes and see what happens: the stages that caused the selected stage to trigger are highlighted.
 
 Scroll down: we can see logs for each of the stages.
 
-This is super-useful for seeing what’s going on when we encounter an error…
+This is super-useful for seeing what’s going on when we encounter an error.
 
 ## To Err Is Human
 
-OK so we have a way to create useful long-running processes without leaving the
-comfort of our favourite programming language. But we need a way to deal with
-faults. Fn Flow provides a few more primitives to help us with this. We are
-going to use `exceptionallyCompose` which triggers only if the preceding stage
-completes with an error. By inserting these calls at the appropriate point in
-the DAG we can implement our compensating transactions to cancel a booking if
-there was a problem with a subsequent booking. The next iteration of our book
-function, `book2`looks like this:
+OK so we have a way to create useful long-running processes without leaving the comfort of our favourite programming language. But we need a way to deal with faults. Fn Flow provides a few more primitives to help us with this. We are going to use `exceptionallyCompose` which triggers only if the preceding stage completes with an error. By inserting these calls at the appropriate point in the DAG we can implement our compensating transactions to cancel a booking if there was a problem with a subsequent booking. The next iteration of our book function, `book2`looks like this:
 
-Notice that we’ve created a `cancel` function to extract some common code. This
-returns a `failedFuture` so that the errors propagate up the graph.
+Notice that we’ve created a `cancel` function to extract some common code. This returns a `failedFuture` so that the errors propagate up the graph.
 
 First we change our `func.yaml` to point to this function instead:
 
@@ -224,45 +223,33 @@ First we change our `func.yaml` to point to this function instead:
 Then we can deploy and run the new function in the same way:
 
     fn deploy --app travel --local
+    
+    
     fn call travel /trip < sample-payload.json
 
-And it will behave the same. Check our SDK dashboard for the new requests:
+And it will behave the same. Check our fake SDK dashboard for the new requests:
 
-The dashboard will let us inject an error. Click on the “Configure fake
-response” link under the “Book Car” heading, set the response code to 500 and
-click the “Set” button:
+The dashboard will let us inject an error. Click on the “Configure fake response” link under the “Book Car” heading, set the response code to 500 and click the “Set” button:
 
-Now when we run the function we will see that the “Book Car” response shows as
-red because we got an error from our fake provider. We can then see the
-compensating transactions being issued to cancel the other bookings:
+Now when we run the function we will see that the “Book Car” response shows as red because we got an error from our fake provider. We can then see the compensating transactions being issued to cancel the other bookings:
 
-Looking at this in the Flow UI we can drill in to the exception and see what
-caused it:
+Looking at this in the Flow UI we can drill in to the exception and see what caused it:
 
 as well as seeing the compensating transactions:
 
 ## Try again
 
-Finally, we would like the compensating transactions to retry if they themselves
-encounter an error. One of the lovely things about Fn Flow is that because we
-have a set of distributed programming primitives we can combine and compose them
-in a library to encapsulate useful patterns.
+Finally, we would like the compensating transactions to retry if they themselves encounter an error. One of the lovely things about Fn Flow is that because we have a set of distributed programming primitives we can combine and compose them in a library to encapsulate useful patterns.
 
 Take a look at the Retry class:
 
-What we’re doing here is defining an exponential backoff in terms of the
-primitives already provided by Fn Flow: here `delay` ,`thenCompose` and
-`exceptionallyCompose`.
+What we’re doing here is defining an exponential backoff in terms of the primitives already provided by Fn Flow: here `delay` ,`thenCompose` and `exceptionallyCompose`.
 
-This let’s us add some complex fault tolerant behaviour without adding much
-complexity to the overall flow. The final version of our flow then looks like
-this:
+This lets us add some complex fault tolerant behaviour without adding much complexity to the overall flow. The final version of our flow then looks like this:
 
-Note that we are now using the `retryCancel` method that simply wraps the
-cancelation function invocation with our encapsulated retry logic.
+Note that we are now using the `retryCancel` method that simply wraps the cancelation function invocation with our encapsulated retry logic.
 
-If we now simulate an error during one of our compensating transactions, say the
-car cancellation, we will see some retry behaviour:
+If we now simulate an error during one of our compensating transactions, say the car cancellation, we will see some retry behaviour:
 
 To run this, again, we change our `func.yaml` to point to the new book function:
 
@@ -271,9 +258,12 @@ To run this, again, we change our `func.yaml` to point to the new book function:
 Then we can deploy and run the new function in the same way:
 
     fn deploy --app travel --local
+    
+    
     fn call travel /trip < sample-payload.json
 
-<span class="figcaption_hack">Retries of the car cancellation happening on the right of the graph</span>
+Here we can see retries of the car cancellation happening on the right of the graph.
+
 
 ## Summary
 

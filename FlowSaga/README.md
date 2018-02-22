@@ -59,7 +59,7 @@ We also need to configure these functions:
 >./scripts/configure.sh
 >```
 
-![travel-app](images/1.png)
+![travel-app](images/1-travel-app.png)
 
 We have just deployed and configured these functions. Have a look in the flight, hotel and car directories in our source tree.
 

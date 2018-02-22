@@ -281,11 +281,23 @@ And it will behave the same. Check our fake SDK dashboard for the new requests:
 
 ![fake-sdk-dashboard](images/7-fake-sdk-dashboard.png)
 
-The dashboard will let us inject an error. Click on the “Configure fake response” link under the “Book Car” heading, set the response code to 500 and click the “Set” button:
+The dashboard will let us inject an error. 
 
+>![user input](../images/userinput.png)
+>
+>Click on the “Configure fake response” link under the “Book Car” heading, set the response code to 500 and click the “Set” button:
+>
 ![book-car-500](images/8-book-car-500.png)
 
-Now when we run the function we will see that the “Book Car” response shows as red because we got an error from our fake provider. We can then see the compensating transactions being issued to cancel the other bookings:
+
+Invoke the trip function:
+
+>![user input](../images/userinput.png)
+>```shell
+>fn call travel /trip < sample-payload.json
+>```
+
+Now we will see that the “Book Car” response shows as red because we got an error from our fake provider. We can then see the compensating transactions being issued to cancel the other bookings:
 
 ![book-car-error](images/9-fake-sdk-dashboard-car-booking-error.png)
 

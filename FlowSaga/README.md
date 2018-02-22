@@ -423,7 +423,7 @@ In this tutorial we have developed a serverless application that exhibits some c
 
 ## Learn more
 
-To learn more about Fn Flow, you may want to refer to the following material:
+To learn more about Fn Flow, please refer to the following material:
 
 * [Fn Flow User Guide](https://github.com/fnproject/fdk-java/blob/master/docs/FnFlowsUserGuide.md)
 * [Asynchronous Thumbnails example](https://github.com/fnproject/fdk-java/blob/master/examples/async-thumbnails/README.md)

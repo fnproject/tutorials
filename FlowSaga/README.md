@@ -258,7 +258,7 @@ First we change our `func.yaml` to point to this function instead:
 
 >![user input](../images/userinput.png)
 >```
->    cmd: com.example.fn.TripFunction::book2
+>cmd: com.example.fn.TripFunction::book2
 >```
 
 Then we can deploy and run the new function in the same way.
@@ -316,27 +316,100 @@ Finally, we would like the compensating transactions to retry if they themselves
 
 Take a look at the Retry class:
 
-What we’re doing here is defining an exponential backoff in terms of the primitives already provided by Fn Flow: here `delay` ,`thenCompose` and `exceptionallyCompose`.
+```
+    private static <T> FlowFuture<T> _exponentialWithJitter(Flows.SerCallable<FlowFuture<T>> op, RetrySettings settings, int attempt) {
+        Flow f = Flows.currentFlow();
+        try {
+            FlowFuture<T> future = op.call();
+            return future.exceptionallyCompose((e) -> {
+                if (attempt < settings.maxAttempts) {
+
+                    long delay_max = (long) Math.min(
+                        settings.timeUnit.toMillis(settings.delayMaxDuration),
+                        settings.timeUnit.toMillis(settings.delayBaseDuration) * Math.pow(2, attempt));
+                    long delay = new Random().longs(1, 0, delay_max).findFirst().getAsLong();
+
+                    return f.delay(delay, TimeUnit.MILLISECONDS)
+                            .thenCompose((a) -> _exponentialWithJitter(op, settings, attempt + 1));
+                } else {
+                    return f.failedFuture(new RuntimeException());
+                }
+            });
+        } catch (Exception ex) {
+            return f.failedFuture(new RuntimeException());
+        }
+    }
+```
+
+What we’re doing here is defining an exponential backoff in terms of the primitives already provided by Fn Flow: here `delay`, `thenCompose` and `exceptionallyCompose`.
 
 This lets us add some complex fault tolerant behaviour without adding much complexity to the overall flow. The final version of our flow then looks like this:
+
+```
+    public void book3(TripReq input) {
+        Flow f = Flows.currentFlow();
+
+        FlowFuture<BookingRes> flightFuture =
+            f.invokeFunction("./flight/book", input.flight, BookingRes.class);
+
+        FlowFuture<BookingRes> hotelFuture =
+            f.invokeFunction("./hotel/book", input.hotel, BookingRes.class);
+
+        FlowFuture<BookingRes> carFuture =
+            f.invokeFunction("./car/book", input.carRental, BookingRes.class);
+
+        flightFuture.thenCompose(
+            (flightRes) -> hotelFuture.thenCompose(
+                (hotelRes) -> carFuture.whenComplete(
+                    (carRes, e) -> EmailReq.sendSuccessMail(flightRes, hotelRes, carRes)
+                )
+                .exceptionallyCompose( (e) -> retryCancel("./car/cancel", input.carRental, e) )
+            )
+            .exceptionallyCompose( (e) -> retryCancel("./hotel/cancel", input.hotel, e) )
+        )
+        .exceptionallyCompose( (e) -> retryCancel("./flight/cancel", input.flight, e) )
+        .exceptionally( (err) -> {EmailReq.sendFailEmail(); return null;} );
+    }
+
+    private static FlowFuture<BookingRes> retryCancel(String cancelFn, Object input, Throwable e) {
+        Retry.exponentialWithJitter(
+            () -> Flows.currentFlow().invokeFunction(cancelFn, input, BookingRes.class));
+        return Flows.currentFlow().failedFuture(e);
+    }
+```
 
 Note that we are now using the `retryCancel` method that simply wraps the cancelation function invocation with our encapsulated retry logic.
 
 If we now simulate an error during one of our compensating transactions, say the car cancellation, we will see some retry behaviour:
 
+![cancel-car-500](images/12-cancel-car-500.png)
+
 To run this, again, we change our `func.yaml` to point to the new book function:
 
-    cmd: com.example.fn.TripFunction::book
+>![user input](../images/userinput.png)
+>```
+>cmd: com.example.fn.TripFunction::book3
+>```
 
-Then we can deploy and run the new function in the same way:
+Then we can deploy and run the new function in the same way.
 
-    fn deploy --app travel --local
-    
-    
-    fn call travel /trip < sample-payload.json
+Deploy the trip function:
+
+>![user input](../images/userinput.png)
+>```shell
+>fn deploy --app travel --local
+>```
+
+Invoke the trip function:
+
+>![user input](../images/userinput.png)
+>```shell
+>fn call travel /trip < sample-payload.json
+>```
 
 Here we can see retries of the car cancellation happening on the right of the graph.
 
+![retries](images/13-flow-ui-retries.png)
 
 ## Summary
 

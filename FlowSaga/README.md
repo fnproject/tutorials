@@ -59,9 +59,9 @@ We also need to configure these functions:
 >./scripts/configure.sh
 >```
 
-![travel-app](images/1-travel-app.png)
-
 We have just deployed and configured these functions. Have a look in the flight, hotel and car directories in our source tree.
+
+![travel-app](images/1-travel-app.png)
 
 ## Getting into the Flow
 
@@ -140,65 +140,53 @@ We are going to use the `thenCompose` method to chain the hotel booking and car 
 
 Let’s explain the code we just wrote.
 
-First the `invokeFunction` call does just that: invokes another function in the Fn platform. In this case the flight booking function. The return value is a
-`FlowFuture<>` that represents the future value of this computation. We create
-futures for all three booking calls that we want to make.
+First the `invokeFunction` call does just that: invokes another function in the Fn platform. In this case the flight booking function. The return value is a `FlowFuture<>` that represents the future value of this computation. We create futures for all three booking calls that we want to make.
 
-Next, the `thenCompose` calls chains these bits of work together. This is in the
-form of a lambda that takes the result of the previous future and returns
-another future with more work to do. In this case another `invokeFunction` call
-but this time to the next booking function. Note that because we’ve specified
-some type information in the `invokeFunction` call (`BookingRes.class`) we have
-type safety across multiple serverless function invocations. And the compiler
-was able to infer the type of the `thenCompose` lambda for us. Very cool.
+Next, the `thenCompose` calls chains these bits of work together. This is in the form of a lambda that takes the result of the previous future and returns another future with more work to do. In this case another `invokeFunction` call but this time to the next booking function. Note that because we’ve specified some type information in the `invokeFunction` call (`BookingRes.class`) we have type safety across multiple serverless function invocations. And the compiler was able to infer the type of the `thenCompose` lambda for us. Very cool.
 
-Finally there is the `whenComplete` call which triggers when all of the
-preceding stages have returned. This takes a lambda with two parameters, a
-result and an error. One of these will always be null and we can use this to
-check for and handle errors.
+Finally there is the `whenComplete` call which triggers when all of the preceding stages have returned. This takes a lambda with two parameters, a result and an error. One of these will always be null and we can use this to check for and handle errors.
 
-What’s interesting here is the way we’re able to do* fan-in *to collect the
-results from the previous calls. Each lambda has access to the outer scope so
-the `sendSuccessEmail` call can simply reference the results of the previous
-function calls. The flow server deals with making sure that the right values are
-available for us at the right time even though these invocations might be in
-different JVMs, on different hosts and separated by hours, days or weeks.
+What’s interesting here is the way we’re able to do *fan-in* to collect the results from the previous calls. Each lambda has access to the outer scope so the `sendSuccessEmail` call can simply reference the results of the previous function calls. The flow server deals with making sure that the right values are available for us at the right time even though these invocations might be in different JVMs, on different hosts and separated by hours, days or weeks.
 
-The combination of a distributed type-safe promises API and an auto-scaling
-function execution platform provides us with a [really powerful set of
-distributed programming
-primitive](https://github.com/fnproject/fdk-java/blob/master/docs/FnFlowsUserGuide.md)s
-that we can use to write long-running, fault-tolerant workflows.
+The combination of a distributed type-safe promises API and an auto-scaling function execution platform provides us with a [really powerful set of distributed programming primitive](https://github.com/fnproject/fdk-java/blob/master/docs/FnFlowsUserGuide.md)so that we can use to write long-running, fault-tolerant workflows.
 
-It’s time to deploy and run this new trip function:
+It’s time to deploy and run this new trip function.
 
-    cd trip
-    fn deploy --app travel --local
-    fn call travel /trip < sample-payload.json
+Change directory:
 
-## Introducing The Fake SDK Dashbaord
+>![user input](../images/userinput.png)
+>```shell
+>cd trip
+>```
 
-So, booking a trip every time we run this tutorial would quickly get expensive.
-We also need a way to see what’s happening as a result of our function calls. To
-that end we are already running a “fake SDK dashboard” that provides a way for
-us to see what calls are being made to our flight, hotel and car rental booking
-providers. In fact all that our booking functions that we created above do is
-forward requests to this dashboard which will return a simple canned response.
+Deploy the trip function:
 
-Visit [http://localhost:3000](http://localhost:3000/) in a browser. We can see a
-page that looks like so:
+>![user input](../images/userinput.png)
+>```shell
+>fn deploy --app travel --local
+>```
+    
+Invoke the trip function:
 
-<span class="figcaption_hack">The Fake SDK dashboard: a great money-saver.</span>
+>![user input](../images/userinput.png)
+>```shell
+>fn call travel /trip < sample-payload.json
+>```
 
-Each column represents a particular call to one of our providers’ APIs. A green
-entry indicates a successful response was returned by our (fake) provider. We
-can see the requests that our call to the trip function just now caused: a
-successful flight booking, a successful hotel booking, a successful car rental
-booking and an email being sent. We can click on a particular request to see
-more details:
 
-<span class="figcaption_hack">The email sending call. Notice that we have collected the results of the
-previous function calls into one place.</span>
+## Introducing the fake SDK dashbaord
+
+So, booking a trip every time we run this tutorial would quickly get expensive. We also need a way to see what’s happening as a result of our function calls. To that end we are already running a “fake SDK dashboard” that provides a way for us to see what calls are being made to our flight, hotel and car rental booking providers. In fact all that our booking functions that we created above do is forward requests to this dashboard which will return a simple canned response.
+
+>![user input](../images/userinput.png)
+>Visit [http://localhost:3000](http://localhost:3000/) in a browser. We can see a page that looks like this:
+
+![fake-SDK-dashboard](images/2-fake-SDK-dashboard.png)
+
+Each column represents a particular call to one of our providers’ APIs. A green entry indicates a successful response was returned by our (fake) provider. We can see the requests that our call to the trip function just now caused: a successful flight booking, a successful hotel booking, a successful car rental booking and an email being sent. We can click on a particular request to see more details as shown below. This is the email sending call. Notice that we have collected the results of the previous function calls into one place.
+
+![fake-send-email](images/3-send-email.png)
+
 
 ## Visualising the Fn Flow
 

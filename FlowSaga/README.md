@@ -2,19 +2,19 @@
 
 This tutorial is based on [Thom Leggett's "Serverless Sagas with Fn Flow" blog post](https://medium.com/fnproject/serverless-sagas-with-fn-flow-d8199b608b12).
 
+In this tutorial we’ll use Fn Flow with the [saga](http://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf) pattern to build a fault-tolerant, polyglot, serverless travel booking app. 
+
+>If you are not familiar with the notion of a saga we encourage you to watch the brilliant talk by [Caitie McCaffrey](https://twitter.com/caitie) where she explains what a saga is and how it can help write reliable distributed systems. We’re going to borrow the travel agent example from this talk and implement it using Fn Flow.
+
+
 ## Before you begin
-> As you make your way through this tutorial, look out for this icon ![](../images/userinput.png). Whenever you see it, it's time for you to perform an action.
 
 We recommend you go through [Flow 101](../Flow101) and [Flow 102](../Flow102) to understand what Fn Flow is, how it works and what it's used for.
 
+> As you make your way through this tutorial, look out for this icon ![](../images/userinput.png). Whenever you see it, it's time for you to perform an action.
 
-# Serverless Sagas with Fn Flow
 
-In this tutorial we’ll build a fault-tolerant, polyglot, serverless travel booking app using Fn Flow to implement the [saga](http://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf) pattern.
-
-If you are not familiar with the notion of a saga we encourage you to watch the brilliant talk by [Caitie McCaffrey](https://twitter.com/caitie) where she explains what a saga is and how it can help write reliable distributed systems. We’re going to borrow the travel agent example from this talk and implement it using Fn Flow.
-
-#### Ready, Set, Flow
+## Ready, Set, Flow
 
 We are going to write a scalable, fault-tolerant function to book a trip that
 consists of a flight, a hotel booking and a car rental.
@@ -54,7 +54,7 @@ We also need to configure these functions:
 <span class="figcaption_hack">We have just deployed and configured these functions. Have a look in the flight,
 hotel and car directories in our source tree.</span>
 
-#### Getting into the Flow
+## Getting into the Flow
 
 So we have some functions that we can call to book a flight, hotel and car
 rental. Now we will create a *trip* function that can reliably book all three.
@@ -112,7 +112,7 @@ We are going to use the `thenCompose` method to chain the hotel booking and car
 rental booking onto the end of the flight booking call. Our full`book1` function
 looks like this:
 
-#### A Type-safe Distributed Programming Toolkit
+## A Type-safe Distributed Programming Toolkit
 
 Let’s explain the code we just wrote.
 
@@ -153,7 +153,7 @@ It’s time to deploy and run this new trip function:
     fn deploy --app travel --local
     fn call travel /trip < sample-payload.json
 
-#### Introducing The Fake SDK Dashbaord
+## Introducing The Fake SDK Dashbaord
 
 So, booking a trip every time we run this tutorial would quickly get expensive.
 We also need a way to see what’s happening as a result of our function calls. To
@@ -177,7 +177,7 @@ more details:
 <span class="figcaption_hack">The email sending call. Notice that we have collected the results of the
 previous function calls into one place.</span>
 
-#### Visualising the Fn Flow
+## Visualising the Fn Flow
 
 Visit [http://localhost:3002](http://localhost:3002/) in a browser and then
 re-run our trip function:
@@ -192,7 +192,7 @@ Scroll down: we can see logs for each of the stages.
 
 This is super-useful for seeing what’s going on when we encounter an error…
 
-#### To Err Is Human
+## To Err Is Human
 
 OK so we have a way to create useful long-running processes without leaving the
 comfort of our favourite programming language. But we need a way to deal with
@@ -230,7 +230,7 @@ caused it:
 
 as well as seeing the compensating transactions:
 
-#### Try again
+## Try again
 
 Finally, we would like the compensating transactions to retry if they themselves
 encounter an error. One of the lovely things about Fn Flow is that because we
@@ -264,49 +264,15 @@ Then we can deploy and run the new function in the same way:
 
 <span class="figcaption_hack">Retries of the car cancellation happening on the right of the graph</span>
 
-#### Go with the Fn Flow
+## Summary
 
-In this tutorial we have developed a serverless application that exhibits some
-complex fault-tolerant behaviour all without leaving the comfort of our own
-language and IDE. When we compare with [other approaches to this
-problem](https://read.acloud.guru/how-the-saga-pattern-manages-failures-with-aws-lambda-and-step-functions-bc8f7129f900)
-we can see several advantages:
+In this tutorial we have developed a serverless application that exhibits some complex fault-tolerant behaviour all without leaving the comfort of our own language and IDE. When we compare with [other approaches to this problem](https://read.acloud.guru/how-the-saga-pattern-manages-failures-with-aws-lambda-and-step-functions-bc8f7129f900) we can see several advantages:
 
-* Orchestrate our functions in a type-safe, testable language. No “programming” in
-JSON. No new language or tooling to learn.
-* We haven’t touched on testing much but there is first-class support for testing
-Fn Flow applications with JUnit. Watch this space for a follow-up article.
-* Bring the full power of an industrial-strength programming language to bear on
-our workflows. Reduce duplicate work by encapsulating common patterns for reuse.
-* Tooling, albeit experimental, to help us visualise and debug our workflows in
-real-time is a massive productivity boost.
-* Open source software means that we can run our code in the same environment on
-our laptop and in our CI that will be running in the production cloud
-environment. Not a [simulation](https://github.com/awslabs/aws-sam-local) or a
-test harness but real dev-prod parity.
+* Orchestrate our functions in a type-safe, testable language. No “programming” in JSON. No new language or tooling to learn.
+* We haven’t touched on testing much but there is first-class support for testing Fn Flow applications with JUnit. Watch this space for a follow-up article.
+* Bring the full power of an industrial-strength programming language to bear on our workflows. Reduce duplicate work by encapsulating common patterns for reuse.
+* Tooling, albeit experimental, to help us visualise and debug our workflows in real-time is a massive productivity boost.
+* Open source software means that we can run our code in the same environment on our laptop and in our CI that will be running in the production cloud environment. Not a [simulation](https://github.com/awslabs/aws-sam-local) or a test harness but real dev-prod parity.
 
-#### Join us
-
-* Check out the [Fn Project on GitHub](https://github.com/fnproject/fn).
-* Join us on the [Fn Project Slack
-](https://join.slack.com/t/fnproject/shared_invite/enQtMjIwNzc5MTE4ODg3LTdlYjE2YzU1MjAxODNhNGUzOGNhMmU2OTNhZmEwOTcxZDQxNGJiZmFiMzNiMTk0NjU2NTIxZGEyNjI0YmY4NTA)—
-we’re a friendly bunch and we’d love to answer your questions.
-
-*****
-
-Edit 22 Nov 2017: Cleaner examples. Move examples into repo to avoid cut ’n’
-paste errors.
-
-* [Serverless](https://medium.com/tag/serverless?source=post)
-* [Fn](https://medium.com/tag/fn?source=post)
-* [Distributed Systems](https://medium.com/tag/distributed-systems?source=post)
-* [Java](https://medium.com/tag/java?source=post)
-
-By clapping more or less, you can signal to us which stories really stand out.
-
-### [Thom Leggett](https://medium.com/@tteggel)
-
-### [Fn Project](https://medium.com/fnproject?source=footer_card)
-
-Learn about the Fn Project, containers, and serverless computing!
+## Learn more
 

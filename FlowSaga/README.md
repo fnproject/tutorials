@@ -423,3 +423,4 @@ In this tutorial we have developed a serverless application that exhibits some c
 
 ## Learn more
 
+**Go:** [Back to Contents](../README.md)

@@ -184,4 +184,4 @@ As you could see from the code above, the `head` and `grep` are executed in para
 
 ## Learn more
 
-The next tutorial [FlowSaga](/FlowSaga) is a more complex Flow tutorial where you will develop a ployglot travel booking application using Flow. 
+Go to the next tutorial [FlowSaga](/FlowSaga). FlowSaga is a more complex Flow tutorial where you will develop a ployglot travel booking application using Fn Flow. 

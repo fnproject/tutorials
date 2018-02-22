@@ -1,26 +1,18 @@
 # Fn Flow Tutorial - Serverless Sagas with Fn Flow
-Please see https://medium.com/fnproject/serverless-sagas-with-fn-flow-d8199b608b12 for instructions.
+
+This tutorial is based on [Thom Leggett's "Serverless Sagas with Fn Flow" blog post](https://medium.com/fnproject/serverless-sagas-with-fn-flow-d8199b608b12).
+
+## Before you begin
+> As you make your way through this tutorial, look out for this icon ![](../images/userinput.png). Whenever you see it, it's time for you to perform an action.
+
+We recommend you go through [Flow 101](../Flow101) and [Flow 102](../Flow102) to understand what Fn Flow is, how it works and what it's used for.
 
 
 # Serverless Sagas with Fn Flow
 
-As [we were
-building](https://medium.com/fnproject/8-reasons-why-we-built-the-fn-project-bcfe45c5ae63)
-the first iteration of [the Fn Project](http://fnproject.io/) we identified the
-need for a higher-level programming model. This is Fn Flow. Check out [Flow
-101](https://medium.com/fnproject/flow-101-be7f328ffce2) and [Flow
-102](https://medium.com/fnproject/flow-102-9fb94134bea9) for an introduction to,
-and some of the rationale behind, Fn Flow.
+In this tutorial we’ll build a fault-tolerant, polyglot, serverless travel booking app using Fn Flow to implement the [saga](http://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf) pattern.
 
-In this article we’ll implement a fault-tolerant app by showing how Fn Flow can
-be used to implement the
-[saga](http://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf) pattern.
-
-If you are not familiar with the notion of a saga we encourage you to watch the
-brilliant talk by [Caitie McCaffrey](https://twitter.com/caitie) where she
-explains what a saga is and how it can help write reliable distributed systems.
-We’re going to borrow the travel agent example from this talk and implement it
-using Fn Flow. Watch it now:
+If you are not familiar with the notion of a saga we encourage you to watch the brilliant talk by [Caitie McCaffrey](https://twitter.com/caitie) where she explains what a saga is and how it can help write reliable distributed systems. We’re going to borrow the travel agent example from this talk and implement it using Fn Flow.
 
 #### Ready, Set, Flow
 

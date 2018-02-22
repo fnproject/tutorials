@@ -184,9 +184,4 @@ As you could see from the code above, the `head` and `grep` are executed in para
 
 ## Learn more
 
-For a more thorough treatment of the different operations you can use to create Flows, see the [Fn Flow User Guide](https://github.com/fnproject/fdk-java/blob/master/docs/FnFlowsUserGuide.md). If you're at the top of the class, you can have a look at the [Flow - Advanced Topics](https://github.com/fnproject/fdk-java/blob/master/docs/FnFlowsAdvancedTopics.md) page. And a real example can be found in the [Asynchronous Thumbnails](https://github.com/fnproject/fdk-java/blob/master/examples/async-thumbnails/README.md) project.
-
-There is an explanation of [testing Fn Java Functions and Flows](https://github.com/fnproject/fdk-java/blob/master/docs/TestingFunctions.md)
-
-Finally, head over to [FlowSaga](/FlowSaga) - a more complex Flow tutorial where you will develop a ployglot travel booking application using Flow.
-
+The next tutorial [FlowSaga](/FlowSaga) is a more complex Flow tutorial where you will develop a ployglot travel booking application using Flow. 

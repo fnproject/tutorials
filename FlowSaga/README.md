@@ -4,9 +4,9 @@ This tutorial is based on [Thom Leggett's "Serverless Sagas with Fn Flow" blog p
 
 In this tutorial we’ll use Fn Flow with the [saga pattern](http://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf) to build a fault-tolerant, polyglot, serverless travel booking app. We will write a scalable, fault-tolerant function to book a trip that consists of a flight, a hotel booking and a car rental.
 
->If you are not familiar with the notion of a saga we encourage you to watch the brilliant talk by [Caitie McCaffrey](https://twitter.com/caitie) where she explains what a saga is and how it can help write reliable distributed systems. We’re going to borrow the travel agent example from this talk and implement it using Fn Flow.
+>If you are not familiar with the notion of a saga we encourage you to watch the brilliant talk ["Distributed Sagas: A Protocol for Coordinating Microservices" from @JOTB17](https://youtu.be/0UTOLRTwOX0) by [Caitie McCaffrey](https://twitter.com/caitie) where she explains what a saga is and how it can help write reliable distributed systems. We’re going to borrow the travel agent example from this talk and implement it using Fn Flow.
 
->If video is more your medium then you can watch us present [this tutorial at Java One](https://www.youtube.com/watch?v=EPhF-__p0Sk). Otherwise follow along here and enjoy!
+>Here's a video recording of [Flow Saga at Java One 2017](https://www.youtube.com/watch?v=EPhF-__p0Sk).
 
 
 ## Before you begin

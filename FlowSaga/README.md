@@ -21,7 +21,7 @@ First, let’s get the code for the tutorial:
 
 >![user input](../images/userinput.png)
 >```shell
->git clone
+>git clone https://github.com/fnproject/tutorials
 >```
 
 Change directory:
@@ -58,6 +58,8 @@ We also need to configure these functions:
 >```shell
 >./scripts/configure.sh
 >```
+
+![travel-app](images/1.png)
 
 We have just deployed and configured these functions. Have a look in the flight, hotel and car directories in our source tree.
 
@@ -116,8 +118,7 @@ We are going to use the `thenCompose` method to chain the hotel booking and car 
 
 Let’s explain the code we just wrote.
 
-First the `invokeFunction` call does just that: invokes another function in the
-Fn platform. In this case the flight booking function. The return value is a
+First the `invokeFunction` call does just that: invokes another function in the Fn platform. In this case the flight booking function. The return value is a
 `FlowFuture<>` that represents the future value of this computation. We create
 futures for all three booking calls that we want to make.
 

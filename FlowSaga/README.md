@@ -112,6 +112,28 @@ This tells the current flow to add an invocation of the `flight/book` function t
 
 We are going to use the `thenCompose` method to chain the hotel booking and car rental booking onto the end of the flight booking call. Our full`book1` function looks like this:
 
+```
+    public void book1(TripReq input) {
+        Flow f = Flows.currentFlow();
+
+        FlowFuture<BookingRes> flightFuture =
+            f.invokeFunction("./flight/book", input.flight, BookingRes.class);
+
+        FlowFuture<BookingRes> hotelFuture =
+            f.invokeFunction("./hotel/book", input.hotel, BookingRes.class);
+
+        FlowFuture<BookingRes> carFuture =
+            f.invokeFunction("./car/book", input.carRental, BookingRes.class);
+
+        flightFuture.thenCompose(
+            (flightRes) -> hotelFuture.thenCompose(
+                (hotelRes) -> carFuture.whenComplete(
+                    (carRes, e) -> EmailReq.sendSuccessMail(flightRes, hotelRes, carRes)
+                )
+            )
+        );
+    }
+```
 
 
 ## A Type-safe Distributed Programming Toolkit

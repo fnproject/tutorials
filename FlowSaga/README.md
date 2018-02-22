@@ -423,4 +423,9 @@ In this tutorial we have developed a serverless application that exhibits some c
 
 ## Learn more
 
+* [Fn Flow User Guide](https://github.com/fnproject/fdk-java/blob/master/docs/FnFlowsUserGuide.md)
+* [Flow - Advanced Topics](https://github.com/fnproject/fdk-java/blob/master/docs/FnFlowsAdvancedTopics.md)
+* [Testing Fn Java Functions and Flows](https://github.com/fnproject/fdk-java/blob/master/docs/TestingFunctions.md)
+
 **Go:** [Back to Contents](../README.md)
+

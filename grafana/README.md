@@ -30,12 +30,6 @@ fn start
 Deploy one or more functions as required.
 See the [front page](/README.md) or any of the other examples for instructions. 
 
-## What is Prometheus?
-
-[Prometheus](https://prometheus.io/) is an open-source systems monitoring system. Essentially it’s a server process which scrapes metrics data from one or more Fn servers and makes it available via a powerful query API.
-
-Whilst the Prometheus server has its own web interface, which can be used to display tables and graphs of metrics data, it is usually used in conjunction with a separate tool such as [Grafana](https://grafana.com/) that displays multiple metrics and can be used to generate alerts.
-
 ## What metrics does Fn provide?
 
 Currently Fn provides three sets of metrics. We’ll see all three sets of metrics in action later.
@@ -44,15 +38,21 @@ Currently Fn provides three sets of metrics. We’ll see all three sets of metri
 * Operation durations: these represent the time taken to perform various operations. In addition to obtaining the time taken to execute a function, you can also obtain finer-grained data such as the time taken to start the docker container in which it runs.
 * Docker metrics: when Fn executes a function in a Docker container it obtains various statistics from that container, such as CPU and memory usage, and makes them available as Prometheus metrics.
 
-## How does Prometheus work get Fn metrics?
+## How does Fn provide metrics?
 
-Fn makes metrics available to the Prometheus server using a special API endpoint. The Fn metrics endpoint for Prometheus is `http://localhost:8080/metrics` by default. Although this endpoint is intended for use only by the Prometheus server, you can invoke it yourself to see how it works.
+Fn makes metrics available using a special API endpoint. The Fn metrics endpoint is `http://localhost:8080/metrics` by default. Although this endpoint is intended for use only by the Prometheus server, you can invoke it yourself to see how it works.
 
 ## Examine the endpoint used to export metrics to Prometheus
 
 The Fn server exports metrics to Prometheus using the API endpoint `/metrics`. 
 
 Try pointing your browser at [http://localhost:8080/metrics](http://localhost:8080/metrics). This will display the metrics in prometheus format.
+
+## What is Prometheus?
+
+[Prometheus](https://prometheus.io/) is an open-source systems monitoring system. Essentially it’s a server process which scrapes metrics data from one or more Fn servers and makes it available via a powerful query API.
+
+Whilst the Prometheus server has its own web interface, which can be used to display tables and graphs of metrics data, it is usually used in conjunction with a separate tool such as [Grafana](https://grafana.com/) that displays multiple metrics and can be used to generate alerts.
 
 ## Introducing Prometheus
 
@@ -128,14 +128,14 @@ Fn comes with a number of pre-defined dashboards which showcase all the various 
 
 Open a terminal window and navigate to the directory containing this example.
 
-Start Grafana on port 3000:
+Start Grafana on port 5000:
 ```
-docker run --name=grafana -d -p 3000:3000 \
+docker run --name=grafana -d -p 5000:3000 \
   --add-host="prometheus:`docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}'`" \
   grafana/grafana
 ```
 
-Open a browser on Grafana at [http://localhost:3000](http://localhost:3000).
+Open a browser on Grafana at [http://localhost:5000](http://localhost:5000).
 
 Login using the default user `admin` and default password `admin`.
 
@@ -254,9 +254,9 @@ Let’s first start a Prometheus server. You can do this very easily in docker:
 
 This dashboard demonstrates the first type of Prometheus metric provided by Fn server: function counts.
 
-Start Grafana on port 3000:
+Start Grafana on port 5000:
 
-Open a browser on Grafana at [http://localhost:3000](http://localhost:3000/).
+Open a browser on Grafana at [http://localhost:5000](http://localhost:5000/).
 
 Login using the default user `admin` and default password `admin`.
 

@@ -174,9 +174,28 @@ Import the dashboard that displays metrics from the Fn server:
 
 You should then see the *Fn usage* Grafana dashboard showing `Function counts: queued, running, completed, failed`. Now invoke a function a number of times and see the graphs update. 
 
+Change directory:
+
 >![user input](../images/userinput.png)
->
->You can also invoke your function repeatedly using the following simple script. Paste it into an empty file `run.bash` and then type `bash run.bash`. Let it run whilst you watch the graphs update.
+>```shell
+>cd myfunc
+>```
+    
+Now build and deploy the function:
+
+>![user input](../images/userinput.png)
+>```shell
+>fn deploy --local --app myapp
+>```
+
+You can invoke this function repeatedly using a simple script 'run.bash' file included in this `myfunc` folder.
+
+>![user input](../images/userinput.png)
+>```shell
+>bash run.bash
+>```
+
+Let it run whilst you watch the graphs update.
 
 ![user input](images/GrafanaDashboard.png)
 
@@ -273,9 +292,6 @@ Here's an example dashboard showing some docker stats:
 
 ![user input](images/GrafanaDashboard3.png)
 
-![](https://cdn-images-1.medium.com/max/1600/1*5T47isXuH6KGO9v-0PLZ_A.png)
-
-
 Available metrics are:
 
 * `fn_docker_stats_cpu_kernel`
@@ -291,57 +307,6 @@ Available metrics are:
 As with the duration metrics these all have the labels `fn_appname` and `fn_path` set to the application and route (path).
 
 
--------------
-
-# Announcing Prometheus Metrics from Fn
-
-
-## Try out the Fn metrics endpoint
-
-All you need is an Fn server running at this stage. Start a Fn server:
-
-    fn start
-
-Now create and deploy a function. Here we simply deploy a simple sync function, but you can use any functions you like.
-
-First use the `fn` CLI tool to create a simple boilerplate function:
-
-    mkdir myfunc
-    
-    cd myfunc
-    
-    fn init --name myfunc --runtime go
-
-This creates a file `func.go` which simply returns “Hello World!. Modify this to add a short sleep, to make it a bit more realistic. The lines you need to add are marked with `// <---- add this` below
-
-Now build and deploy the function:
-
-    fn deploy --local --app myapp
-
-Invoke the function a few times:
-
-    curl localhost:8080/r/myapp/myfunc
-    
-    curl localhost:8080/r/myapp/myfunc
-    
-    curl localhost:8080/r/myapp/myfunc
-    
-    curl localhost:8080/r/myapp/myfunc
-
-Now type the following to see what is returned by the Prometheus metrics endpoint.
-
-    curl  --silent http://localhost:8080/metrics | grep fn_completed
-
-This will return something like
-
-    # HELP fn_completed Metric fn_completed
-    # TYPE fn_completed counter
-    fn_completed{fn_appname="myapp",fn_path="/myfunc"} 4
-
-The endpoint returns a long list of metric names and their current values, so we used `grep` to display only the values of the metric `fn_completed`.
-
-This particular metric gives you the number of times a function has run successfully since the server was last started. `fn_appname` and `fn_path` are *labels* which provide more information about a particular metric value. Almost all the metrics provided by Fn are given labels to specify the application and the route (path) of the function.
-
 ## Summary
 
 Congratulations! You have a working set up of Fn Grafana dashboards integrated with Prometheus and Fn server metrics. You can leave the setup running and keep checking the dashboards as you work on other tutorials. 
@@ -349,4 +314,4 @@ Congratulations! You have a working set up of Fn Grafana dashboards integrated w
 ## Learn more
 
 * Check the Grafana documentation to create your own custom dashboards to display the data that is important to you
-* If you enable tracing in the Fn server you can analyse these tracing spans using Zipkin. These same tracing spans are also used to generate duration metrics for Prometheus
+* If you enable tracing in the Fn server you can analyse these tracing spans using Zipkin. The same tracing spans are also used to generate duration metrics for Prometheus

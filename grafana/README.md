@@ -208,8 +208,8 @@ Import this dashboard in Grafana:
 >![user input](../images/userinput.png)
 >* Go to http://localhost:5000/dashboard/import  
 >* Click **Upload .json file** on the top right hand side of the screen and select the file `fn_grafana_dashboard2.json` from the the folder `<checked-out-dir>/tutorials/grafana`
-* Specify the Prometheus data source `PromDS` created above
-* Click **Import**
+>* Specify the Prometheus data source `PromDS` created above
+>* Click **Import**
 
 You should then see the *Fn tracing spans* Grafana dashboard showing `Operation durations`. When you first see the dashboard you will see just two graphs. This is the initial, default setting. There are two pull-down lists at the top:
 
@@ -219,8 +219,6 @@ You should then see the *Fn tracing spans* Grafana dashboard showing `Operation 
 In the following screenshot, the "Choose spans to display rates" dropdown has been used to select `agent_submit` and `serve_http`, and the "Choose spans to display durations" dropdown, has been used to select `agent_cold_exec`, `agent_get_slot`, `agent_submit`, `docker_create_container`, `docker_start_container` and `docker_wait_container`. 
 
 ![user input](images/GrafanaDashboard2.png)
-
-![](https://cdn-images-1.medium.com/max/1600/1*OIf_CUCidG7Uud6zCsNKng.png)
 
 The three most interesting metrics are:
 
@@ -254,32 +252,42 @@ The following metrics relate to more internal operations. These all have the lab
 * `fn_span_mq_reserve_duration_seconds`
 * `fn_span_serve_http_duration_seconds`
 
+## Dashboard 3: Docker Statistics Metrics
 
+The `Fn docker stats` dashboard demonstrates the third type of Prometheus metric provided by Fn server: docker statistics.
 
+Import this dashboard in Grafana:
 
+>![user input](../images/userinput.png)
+>* Go to http://localhost:5000/dashboard/import  
+>* Click **Upload .json file** on the top right hand side of the screen and select the file `fn_grafana_dashboard3.json` from the the folder `<checked-out-dir>/tutorials/grafana`
+>* Specify the Prometheus data source `PromDS` created above
+>* Click **Import**
 
+You should then see the `Fn docker stats` Grafana dashboard showing `Docker statistics`. Once again when you first display this dashboard it will display just one graph. Use the pull-down list at the top to select which particular metrics you desire. 
 
-## Docker statistics
-
-During the execution of the docker container, a selected number of statistics from docker are available as Prometheus metrics. The available metrics are listed in the following table:
-
-| Prometheus metric name |
-| ------------- |
-| `fn_docker_stats_cpu_kernel` |
-| `fn_docker_stats_cpu_kernel`  |
-| `fn_docker_stats_cpu_user` |
-| `fn_docker_stats_disk_read` |
-| `fn_docker_stats_disk_write` |
-| `fn_docker_stats_mem_limit` |
-| `fn_docker_stats_mem_usage` |
-| `fn_docker_stats_net_rx` |
-| `fn_docker_stats_net_tx` |
+>Note: If the container runs for a very short time there may be insufficient time to obtain statistics before the container terminates. So in your case you won’t see any metrics if your function is very quick then there is insufficient time for docker to obtain the statistics before the container in which the function was running is shut down. The Fn team has contemplated delaying the termination of the container until at least one set of statistics was obtained, but at present has decided not to do this.
  
- Note that if the container runs for a very short length of time there may be insufficient time to obtain statistics before the container terminates.
- 
-An example dashboard `fn_grafana_dashboard3.json` in this example's directory displays the available docker statistics. Use the dropdown lists at the top of the dashboard to choose which metrics to examine.
+Here's an example dashboard showing some docker stats:
 
-<img src="images/GrafanaDashboard3.png" width="100%">
+![user input](images/GrafanaDashboard3.png)
+
+![](https://cdn-images-1.medium.com/max/1600/1*5T47isXuH6KGO9v-0PLZ_A.png)
+
+
+Available metrics are:
+
+* `fn_docker_stats_cpu_kernel`
+* `fn_docker_stats_cpu_total`
+* `fn_docker_stats_cpu_user`
+* `fn_docker_stats_disk_read`
+* `fn_docker_stats_disk_write`
+* `fn_docker_stats_mem_limit`
+* `fn_docker_stats_mem_usage`
+* `fn_docker_stats_net_rx`
+* `fn_docker_stats_net_tx`
+
+As with the duration metrics these all have the labels `fn_appname` and `fn_path` set to the application and route (path).
 
 
 -------------
@@ -333,40 +341,7 @@ The endpoint returns a long list of metric names and their current values, so we
 
 This particular metric gives you the number of times a function has run successfully since the server was last started. `fn_appname` and `fn_path` are *labels* which provide more information about a particular metric value. Almost all the metrics provided by Fn are given labels to specify the application and the route (path) of the function.
 
-## Dashboard 3: Docker Statistics Metrics
-
-This last dashboard demonstrates the third type of Prometheus metric provided by Fn server: docker statistics.
-
-To try out this dashboard,
-
-* Click on the main menu at the top left and choose **Dashboards** and then
-**Import**
-* In the dialog that opens, click **Upload .json file**, navigate to `$GOPATH/src/github.com/fnproject/fn/examples/grafana` and select `fn_grafana_dashboard3.json`.
-* Specify the Prometheus data source that you created earlier
-* Click **Import**
-
-![](https://cdn-images-1.medium.com/max/1600/1*5T47isXuH6KGO9v-0PLZ_A.png)
-<span class="figcaption_hack">Docker statistics</span>
-
-Once again when you first display this dashboard it will display just one graph. Use the pull-down list at the top to select which particular metrics you desire.
-
-Available metrics are
-
-* `fn_docker_stats_cpu_kernel`
-* `fn_docker_stats_cpu_total`
-* `fn_docker_stats_cpu_user`
-* `fn_docker_stats_disk_read`
-* `fn_docker_stats_disk_write`
-* `fn_docker_stats_mem_limit`
-* `fn_docker_stats_mem_usage`
-* `fn_docker_stats_net_rx`
-* `fn_docker_stats_net_tx`
-
-As with the duration metrics these all have the labels `fn_appname` and `fn_path` set to the application and route (path).
-
-If you try this with your own functions it is possible that you won’t see any metrics. This might be because your function is very quick then there is insufficient time for docker to obtain the statistics before the container in which the function was running is shut down. The Fn team has contemplated delaying the termination of the container until at least one set of statistics was obtained, but at present has decided not to do this.
-
-## Create your own dashboard
+## Summary
 
 The three dashboards provided with Fn are intended to showcase the wide variety of Prometheus metrics currently available from the Fn server. Using Grafana it’s easy to create your own dashboards which display the data that is important to you.
 

@@ -15,7 +15,7 @@ Below is a sample Grafana dashboard showing some Fn server metrics:
 ## Prerequisites
 
 * Make sure you have cloned the GitHub repo `fnproject/tutorials`
-* Make sure you are in the folder `<checked-out-dir>/tutorials/graphana` while executing the docker commands below
+* Make sure you are in the folder `<checked-out-dir>/tutorials/grafana` while executing the docker commands below
 * Make sure you have Docker 17.05 or later installed and running
 * Make sure you have `fn` command-line tool installed. If you don't have `fn` installed follow the instructions in the tutorial [Introduction](../Introduction).
 

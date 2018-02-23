@@ -42,10 +42,7 @@ Prometheus has a powerful API and query syntax which can be used to obtain value
 
 ## Start Prometheus
 
->![user input](../images/userinput.png)
->Open a terminal window.
-
-Navigate to the directory containing this example.
+Open a terminal window and navigate to the directory containing this example.
 
 >![user input](../images/userinput.png)
 >```shell
@@ -86,7 +83,7 @@ This shows the contents of `prometheus.yml` file
 
 The last line ` - targets: ... ` specifies the host and port of the Fn server from which metrics will be obtained. *Note:The name `fnserver` used in this example is defined below in the docker command to start Prometheus server.* If you are running a cluster of Fn servers then you can specify them all here.
 
-Check output of the following docker command. This is used in subsequent docker commands to map the docker IP address to the hostname `fnserver`.
+Check output of the following docker command. This is used in subsequent docker commands to map the docker IP address to the hostnames `fnserver` and `prometheus`.
 
 >![user input](../images/userinput.png)
 >```shell
@@ -113,32 +110,36 @@ Note: This command uses the parameter `--add-host` to define a hostname `fnserve
 
 Open a browser on Prometheus's graph tool at [http://localhost:9090/graph](http://localhost:9090/graph). 
 
-While Prometheus can display tables and graphs of metrics data, it is usually used in conjunction with another popular tool called [Grafana](https://grafana.com/) that fetches data from Prometheus, displays multiple metrics using graphical dashboards and can also generate alerts.
+While Prometheus can display tables and graphs of metrics data, it is usually used in conjunction with another popular data visualization tool called Grafana.
 
 ## Introducing Grafana
 
-Now let’s take a look at Grafana. This is another server process, also open source. It has a web interface that you can use to create custom dashboards that pull data from Prometheus (using the full power of the Prometheus query API to perform statistical transformations) and display it graphically to the user.
+[Grafana](https://grafana.com/) is a popular open source data visualization tool. It is another server process. It has a web interface to create custom dashboards that pull data from Prometheus (using the full power of the Prometheus query API to perform statistical transformations), display multiple metrics using graphical dashboards and can also generate alerts.  
 
-Fn comes with a number of pre-defined dashboards which showcase all the various metrics provided by the Fn server.
+Grafana provides powerful and flexible facilities to create graphs of any metric available to Prometheus. This example provides a ready-made dashboard that displays the numbers of functions that are queued, running, completed and failed. 
+
+Fn comes with a number of pre-defined dashboards which showcase the various metrics provided by the Fn server.
 
 ## Start Grafana and load the example dashboard
 
-[Grafana](https://grafana.com/) provides powerful and flexible facilities to create graphs of any metric available to Prometheus. This example provides a ready-made dashboard that displays the numbers of functions that are queued, running, completed and failed. 
+From the same terminal window and the same directory as above, start Grafana on port 5000:
 
-Open a terminal window and navigate to the directory containing this example.
+>![user input](../images/userinput.png)
+>```shell
+>```
+>docker run --name=grafana -d -p 5000:3000 \
+>  --add-host="prometheus:`docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}'`" \
+>  grafana/grafana
+>```
 
-Start Grafana on port 5000:
-```
-docker run --name=grafana -d -p 5000:3000 \
-  --add-host="prometheus:`docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}'`" \
-  grafana/grafana
-```
+>![user input](../images/userinput.png)
+>Open a browser on Grafana at [http://localhost:5000](http://localhost:5000).
 
-Open a browser on Grafana at [http://localhost:5000](http://localhost:5000).
+>![user input](../images/userinput.png)
+>Login using the default user `admin` and default password `admin`.
 
-Login using the default user `admin` and default password `admin`.
-
-Create a datasource to obtain metrics from Promethesus:
+>![user input](../images/userinput.png)
+>Create a datasource to obtain metrics from Prometheus:
 * Click on **Add data source**. In the form that opens:
 * Set **Name** to `PromDS` (or whatever name you choose)
 * Set **Type** to `Prometheus`
@@ -146,7 +147,8 @@ Create a datasource to obtain metrics from Promethesus:
 * Set **Access** to `proxy`
 * Click **Add** and then **Save and test**
 
-Import the example dashboard that displays metrics from the Fn server:
+>![user input](../images/userinput.png)
+>Import the example dashboard that displays metrics from the Fn server:
 * Click on the main menu at the top left and choose **Dashboards** and then **Import**
 * In the dialog that opens, click **Upload .json file** and specify `fn_grafana_dashboard.json` in this example's directory.
 * Specify the Prometheus data source that you just created

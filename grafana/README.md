@@ -331,3 +331,6 @@ Congratulations! You have a working set up of Fn Grafana dashboards integrated w
 
 * Check the Grafana documentation to create your own custom dashboards to display the data that is important to you
 * If you enable tracing in the Fn server you can analyse these tracing spans using Zipkin. The same tracing spans are also used to generate duration metrics for Prometheus
+
+**Go:** [Back to Contents](../README.md) and proceed to the next tutorial.
+

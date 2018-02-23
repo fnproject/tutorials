@@ -1,24 +1,23 @@
-# Display runtime metrics using Prometheus and Grafana
+# Display Fn runtime metrics using Prometheus and Grafana
 
 This tutorial is based on [Nigel Deakin's "Announcing Prometheus Metrics from Fn" blog post](https://medium.com/fnproject/announcing-prometheus-metrics-from-fn-2d0f9ddf0f09).
 
-The Fn server has built-in support to export metrics. This allows you to obtain information about the Fn server's performance and resource consumption and make this information available to other tools to display and analyse.
-
-In this tutorial we will use Prometheus and see what kind of information the Fn server makes available to it. We will briefly look at how it works before seeing how you can use Prometheus in conjunction with Grafana to display dynamic graphs that show how your Fn server is performing. 
+The Fn server exposes metrics i.e. information about it's performance and resource consumption. This information can be easily made available to monitoring tools to display and analyze the server performance. In this tutorial we will use popular monitoring tools Grafana and Prometheus to visualize Fn server metrics. 
 
 Below is a sample Grafana dashboard showing some Fn server metrics:
 
-<img src="images/GrafanaDashboard.png" width="800">
+![user input](images/GrafanaDashboard.png)
 
 ## Before you begin
 
 > As you make your way through this tutorial, look out for this icon ![](../images/userinput.png). Whenever you see it, it's time for you to perform an action.
 
-## Initial Setup
+## Prerequisites
 
-* Docker 17.05 or later should be installed and running
-* Install the `fn` command-line tool. There are instructions in the [README](https://github.com/fnproject/fn/blob/master/README.md).
-* Clone the GitHub repo `fnproject/fn` to get the examples you need: install go from [golang.org](https://golang.org/), set `$GOPATH`to the directory where you want to place the clone, and then type `go get github.com/fnproject/fn` . This will create a directory `$GOPATH/src/github.com/fnproject/fn`. We’ll assume this location later, so if you perform the clone using git you’ll need to adjust the instructions appropriately.
+* Make sure you have cloned the GitHub repo `fnproject/tutorials`
+* Make sure you are in the folder `<checked-out-dir>/tutorials/graphana` while executing the docker commands below
+* Make sure you have Docker 17.05 or later installed and running
+* Make sure you have `fn` command-line tool installed. If you don't have `fn` installed follow the instructions in the tutorial [Introduction](../Introduction).
 
 ## Start an Fn server and deploy some functions
 

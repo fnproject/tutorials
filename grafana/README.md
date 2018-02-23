@@ -4,10 +4,6 @@ This tutorial is based on [Nigel Deakin's "Announcing Prometheus Metrics from Fn
 
 The Fn server exposes metrics i.e. information about it's performance and resource consumption. This information can be easily made available to monitoring tools to display and analyze the server performance. In this tutorial we will use popular monitoring tools Grafana and Prometheus to visualize Fn server metrics. 
 
-Below is a sample Grafana dashboard showing some Fn server metrics:
-
-![user input](images/GrafanaDashboard.png)
-
 ## Before you begin
 
 * Make sure you have cloned the GitHub repo `fnproject/tutorials`
@@ -174,15 +170,13 @@ Import the dashboard that displays metrics from the Fn server:
 >* Select the Prometheus data source `PromDS` created above
 >* Click **Import**
 
-You should then see the following dashboard showing `Function counts: queued, running, completed, failed`:
-
-![user input](images/GrafanaDashboard.png)
-
-Now invoke your function a few more times and see the graphs update. 
+You should then see the *Fn usage* Grafana dashboard showing `Function counts: queued, running, completed, failed`. Now invoke your function a few more times and see the graphs update. 
 
 >![user input](../images/userinput.png)
 >
 >Try invoking your function repeatedly using the following simple script. Paste it into an empty file `run.bash` and then type `bash run.bash`. Let it run whilst you watch the graphs update.
+
+![user input](images/GrafanaDashboard.png)
 
 This dashboard shows the four “function count” metrics. From left to right, these are:
 

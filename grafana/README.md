@@ -4,6 +4,8 @@ This tutorial is based on [Nigel Deakin's "Announcing Prometheus Metrics from Fn
 
 The Fn server exposes metrics i.e. information about it's performance and resource consumption. This information can be easily made available to monitoring tools to display and analyze the server performance. In this tutorial we will use popular monitoring tools Grafana and Prometheus to visualize Fn server metrics. 
 
+![architecture-fn-metrics-prometheus-grafana](images/fn-metrics-prometheus-grafana.gif)
+
 ## Before you begin
 
 * Make sure you have cloned the GitHub repo `fnproject/tutorials`
@@ -192,7 +194,6 @@ For each type of metric, the dashboard displays two separate graphs, one above t
 
 This demonstrates how there is more to using Prometheus than simply displaying a metric. It allows you to perform various statistical transformations on the raw data, performing a `sum` in this case.
 
-
 ## Dashboard 2: Operation Duration Metrics
 
 The `Fn tracing spans` dashboard demonstrates the second type of Prometheus metric provided by the Fn server: operation durations. These tell you how much time was taken to perform various internal operations such as executing a function. These operations are actually tracing spans. Fn uses the [Open Tracing](http://opentracing.io/) API to create tracing spans for various important operations.
@@ -343,24 +344,9 @@ This particular metric gives you the number of times a function has run successf
 
 ## Summary
 
-The three dashboards provided with Fn are intended to showcase the wide variety of Prometheus metrics currently available from the Fn server. Using Grafana it’s easy to create your own dashboards which display the data that is important to you.
-
-![](https://cdn-images-1.medium.com/max/1600/1*_eUYzGBPvDEr1AMa_OvjYg.gif)
-<span class="figcaption_hack">Fn, Prometheus and Grafana</span>
-
-## What’s Next
-
-* More metrics! We’re adding additional metrics to Fn all the time. For example we’ll be soon be adding metrics allow you to see how many running, stopped and paused Docker containers you have.
-* API extensions: Work is in progress on a new extension API which will provide the most useful statistics directly from the Fn server without the need to access Prometheus directly. See [GitHub issue 514](https://github.com/fnproject/fn/issues/514) for details.
-* If you build your own dashboard, share it! Add it alongside the existing examples and submit a pull request.
+Congratulations! You have a working set up of Fn Grafana dashboards integrated with Prometheus and Fn server metrics. You can leave the setup running and keep checking the dashboards as you work on other tutorials. 
 
 ## Learn more
 
-* If you wish you can use this tool to display metrics from the Fn server see the [Prometheus](https://prometheus.io/) documentation for instructions. Alternatively continue with the next step to view a ready-made set of graphs in Grafana.
-
-* If you enable tracing in your Fn server (and we’re not going to discuss this further here) you can analyse these tracing spans using Zipkin. All you need to know is that these same tracing spans are also used to generate duration metrics for Prometheus.
-
-
-
-
-
+* Check the Grafana documentation to create your own custom dashboards to display the data that is important to you
+* If you enable tracing in the Fn server you can analyse these tracing spans using Zipkin. These same tracing spans are also used to generate duration metrics for Prometheus

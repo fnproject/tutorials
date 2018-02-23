@@ -108,7 +108,9 @@ Now start Prometheus, specifying the above config file.
 
 Note: This command uses the parameter `--add-host` to define a hostname `fnserver` in the docker container and configure it to use the IP address on which the Fn server is listening.
 
-Open a browser on Prometheus's graph tool at [http://localhost:9090/graph](http://localhost:9090/graph). 
+>![user input](../images/userinput.png)
+>
+>Open a browser on Prometheus's graph tool at [http://localhost:9090/graph](http://localhost:9090/graph). 
 
 While Prometheus can display tables and graphs of metrics data, it is usually used in conjunction with another popular data visualization tool called Grafana.
 
@@ -126,26 +128,27 @@ From the same terminal window and the same directory as above, start Grafana on 
 
 >![user input](../images/userinput.png)
 >```shell
->```
 >docker run --name=grafana -d -p 5000:3000 \
 >  --add-host="prometheus:`docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}'`" \
 >  grafana/grafana
 >```
 
 >![user input](../images/userinput.png)
+>
 >Open a browser on Grafana at [http://localhost:5000](http://localhost:5000).
 
 >![user input](../images/userinput.png)
+>
 >Login using the default user `admin` and default password `admin`.
 
 >![user input](../images/userinput.png)
 >Create a datasource to obtain metrics from Prometheus:
-* Click on **Add data source**. In the form that opens:
-* Set **Name** to `PromDS` (or whatever name you choose)
-* Set **Type** to `Prometheus`
-* Set **URL** to `http://prometheus:9090` 
-* Set **Access** to `proxy`
-* Click **Add** and then **Save and test**
+>* Click on **Add data source**. In the form that opens:
+>* Set **Name** to `PromDS` (or whatever name you choose)
+>* Set **Type** to `Prometheus`
+>* Set **URL** to `http://prometheus:9090` 
+>* Set **Access** to `proxy`
+>* Click **Add** and then **Save and test**
 
 >![user input](../images/userinput.png)
 >Import the example dashboard that displays metrics from the Fn server:

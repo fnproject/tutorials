@@ -10,27 +10,16 @@ Below is a sample Grafana dashboard showing some Fn server metrics:
 
 ## Before you begin
 
-> As you make your way through this tutorial, look out for this icon ![](../images/userinput.png). Whenever you see it, it's time for you to perform an action.
-
-### Prerequisites
-
 * Make sure you have cloned the GitHub repo `fnproject/tutorials`
 * Make sure you are in the folder `<checked-out-dir>/tutorials/grafana` while executing the docker commands below
 * Make sure you have Docker 17.05 or later installed and running
-* Make sure you have `fn` CLI tool installed. If you don't have `fn` installed follow the instructions to download and install Fn from the tutorial [Introduction](../Introduction#downloading-and-installing-fn).
-* Make sure you have `Fn server` running. If it's not running follow the instructions to start the Fn server from the tutorial [Introduction](../Introduction#starting-fn-server)
+* Make sure you have `fn` CLI tool installed. If you don't have `fn` installed, follow the instructions to **download and install Fn** from the tutorial [Introduction](../Introduction#downloading-and-installing-fn)
+* Make sure you have `Fn server` up and running. If it's not running, follow the instructions to **start the Fn server** from the tutorial [Introduction](../Introduction#starting-fn-server)
 
-## Start an Fn server and deploy some functions
+> As you make your way through this tutorial, look out for this icon ![](../images/userinput.png). Whenever you see it, it's time for you to perform an action.
 
-Start an fn server
 
-```sh
-fn start
-```
-Deploy one or more functions as required.
-See the [front page](/README.md) or any of the other examples for instructions. 
-
-## What metrics does Fn provide?
+## Which metrics does Fn provide?
 
 Currently Fn provides three sets of metrics. We’ll see all three sets of metrics in action later.
 

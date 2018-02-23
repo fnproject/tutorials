@@ -19,7 +19,7 @@ Below is a sample Grafana dashboard showing some Fn server metrics:
 > As you make your way through this tutorial, look out for this icon ![](../images/userinput.png). Whenever you see it, it's time for you to perform an action.
 
 
-## Which metrics does Fn provide?
+## Which metrics does Fn expose?
 
 Currently Fn provides three sets of metrics. We’ll see all three sets of metrics in action later.
 
@@ -27,7 +27,7 @@ Currently Fn provides three sets of metrics. We’ll see all three sets of metri
 * Operation durations: these represent the time taken to perform various operations. In addition to obtaining the time taken to execute a function, you can also obtain finer-grained data such as the time taken to start the docker container in which it runs.
 * Docker metrics: when Fn executes a function in a Docker container it obtains various statistics from that container, such as CPU and memory usage, and makes them available as Prometheus metrics.
 
-## How does Fn provide metrics?
+## How does Fn expose metrics?
 
 Fn makes metrics available using a special API endpoint. The Fn metrics endpoint is `http://localhost:8080/metrics` by default. Although this endpoint is intended for use only by the Prometheus server, you can invoke it yourself to see how it works.
 

@@ -137,25 +137,30 @@ From the same terminal window and the same directory as above, start Grafana on 
 >
 >Open a browser on Grafana at [http://localhost:5000](http://localhost:5000).
 
->![user input](../images/userinput.png)
->
->Login using the default user `admin` and default password `admin`.
+Login using the default Grafana credentials:
 
 >![user input](../images/userinput.png)
->Create a datasource to obtain metrics from Prometheus:
->* Click on **Add data source**. In the form that opens:
+>
+>Enter user: `admin` and password: `admin`
+
+Create a datasource to obtain metrics from Prometheus:
+
+>![user input](../images/userinput.png)
+>* Click on **Add data source** 
+>In the form that opens:
 >* Set **Name** to `PromDS` (or whatever name you choose)
 >* Set **Type** to `Prometheus`
 >* Set **URL** to `http://prometheus:9090` 
 >* Set **Access** to `proxy`
 >* Click **Add** and then **Save and test**
 
+Import the example dashboard that displays metrics from the Fn server:
+
 >![user input](../images/userinput.png)
->Import the example dashboard that displays metrics from the Fn server:
-* Click on the main menu at the top left and choose **Dashboards** and then **Import**
-* In the dialog that opens, click **Upload .json file** and specify `fn_grafana_dashboard.json` in this example's directory.
-* Specify the Prometheus data source that you just created
-* Click **Import**
+>* Click on the main menu at the top left and choose **Dashboards** and then **Import**
+>* In the dialog that opens, click **Upload .json file** and specify `fn_grafana_dashboard.json` in this example's directory.
+>* Specify the Prometheus data source that you just created
+>* Click **Import**
 
 You should then see the dashboard shown above. Now execute some functions and see the graphs update.
 

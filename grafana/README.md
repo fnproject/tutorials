@@ -108,9 +108,11 @@ Now start Prometheus, specifying the above config file.
 
 Note: This command uses the parameter `--add-host` to define a hostname `fnserver` in the docker container and configure it to use the IP address on which the Fn server is listening.
 
+Go to the Prometheus web console in a browser window:
+
 >![user input](../images/userinput.png)
 >
->Open a browser on Prometheus's graph tool at [http://localhost:9090/graph](http://localhost:9090/graph). 
+>Open a browser and go to [http://localhost:9090/graph](http://localhost:9090/graph)
 
 While Prometheus can display tables and graphs of metrics data, it is usually used in conjunction with another popular data visualization tool called Grafana.
 
@@ -122,7 +124,7 @@ Grafana provides powerful and flexible facilities to create graphs of any metric
 
 Fn comes with a number of pre-defined dashboards which showcase the various metrics provided by the Fn server.
 
-## Start Grafana and load the example dashboard
+## Start Grafana
 
 From the same terminal window and the same directory as above, start Grafana on port 5000:
 
@@ -133,9 +135,11 @@ From the same terminal window and the same directory as above, start Grafana on 
 >  grafana/grafana
 >```
 
+Go to the Grafana web console in a browser window:
+
 >![user input](../images/userinput.png)
 >
->Open a browser on Grafana at [http://localhost:5000](http://localhost:5000).
+>Open a browser and go to [http://localhost:5000](http://localhost:5000)
 
 Login using the default Grafana credentials:
 
@@ -143,32 +147,62 @@ Login using the default Grafana credentials:
 >
 >Enter user: `admin` and password: `admin`
 
+## Configure Grafana to pull metrics from Prometheus
+
 Create a datasource to obtain metrics from Prometheus:
 
 >![user input](../images/userinput.png)
 >* Click on **Add data source** 
 >
 >In the form that opens:
->* Set **Name** to `PromDS` (or whatever name you choose)
+>* Set **Name** to `PromDS`
 >* Set **Type** to `Prometheus`
 >* Set **URL** to `http://prometheus:9090` 
 >* Set **Access** to `proxy`
->* Click **Add** and then **Save and test**
+>* Click **Add**
+>* Click **Save and test**
 
-Import the example dashboard that displays metrics from the Fn server:
+## Dashboard 1: Function Count Metrics
+
+The `Fn usage` dashboard demonstrates the first type of metric provided by Fn server: function counts.
+
+Import the dashboard that displays metrics from the Fn server:
 
 >![user input](../images/userinput.png)
->* Click on the main menu at the top left and choose **Dashboards** and then **Import**
->* In the dialog that opens, click **Upload .json file** and specify `fn_grafana_dashboard.json` in this example's directory.
->* Specify the Prometheus data source that you just created
+>* Go to http://localhost:5000/dashboard/import  
+>* Click **Upload .json file** on the top right hand side of the screen and select the file `fn_grafana_dashboard.json` from the the folder `<checked-out-dir>/tutorials/grafana`
+>* Select the Prometheus data source `PromDS` created above
 >* Click **Import**
 
-You should then see the dashboard shown above. Now execute some functions and see the graphs update.
+You should then see the following dashboard showing `Function counts: queued, running, completed, failed`:
+
+![user input](images/GrafanaDashboard.png)
+
+Now invoke your function a few more times and see the graphs update. 
+
+>![user input](../images/userinput.png)
+>
+>Try invoking your function repeatedly using the following simple script. Paste it into an empty file `run.bash` and then type `bash run.bash`. Let it run whilst you watch the graphs update.
+
+This dashboard shows the four “function count” metrics. From left to right, these are:
+
+* `fn_queued` number of async function calls that are queued
+* `fn_running` number of function calls that are currently running
+* `fn_completed` number of function calls that have completed successfully
+* `fn_failed` number of function calls that have failed
+
+For each type of metric, the dashboard displays two separate graphs, one above the other:
+
+* The graph at the bottom shows the raw data, which by default is subdivided by its app and route (path) labels. So you will see one line for each function
+* The graph at the top shows the result of performing a Prometheus `sum` expression that adds together the metric values for each function. So the graph shows just one line, the grand total for all functions
+
+This demonstrates how there is more to using Prometheus than simply displaying a metric. It allows you to perform various statistical transformations on the raw data, performing a `sum` in this case.
+
+
 
 ## Tracing metrics
 
-Tracing spans from the Fn server are available as Prometheus metrics. Each span represents a timed internal operation such as a function call, and has
-two main attributes: a name that describes the operation being performed (for example `docker_wait_container`), and its duration in seconds. Each span name is represented by a separate histogram metric, which has a name of the form `fn_span_<span-name>_duration_seconds`. 
+Tracing spans from the Fn server are available as Prometheus metrics. Each span represents a timed internal operation such as a function call, and has two main attributes: a name that describes the operation being performed (for example `docker_wait_container`), and its duration in seconds. Each span name is represented by a separate histogram metric, which has a name of the form `fn_span_<span-name>_duration_seconds`. 
 
 If the span is associated with a specific function invocation, the corresponding metric is given the labels `fn_app` and `fn_path` which are set to the application name and function path respectively.
 
@@ -251,63 +285,6 @@ This will return something like
 The endpoint returns a long list of metric names and their current values, so we used `grep` to display only the values of the metric `fn_completed`.
 
 This particular metric gives you the number of times a function has run successfully since the server was last started. `fn_appname` and `fn_path` are *labels* which provide more information about a particular metric value. Almost all the metrics provided by Fn are given labels to specify the application and the route (path) of the function.
-
-## Try out Prometheus
-
-Let’s first start a Prometheus server. You can do this very easily in docker:
-
-1.  The `-v` parameter is used to specify a Prometheus confguration file provided with one of the Fn examples. If you look at `${GOPATH}/src/github.com/fnproject/fn/examples/grafana/prometheus.yml` you will see that it tells Prometheus to scrape metrics from `fnserver:8080`
-
-2.  The hostname `fnserver`is an alias, configured using the parameter `--link fnserver` to refer to the running Fn server. This requires the Fn server to be running in docker.
-
-## Dashboard 1: Function Count Metrics
-
-This dashboard demonstrates the first type of Prometheus metric provided by Fn server: function counts.
-
-Start Grafana on port 5000:
-
-Open a browser on Grafana at [http://localhost:5000](http://localhost:5000/).
-
-Login using the default user `admin` and default password `admin`.
-
-Create a datasource to obtain metrics from Prometheus:
-
-* Click on **Add data source**. In the form that opens:
-* Set **Name** to `PromDS` (or whatever name you choose)
-* Set **Type** to `Prometheus`
-* Set **URL** to `http://prometheus:9090`
-* Set **Access** to `proxy`
-* Click **Add** and then **Save and test**
-
-Now import the example dashboard that displays metrics from the Fn server:
-
-* Click on the main menu at the top left and choose **Dashboards** and then
-**Import**
-* In the dialog that opens, click **Upload .json file**, navigate to `$GOPATH/src/github.com/fnproject/fn/examples/grafana` and select `fn_grafana_dashboard.json`.
-* Specify the Prometheus data source that you just created
-* Click **Import**
-
-You should then see the following dashboard. Now invoke your function a few more times and see the graphs update.
-
-![](https://cdn-images-1.medium.com/max/1600/1*kT08JgGMJHmy6fM4x610XQ.png)
-<span class="figcaption_hack">Function counts: queued, running, completed, failed</span>
-
-Try invoking your function repeatedly using the following simple script. Paste it into an empty file `run.bash` and then type `bash run.bash`. Let it run whilst you watch the graphs update.
-
-This dashboard shows the four “function count” metrics. From left to right, these are:
-
-* `fn_queued` number of async function calls that are queued
-* `fn_running` number of function calls that are currently running
-* `fn_completed` number of function calls that have completed successfully
-* `fn_failed` number of function calls that have failed
-
-For each type of metric, the dashboard displays two separate graphs, one above the other.
-
-The graph at the bottom shows the raw data, which by default is subdivided by its app and route (path) labels. So you will see one line for each function.
-
-The graph at the top shows the result of performing a Prometheus `sum` expression that adds together the metric values for each function. So the graph shows just one line, the grand total for all functions.
-
-This demonstrates how there is more to using Prometheus than simply displaying a metric. It allows you to perform various statistical transformations on the raw data, performing a `sum` in this case.
 
 ## Dashboard 2: Operation Duration Metrics
 

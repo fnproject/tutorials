@@ -1,13 +1,14 @@
 # Tutorials
 
-Each of the tutorials below provides a step by step
-examination and walkthrough of a specific Fn feature
-or component.  Check back soon as new tutorials
-are being added regularly.
+Each of the tutorials below provides a step by step examination and walkthrough of a specific Fn feature or component.  Check back soon as new tutorials are being added regularly.
 
 ## Introduction to Fn
 
 [Install Fn and deploy your first functions.](Introduction/README.md)
+
+## Fn metrics in Grafana and Prometheus
+
+[Learn how to view Fn server metrics with Grafana and Prometheus](grafana)
 
 ## Applications
 
@@ -34,10 +35,7 @@ define an Fn function using a custom built Docker containeer.](ContainerAsFuncti
 
 ## Troubleshooting Fn
 
-Sometimes things aren't working just how you'd like them and you'd like to
-figure out what's going on.  This tutorial focuses on [troubleshooting
-techniques](Troubleshooting/README.md) you can use to resolve issues at both 
-development and deployment time.
+Sometimes things aren't working just how you'd like them and you'd like to figure out what's going on.  This tutorial focuses on [troubleshooting techniques](Troubleshooting/README.md) you can use to resolve issues at both development and deployment time.
 
 ## Introducing Flow
 
@@ -49,8 +47,3 @@ Get started with Flow with
 ## Fn Flow Saga Pattern
 
 Fn Flow provides a way to orchestrate functions to build sophisticated applications--initially using Java and soon with other programming languages.  [In this tutorial you will learn how to use Fn Flow to implement a Java travel booking system that leverages functions written in a variety of languages.](FlowSaga)
-
-## Fn metrics in Grafana and Prometheus
-
-[In this tutorial, see how to use Grafana to visualize Prometheus format
-metrics that are produced by the Fn server.](grafana)

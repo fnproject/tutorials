@@ -172,7 +172,7 @@ Import the dashboard that displays metrics from the Fn server:
 >* Select the Prometheus data source `PromDS` created above
 >* Click **Import**
 
-You should then see the *Fn usage* Grafana dashboard showing `Function counts: queued, running, completed, failed`. Now invoke a function a number of times and see the graphs update. 
+You should then see the *Fn usage* Grafana dashboard showing `Function counts: queued, running, completed, failed`. Now invoke some function a number of times and see the graphs update. We have provided a sample function in the folder `<checked-out-dir>/tutorials/grafana/myfunc`.
 
 Change directory:
 
@@ -188,7 +188,7 @@ Now build and deploy the function:
 >fn deploy --local --app myapp
 >```
 
-You can invoke this function repeatedly using a simple script 'run.bash' file included in this `myfunc` folder.
+We have provided a simple script file 'run.bash' in the folder `<checked-out-dir>/tutorials/grafana/myfunc`. This script invokes our function 100 times.
 
 >![user input](../images/userinput.png)
 >```shell
@@ -238,6 +238,15 @@ You should then see the *Fn tracing spans* Grafana dashboard showing `Operation 
 
 In the following screenshot, the "Choose spans to display rates" dropdown has been used to select `agent_submit` and `serve_http`, and the "Choose spans to display durations" dropdown, has been used to select `agent_cold_exec`, `agent_get_slot`, `agent_submit`, `docker_create_container`, `docker_start_container` and `docker_wait_container`. 
 
+We have provided a simple script file 'run.bash' in the folder `<checked-out-dir>/tutorials/grafana/myfunc`. This script invokes our function 100 times.
+
+>![user input](../images/userinput.png)
+>```shell
+>bash run.bash
+>```
+
+Let it run whilst you watch the graphs update.
+
 ![user input](images/GrafanaDashboard2.png)
 
 The three most interesting metrics are:
@@ -286,12 +295,19 @@ Import this dashboard in Grafana:
 
 You should then see the `Fn docker stats` Grafana dashboard showing `Docker statistics`. Once again when you first display this dashboard it will display just one graph. Use the pull-down list at the top to select which particular metrics you desire. 
 
->Note: If the container runs for a very short time there may be insufficient time to obtain statistics before the container terminates. So in your case you won’t see any metrics if your function is very quick then there is insufficient time for docker to obtain the statistics before the container in which the function was running is shut down. The Fn team has contemplated delaying the termination of the container until at least one set of statistics was obtained, but at present has decided not to do this.
- 
-Here's an example dashboard showing some docker stats:
+We have provided a simple script file 'run.bash' in the folder `<checked-out-dir>/tutorials/grafana/myfunc`. This script invokes our function 100 times.
+
+>![user input](../images/userinput.png)
+>```shell
+>bash run.bash
+>```
+
+Let it run whilst you watch the graphs update.
 
 ![user input](images/GrafanaDashboard3.png)
 
+>Note: If the container runs for a very short time there may be insufficient time to obtain statistics before the container terminates. So you may not see any metrics if your function is very quick and hence there is insufficient time for docker to obtain the statistics before the container in which the function was running is shut down.
+ 
 Available metrics are:
 
 * `fn_docker_stats_cpu_kernel`

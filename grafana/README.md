@@ -170,11 +170,11 @@ Import the dashboard that displays metrics from the Fn server:
 >* Select the Prometheus data source `PromDS` created above
 >* Click **Import**
 
-You should then see the *Fn usage* Grafana dashboard showing `Function counts: queued, running, completed, failed`. Now invoke your function a few more times and see the graphs update. 
+You should then see the *Fn usage* Grafana dashboard showing `Function counts: queued, running, completed, failed`. Now invoke a function a number of times and see the graphs update. 
 
 >![user input](../images/userinput.png)
 >
->Try invoking your function repeatedly using the following simple script. Paste it into an empty file `run.bash` and then type `bash run.bash`. Let it run whilst you watch the graphs update.
+>You can also invoke your function repeatedly using the following simple script. Paste it into an empty file `run.bash` and then type `bash run.bash`. Let it run whilst you watch the graphs update.
 
 ![user input](images/GrafanaDashboard.png)
 
@@ -193,18 +193,71 @@ For each type of metric, the dashboard displays two separate graphs, one above t
 This demonstrates how there is more to using Prometheus than simply displaying a metric. It allows you to perform various statistical transformations on the raw data, performing a `sum` in this case.
 
 
+## Dashboard 2: Operation Duration Metrics
 
-## Tracing metrics
+The `Fn tracing spans` dashboard demonstrates the second type of Prometheus metric provided by the Fn server: operation durations. These tell you how much time was taken to perform various internal operations such as executing a function. These operations are actually tracing spans. Fn uses the [Open Tracing](http://opentracing.io/) API to create tracing spans for various important operations.
 
-Tracing spans from the Fn server are available as Prometheus metrics. Each span represents a timed internal operation such as a function call, and has two main attributes: a name that describes the operation being performed (for example `docker_wait_container`), and its duration in seconds. Each span name is represented by a separate histogram metric, which has a name of the form `fn_span_<span-name>_duration_seconds`. 
+Each span represents a timed internal operation such as a function call, and has two main attributes: a name that describes the operation being performed (for example `docker_wait_container`), and its duration in seconds. Each span name is represented by a separate histogram metric, which has a name of the form `fn_span_<span-name>_duration_seconds`.
 
 If the span is associated with a specific function invocation, the corresponding metric is given the labels `fn_app` and `fn_path` which are set to the application name and function path respectively.
 
-A second example dashboard `fn_grafana_dashboard2.json` in this example's directory displays rate and duration data for any number of spans. Use the dropdown lists at the top of the dashboard to choose which tracing spans to examine.
+There are several ways in which these metrics can be used. In this dashboard you can display either a rolling mean value of the operation duration, or you can display the operation rate in operations per second.
+
+Import this dashboard in Grafana:
+
+>![user input](../images/userinput.png)
+>* Go to http://localhost:5000/dashboard/import  
+>* Click **Upload .json file** on the top right hand side of the screen and select the file `fn_grafana_dashboard2.json` from the the folder `<checked-out-dir>/tutorials/grafana`
+* Specify the Prometheus data source `PromDS` created above
+* Click **Import**
+
+You should then see the *Fn tracing spans* Grafana dashboard showing `Operation durations`. When you first see the dashboard you will see just two graphs. This is the initial, default setting. There are two pull-down lists at the top:
+
+* The one on the left allows you to choose which operations you wish to display as rates
+* The one on the right allows you to choose which operations you wish to display as durations
 
 In the following screenshot, the "Choose spans to display rates" dropdown has been used to select `agent_submit` and `serve_http`, and the "Choose spans to display durations" dropdown, has been used to select `agent_cold_exec`, `agent_get_slot`, `agent_submit`, `docker_create_container`, `docker_start_container` and `docker_wait_container`. 
 
-<img src="images/GrafanaDashboard2.png" width="100%">
+![user input](images/GrafanaDashboard2.png)
+
+![](https://cdn-images-1.medium.com/max/1600/1*OIf_CUCidG7Uud6zCsNKng.png)
+
+The three most interesting metrics are:
+
+* `fn_span_agent_submit_duration_seconds`
+* `fn_span_agent_submit_app_duration_seconds`
+* `fn_span_agent_submit_global_duration_seconds`
+
+These operations all correspond to the time taken to execute a function. They represent the same operation, but the first has labels `fn_appname` and `fn_path` set to the application and route (path), the second has just the `fn_appname` label set, and the third has no labels. This makes it easier to construct Prometheus queries by removing the need to sum values across label values.
+
+The following metrics relate to more internal operations. These all have the labels `fn_appname` and `fn_path` set to the application and route (path).
+
+* `fn_span_agent_call_end_duration_seconds`
+* `fn_span_agent_call_start_duration_seconds`
+* `fn_span_agent_cold_exec_duration_seconds`
+* `fn_span_agent_get_slot_duration_seconds`
+* `fn_span_agent_attach_container_duration_seconds`
+* `fn_span_agent_collect_stats_duration_seconds`
+* `fn_span_agent_create_container_duration_seconds`
+* `fn_span_agent_inspect_container_duration_seconds`
+* `fn_span_agent_inspect_image_duration_seconds`
+* `fn_span_agent_remove_container_duration_seconds`
+* `fn_span_agent_start_container_duration_seconds`
+* `fn_span_agent_wait_container_duration_seconds`
+* `fn_span_ds_get_app_duration_seconds`
+* `fn_span_ds_get_route_duration_seconds`
+* `fn_span_ds_insert_app_duration_seconds`
+* `fn_span_ds_insert_call_duration_seconds`
+* `fn_span_ds_insert_log_duration_seconds`
+* `fn_span_ds_route_duration_seconds`
+* `fn_span_ds_update_route_duration_seconds`
+* `fn_span_mq_reserve_duration_seconds`
+* `fn_span_serve_http_duration_seconds`
+
+
+
+
+
 
 ## Docker statistics
 
@@ -280,65 +333,6 @@ The endpoint returns a long list of metric names and their current values, so we
 
 This particular metric gives you the number of times a function has run successfully since the server was last started. `fn_appname` and `fn_path` are *labels* which provide more information about a particular metric value. Almost all the metrics provided by Fn are given labels to specify the application and the route (path) of the function.
 
-## Dashboard 2: Operation Duration Metrics
-
-This dashboard demonstrates the second type of Prometheus metric provided by the Fn server: operation durations. These tell you how much time was taken to perform various internal operations such as executing a function.
-
-These operations are actually tracing spans. Fn uses the [Open Tracing](http://opentracing.io/) API to create tracing spans for various important operations.
-
-Each span represents a timed internal operation such as a function call, and has two main attributes: a name that describes the operation being performed (for example `docker_wait_container`), and its duration in seconds. Each span name is represented by a separate histogram metric, which has a name of the form `fn_span_<span-name>_duration_seconds`.
-
-If you enable tracing in your Fn server (and we’re not going to discuss this further here) you can analyse these tracing spans using Zipkin. All you need to know is that these same tracing spans are also used to generate duration metrics for Prometheus.
-
-If the span is associated with a specific function invocation, the corresponding metric is given the labels `fn_app` and `fn_path` which are set to the application name and function path respectively.
-
-There are several ways in which these metrics can be used. In this dashboard you can display either a rolling mean value of the operation duration, or you can display the operation rate in operations per second.
-
-To try out this dashboard,
-
-* Click on the main menu at the top left and choose **Dashboards** and then
-**Import**
-* In the dialog that opens, click **Upload .json file**, navigate to `$GOPATH/src/github.com/fnproject/fn/examples/grafana` and select `fn_grafana_dashboard2.json`.
-* Specify the Prometheus data source that you created earlier
-* Click **Import**
-
-![](https://cdn-images-1.medium.com/max/1600/1*OIf_CUCidG7Uud6zCsNKng.png)
-<span class="figcaption_hack">Operation durations</span>
-
-When you first display the dashboard you will see just two graphs. This is the initial, default setting. There are two pull-down lists at the top. Each allows you to choose which operations you wish to display as graphs. The one on the left allows you to choose which operations you wish to display as rates, whilst the one on the right allows you to choose which operations you wish to display as durations. Choose as many as you like.
-
-The three most interesting metrics are
-
-* `fn_span_agent_submit_duration_seconds`
-* `fn_span_agent_submit_app_duration_seconds`
-* `fn_span_agent_submit_global_duration_seconds`
-
-These operations all correspond to the time taken to execute a function. They represent the same operation, but the first has labels `fn_appname` and `fn_path` set to the application and route (path), the second has just the `fn_appname` label set, and the third has no labels. This makes it easier to construct Prometheus queries by removing the need to sum values across label values.
-
-The following metrics relate to more internal operations. These all have the labels `fn_appname` and `fn_path` set to the application and route (path).
-
-* `fn_span_agent_call_end_duration_seconds`
-* `fn_span_agent_call_start_duration_seconds`
-* `fn_span_agent_cold_exec_duration_seconds`
-* `fn_span_agent_get_slot_duration_seconds`
-* `fn_span_agent_attach_container_duration_seconds`
-* `fn_span_agent_collect_stats_duration_seconds`
-* `fn_span_agent_create_container_duration_seconds`
-* `fn_span_agent_inspect_container_duration_seconds`
-* `fn_span_agent_inspect_image_duration_seconds`
-* `fn_span_agent_remove_container_duration_seconds`
-* `fn_span_agent_start_container_duration_seconds`
-* `fn_span_agent_wait_container_duration_seconds`
-* `fn_span_ds_get_app_duration_seconds`
-* `fn_span_ds_get_route_duration_seconds`
-* `fn_span_ds_insert_app_duration_seconds`
-* `fn_span_ds_insert_call_duration_seconds`
-* `fn_span_ds_insert_log_duration_seconds`
-* `fn_span_ds_route_duration_seconds`
-* `fn_span_ds_update_route_duration_seconds`
-* `fn_span_mq_reserve_duration_seconds`
-* `fn_span_serve_http_duration_seconds`
-
 ## Dashboard 3: Docker Statistics Metrics
 
 This last dashboard demonstrates the third type of Prometheus metric provided by Fn server: docker statistics.
@@ -388,6 +382,10 @@ The three dashboards provided with Fn are intended to showcase the wide variety 
 ## Learn more
 
 * If you wish you can use this tool to display metrics from the Fn server see the [Prometheus](https://prometheus.io/) documentation for instructions. Alternatively continue with the next step to view a ready-made set of graphs in Grafana.
+
+* If you enable tracing in your Fn server (and we’re not going to discuss this further here) you can analyse these tracing spans using Zipkin. All you need to know is that these same tracing spans are also used to generate duration metrics for Prometheus.
+
+
 
 
 

@@ -50,7 +50,7 @@ Get started with Flow with
 
 Fn Flow provides a way to orchestrate functions to build sophisticated applications--initially using Java and soon with other programming languages.  [In this tutorial you will learn how to use Fn Flow to implement a Java travel booking system that leverages functions written in a variety of languages.](FlowSaga)
 
-## Prometheus and Grafana
+## Fn metrics in Grafana and Prometheus
 
 [In this tutorial, see how to use Grafana to visualize Prometheus format
 metrics that are produced by the Fn server.](grafana)

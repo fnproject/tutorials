@@ -147,6 +147,7 @@ Create a datasource to obtain metrics from Prometheus:
 
 >![user input](../images/userinput.png)
 >* Click on **Add data source** 
+>
 >In the form that opens:
 >* Set **Name** to `PromDS` (or whatever name you choose)
 >* Set **Type** to `Prometheus`

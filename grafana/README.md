@@ -243,16 +243,16 @@ You should then see the *Fn tracing spans* Grafana dashboard showing `Operation 
 
 In the following screenshot, the "Choose spans to display rates" dropdown has been used to select `agent_submit` and `serve_http`, and the "Choose spans to display durations" dropdown, has been used to select `agent_cold_exec`, `agent_get_slot`, `agent_submit`, `docker_create_container`, `docker_start_container` and `docker_wait_container`. 
 
-We have provided a simple script file 'run.bash' in the folder `<checked-out-dir>/tutorials/grafana/myfunc`. This script invokes our function 100 times.
+Now run the simple script file 'run.bash' in the folder `<checked-out-dir>/tutorials/grafana/myfunc`. This script invokes our function 100 times.
 
 >![user input](../images/userinput.png)
 >```shell
 >bash run.bash
 >```
 
-Let it run whilst you watch the graphs update.
+Let it run while you watch the graphs update.
 
-![user input](images/GrafanaDashboard2.png)
+![user input](images/GrafanaDashboard2-1.png)
 
 The three most interesting metrics are:
 
@@ -260,9 +260,9 @@ The three most interesting metrics are:
 * `fn_span_agent_submit_app_duration_seconds`
 * `fn_span_agent_submit_global_duration_seconds`
 
-These operations all correspond to the time taken to execute a function. They represent the same operation, but the first has labels `fn_appname` and `fn_path` set to the application and route (path), the second has just the `fn_appname` label set, and the third has no labels. This makes it easier to construct Prometheus queries by removing the need to sum values across label values.
+These operations all correspond to the time taken to execute a function. They represent the same operation, but the first has labels `fn_path` and `fn_appname` set to the route/path and application, the second has just the `fn_appname` label set, and the third has no labels. This makes it easier to construct Prometheus queries by removing the need to sum values across label values.
 
-The following metrics relate to more internal operations. These all have the labels `fn_appname` and `fn_path` set to the application and route (path).
+The following metrics relate to more internal operations. These all have the labels `fn_path` and `fn_appname` set to the route/path and application.
 
 * `fn_span_agent_call_end_duration_seconds`
 * `fn_span_agent_call_start_duration_seconds`
@@ -285,6 +285,10 @@ The following metrics relate to more internal operations. These all have the lab
 * `fn_span_ds_update_route_duration_seconds`
 * `fn_span_mq_reserve_duration_seconds`
 * `fn_span_serve_http_duration_seconds`
+
+Below is a **sample** `Fn tracing spans` Grafana Dashboard showing multiple functions over a longer time duration: 
+
+![user input](images/GrafanaDashboard2-1.png)
 
 ## Dashboard 3: Docker Statistics Metrics
 

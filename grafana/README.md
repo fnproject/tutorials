@@ -286,6 +286,8 @@ The following metrics relate to more internal operations. These all have the lab
 * `fn_span_mq_reserve_duration_seconds`
 * `fn_span_serve_http_duration_seconds`
 
+Note: In the Grafana dashboard we strip out the prefix `fn_span` and the suffix `_duration_seconds` from the metric name. This behaviour is defined in the dashboard JSON file.
+
 Below is a **sample** `Fn tracing spans` Grafana Dashboard showing multiple functions over a longer time duration: 
 
 ![user input](images/GrafanaDashboard2.png)

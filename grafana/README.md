@@ -295,6 +295,28 @@ Import this dashboard in Grafana:
 
 You should then see the `Fn docker stats` Grafana dashboard showing `Docker statistics`. Once again when you first display this dashboard it will display just one graph. Use the pull-down list at the top to select which particular metrics you desire. 
 
+From http://localhost:8080/metrics you can see the following metrics are available:
+
+>![user input](../images/userinput.png)
+>```shell
+>curl  --silent http://localhost:8080/metrics | grep 'Metric fn_docker'
+>```
+
+* `fn_docker_stats_fn_cpu_kernel`
+* `fn_docker_stats_fn_cpu_total`
+* `fn_docker_stats_fn_cpu_user`
+* `fn_docker_stats_fn_disk_read`
+* `fn_docker_stats_fn_disk_write`
+* `fn_docker_stats_fn_mem_limit`
+* `fn_docker_stats_fn_mem_usage`
+* `fn_docker_stats_fn_net_rx`
+* `fn_docker_stats_fn_net_tx`
+
+As with the duration metrics these all have the labels `fn_appname` and `fn_path` set to the application and route (path).
+
+
+
+
 We have provided a simple script file 'run.bash' in the folder `<checked-out-dir>/tutorials/grafana/myfunc`. This script invokes our function 100 times.
 
 >![user input](../images/userinput.png)
@@ -308,19 +330,6 @@ Let it run whilst you watch the graphs update.
 
 >Note: If the container runs for a very short time there may be insufficient time to obtain statistics before the container terminates. So you may not see any metrics if your function is very quick and hence there is insufficient time for docker to obtain the statistics before the container in which the function was running is shut down.
  
-Available metrics are:
-
-* `fn_docker_stats_cpu_kernel`
-* `fn_docker_stats_cpu_total`
-* `fn_docker_stats_cpu_user`
-* `fn_docker_stats_disk_read`
-* `fn_docker_stats_disk_write`
-* `fn_docker_stats_mem_limit`
-* `fn_docker_stats_mem_usage`
-* `fn_docker_stats_net_rx`
-* `fn_docker_stats_net_tx`
-
-As with the duration metrics these all have the labels `fn_appname` and `fn_path` set to the application and route (path).
 
 
 ## Summary

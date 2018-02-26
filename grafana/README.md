@@ -224,7 +224,7 @@ The `Fn tracing spans` dashboard demonstrates the second type of Prometheus metr
 
 Each span represents a timed internal operation such as a function call, and has two main attributes: a name that describes the operation being performed (for example `docker_wait_container`), and its duration in seconds. Each span name is represented by a separate histogram metric, which has a name of the form `fn_span_<span-name>_duration_seconds`.
 
-If the span is associated with a specific function invocation, the corresponding metric is given the labels `fn_app` and `fn_path` which are set to the application name and function path respectively.
+If the span is associated with a specific function invocation, the corresponding metric is given the labels `fn_path` and `fn_app` which are set to the function path and application name respectively e.g. `/myfunc (myapp)`.
 
 There are several ways in which these metrics can be used. In this dashboard you can display either a rolling mean value of the operation duration, or you can display the operation rate in operations per second.
 
@@ -238,10 +238,10 @@ Import this dashboard in Grafana:
 
 You should then see the *Fn tracing spans* Grafana dashboard showing `Operation durations`. When you first see the dashboard you will see just two graphs. This is the initial, default setting. There are two pull-down lists at the top:
 
-* The one on the left allows you to choose which operations you wish to display as rates
-* The one on the right allows you to choose which operations you wish to display as durations
+* `Choose spans to display rates`, on the left, allows you to choose which operations you wish to display as rates
+* `Choose spans to display durations`, on the right, allows you to choose which operations you wish to display as durations
 
-In the following screenshot, the "Choose spans to display rates" dropdown has been used to select `agent_submit` and `serve_http`, and the "Choose spans to display durations" dropdown, has been used to select `agent_cold_exec`, `agent_get_slot`, `agent_submit`, `docker_create_container`, `docker_start_container` and `docker_wait_container`. 
+In the following screenshot, the `Choose spans to display rates` dropdown has been used to select `agent_submit` and `serve_http`, and the `Choose spans to display durations` dropdown, has been used to select `agent_cold_exec`, `agent_get_slot`, `agent_submit`, `docker_create_container`, `docker_start_container` and `docker_wait_container`. 
 
 Now run the simple script file 'run.bash' in the folder `<checked-out-dir>/tutorials/grafana/myfunc`. This script invokes our function 100 times.
 
@@ -288,7 +288,8 @@ The following metrics relate to more internal operations. These all have the lab
 
 Below is a **sample** `Fn tracing spans` Grafana Dashboard showing multiple functions over a longer time duration: 
 
-![user input](images/GrafanaDashboard2-1.png)
+![user input](images/GrafanaDashboard2.png)
+
 
 ## Dashboard 3: Docker Statistics Metrics
 

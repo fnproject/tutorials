@@ -293,9 +293,9 @@ Import this dashboard in Grafana:
 >* Specify the Prometheus data source `PromDS` created above
 >* Click **Import**
 
-You should then see the `Fn docker stats` Grafana dashboard showing `Docker statistics`. Once again when you first display this dashboard it will display just one graph. Use the pull-down list at the top to select which particular metrics you desire. 
+You should then see the `Fn docker stats` Grafana dashboard showing `Docker statistics`. Once again when you first display this dashboard it will display just one graph. Use the pull-down list at the top to select which particular `docker stats` metrics you desire. 
 
-To view the available Fn docker stats:
+To view the available `Fn docker stats` metrics:
 
 >![user input](../images/userinput.png)
 >```shell
@@ -314,7 +314,7 @@ And you will see the following metrics:
 * `fn_docker_stats_fn_net_rx`
 * `fn_docker_stats_fn_net_tx`
 
-Note: In the Grafana dashboard we strip out the prefix `fn_docker_stats` from the metric name to make it look better. This behaviour is defined in the yaml file.
+Note: In the Grafana dashboard we strip out the prefix `fn_docker_stats` from the metric name. This behaviour is defined in the dashboard JSON file.
 
 Now run the script file 'run.bash' in the folder `<checked-out-dir>/tutorials/grafana/myfunc`. This script invokes our function 100 times.
 
@@ -323,13 +323,13 @@ Now run the script file 'run.bash' in the folder `<checked-out-dir>/tutorials/gr
 >bash run.bash
 >```
 
-Let it run whilst you watch the graphs update. All the metrics have the labels `fn_appname` and `fn_path` set to the application and route/path e.g. `/myfunc (myapp)` in the legend below each graph.
+Let it run while you watch the graphs update. All the metrics have the labels `fn_path` and `fn_appname` set to the route/path and application e.g. `/myfunc (myapp)` in the legend below each graph. You will see something like the following:
 
 ![user input](images/GrafanaDashboard3-1.png)
 
->Note: If the container runs for a very short time there may be insufficient time to obtain statistics before the container terminates. So you may not see any metrics if your function is very quick and hence there is insufficient time for docker to obtain the statistics before the container in which the function was running is shut down.
+>Note: If the container runs for a very short time there may be insufficient time to obtain statistics before the container terminates. So you may not see any metrics if your function is very quick and hence gives docker insufficient time to obtain the statistics before the container running your function shuts down.
  
-Below is a sample Grafana Dashboard showing multiple functions: 
+Below is a **sample** Grafana Dashboard showing multiple functions over a longer time duration: 
 
 ![user input](images/GrafanaDashboard3.png)
 

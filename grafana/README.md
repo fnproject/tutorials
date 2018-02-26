@@ -195,9 +195,9 @@ We have provided a simple script file 'run.bash' in the folder `<checked-out-dir
 >bash run.bash
 >```
 
-Let it run whilst you watch the graphs update.
+Let it run whilst you watch the graphs update. You will see something like this:
 
-![user input](images/GrafanaDashboard.png)
+![user input](images/GrafanaDashboard-1.png)
 
 This dashboard shows the four “function count” metrics. From left to right, these are:
 
@@ -212,6 +212,11 @@ For each type of metric, the dashboard displays two separate graphs, one above t
 * The graph at the top shows the result of performing a Prometheus `sum` expression that adds together the metric values for each function. So the graph shows just one line, the grand total for all functions
 
 This demonstrates how there is more to using Prometheus than simply displaying a metric. It allows you to perform various statistical transformations on the raw data, performing a `sum` in this case.
+
+Below is a **sample** `Fn usage` Grafana Dashboard showing multiple functions over a longer time duration: 
+
+![user input](images/GrafanaDashboard.png)
+
 
 ## Dashboard 2: Operation Duration Metrics
 
@@ -329,7 +334,7 @@ Let it run while you watch the graphs update. All the metrics have the labels `f
 
 >Note: If the container runs for a very short time there may be insufficient time to obtain statistics before the container terminates. So you may not see any metrics if your function is very quick and hence gives docker insufficient time to obtain the statistics before the container running your function shuts down.
  
-Below is a **sample** Grafana Dashboard showing multiple functions over a longer time duration: 
+Below is a **sample** `Fn docker stats` Grafana Dashboard showing multiple functions over a longer time duration: 
 
 ![user input](images/GrafanaDashboard3.png)
 

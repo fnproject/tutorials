@@ -79,7 +79,7 @@ This shows the contents of `prometheus.yml` file
         - targets: ['fnserver:8080'] # Uses /metrics by default
 ```
 
-The last line ` - targets: ... ` specifies the host and port of the Fn server from which metrics will be obtained. *Note:The name `fnserver` used in this example is defined below in the docker command to start Prometheus server.* If you are running a cluster of Fn servers then you can specify them all here.
+The last line ` - targets: ... ` specifies the host name and port of the Fn server from which metrics will be obtained. The name `fnserver` used in this example is defined below in the docker command to start Prometheus server. If you are running a cluster of Fn servers then you can specify them all here.
 
 Check output of the following docker command. This is used in subsequent docker commands to map the docker IP address to the hostnames `fnserver` and `prometheus`.
 

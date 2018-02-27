@@ -65,7 +65,9 @@ The func.js file is nothing special and simply reads from standard input
 and writes to standard output.  This is the standard Fn supported mechanism
 for functions to receive input and return output.  
 ['Hot Functions'](https://github.com/fnproject/fn/blob/master/docs/hot-functions.md)
-(not discussed in this tutorial) are slightly different.
+(not discussed in this tutorial) are slightly different.  
+
+![](images/userinput.png) Copy/paste the following into a file named `func.js`:
 
 ```javascript
 name = "World";
@@ -83,37 +85,36 @@ console.log("Hello", name, "from Node!");
 
 The `Dockerfile` for our function is also very simple.  It starts with
 a light alpine Node.js base image, copies the `func.js` into the image,
-and sets the entrypoint so that when the container is started the 
-`func.js` is run.  
+and sets the entrypoint so that when the container is started the
+`func.js` is run.
 
 NOTE: `func.js` has no required Node modules but if there were
-you would have to run `npm install` to download them to `node_modules` and
- then use `ADD` in the Dockerfile to include them in the generated image file.
+you would have to run `npm install` to download them to the 
+`/function/node_modules` folder in the generated image.
+
+![](images/userinput.png) In the same folder as the `func.js` file, copy/paste
+ the following into a file named `Dockerfile`:
 
 ```dockerfile
 FROM node:8-alpine
 
 WORKDIR /function
 
-# cli should forbid this name
 ADD func.js /function/func.js
 
-# Run the handler, with a payload in the future.
 ENTRYPOINT ["node", "./func.js"]
 ```
 
 ### Building the Function Image
 
-You build and run the image as you would any Docker image:
+In your working directory, build and run the image as you would any Docker image:
 
-1. Open a new terminal
-
-2. Build your function container image with `docker build`:
+1. Build your function container image with `docker build`:
 
    ![](images/userinput.png)
    >`docker build . -t <yourdockerid>/node-hello:0.0.1`
 
-3. Test the image by running it with no input:
+2. Test the image by running it with no input:
 
    ![](images/userinput.png)
    >`docker run --rm <yourdockerid>/node-hello:0.0.1`
@@ -123,7 +124,7 @@ You build and run the image as you would any Docker image:
    Hello World from Node!
    ```
 
-4. Test the image by running it with a name parameter:
+3. Test the image by running it with a name parameter:
 
    ![](images/userinput.png)
    >`echo -n "Jane" | docker run -i --rm <yourdockerid>/node-hello:0.0.1`
@@ -226,8 +227,7 @@ above.
 When the function is invoked, regardless of the mechanism, the Fn server 
 looks up the function image name and tag associated with the route and 
 has Docker run a container. If the required image is not already available
-locally then Docker will attempt to pull the image from the registry
-that was specified by the FN_REGISTRY environment variable.
+locally then Docker will attempt to pull the image from the Docker registry.
 
 In our local development scenario, the image is already on the local machine
 so you won't see a 'pull' message in the Fn server log.

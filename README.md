@@ -43,8 +43,8 @@ development and deployment time.
 
 Get started with Flow with 
 
-* [Flow 101](Flow101)
-* [Flow 102](Flow102)
+* [Flow 101](Flow101/README.md)
+* [Flow 102](Flow102/README.md)
 
 ## Fn Flow Saga Pattern
 

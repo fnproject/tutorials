@@ -24,14 +24,15 @@ Let's create a function and make it async:
 
 ![user input](../images/userinput.png)
 >```sh
->fn init --runtime go async
->cd async
+>fn init --runtime go asyncfn
+>cd asyncfn
 ```
 
 Now open `func.yaml` and add `type: async`, for example:
 
 ![user input](../images/userinput.png)
 >```yaml
+>name: asyncfn
 >type: async
 >version: 0.0.1
 >runtime: go
@@ -45,13 +46,13 @@ Now let's deploy it:
 >fn deploy --local --app myapp
 >```
 
-Now we've deployed it as an `async` function so when we call it, it will be queued up to run later.
+Now we've deployed it as an async function so when we call it, it will be queued up to run later.
 
-And call the async function:
+And call the asyncfn function:
 
 ![user input](../images/userinput.png)
 >```sh
->fn call myapp async
+>fn call myapp /asyncfn
 >```
 
 Now you'll get a response like:
@@ -76,7 +77,7 @@ You'll get something like the following:
 ```
 ID: 01BVJ5T7CA07WGE00000000000
 App: myapp
-Route: /async
+Route: /asyncfn
 Created At: 2017-10-03T22:31:01.258Z
 Started At: 2017-10-03T22:31:01.908Z
 Completed At: 2017-10-03T22:31:02.615Z

@@ -47,10 +47,11 @@ From a terminal type the following:
 >`curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh`
 
 Once installed you'll see the Fn version printed out.  You should see
-something similar to the following displayed (although likely with a later version number):
+something similar to the following displayed (although likely with a later 
+version number):
 
 ```sh
-fn version 0.4.23
+fn version 0.4.44
 ```
 
 ### Starting Fn Server
@@ -58,7 +59,7 @@ fn version 0.4.23
 The final install step is to start the Fn server.  Since Fn runs on
 Docker it'll need to be up and running too.
 
-To start Fn you can use the `fn` command line interface (cli).  Type the
+To start Fn you can use the `fn` command line interface (CLI).  Type the
 following but note that the process will run in the foreground so that
 it's easy to stop with Ctrl-C:
 
@@ -79,10 +80,25 @@ time="2017-09-18T14:37:13Z" level=info msg="Serving Functions API on address `:8
   /_/   /_/ /_/
 ```
 
-That's it!  The Fn cli is now installed and an Fn server instance
-is up and running. 
+Let's verify everthing is up and running correctly.
 
-Now open a new console to continue. 
+**Open a new terminal** and run the following:
+
+![user input](images/userinput.png)
+>`fn version`
+
+You should see the version of the fn CLI (client) and server displayed (your version will
+likely differ):
+
+```sh
+Client version:  0.4.44
+Server version:  0.3.335
+```
+
+If the server version is "?" then the fn CLI cannot reach the server.  If 
+this happens it's likely you have something else running on port 8080. In this
+case stop the other process, and stop (ctrl-c) and restart the fn server as
+described previously.
 
 ## Your First Function
 
@@ -93,14 +109,10 @@ machine as Fn provides the necessary Go compiler and tools as a Docker
 container.  Let's walk through your first function to become familiar
 with the process and how Fn supports development.
 
-Open a new terminal window and leave the Fn server running in the first
-terminal.
-
 Before we start developing we need to set the `FN_REGISTRY`
-environment variable.  Normally, it's set to your Docker repository and
-Docker Hub username.  However in this tutorial we'll work in local
-development mode so we can set the `FN_REGISTRY` variable to an invented
- value. Let's use `fndemouser`.
+environment variable.  Normally, it's set to your Docker Hub username.
+However in this tutorial we'll work in local development mode so we can set
+the `FN_REGISTRY` variable to an arbitrary value. Let's use `fndemouser`.
 
 ![user input](images/userinput.png)
 >`export FN_REGISTRY=fndemouser`
@@ -143,20 +155,21 @@ Let's use the `fn` CLI to initialize this function's configuration.
 > `fn init`
 
 ```sh
-Found go, assuming go runtime.
-func.yaml created
+Found go function, assuming go runtime.
+func.yaml created.
 ```
 
-`fn` found your `func.go` file and generated a `func.yaml` file with
-contents that should look like:
+`fn` found your `func.go` file and generated a `func.yaml` function 
+configuration file with contents that should look like:
 
 ```yaml
+name: hello
 version: 0.0.1
 runtime: go
 entrypoint: ./func
 ```
 
-You can see the file contents by typing:
+You can see the `func.yaml` contents by typing:
 
 ![user input](images/userinput.png)
 >cat func.yaml
@@ -170,11 +183,12 @@ declares a number of properties including:
 * the version--automatically starting at 0.0.1
 * the name of the runtime/language--which was set
 automatically based on the presence of `func.go`
-* the name of the executable to invoke when your function is called--in this case `./func` 
+* the name of the executable to invoke when your function is called,
+in this case `./func` 
 
 There are other user specifiable properties but these will suffice for
-this example.  Note that the name of your function is taken from the containing folder
-name.  We'll see this come into play later on.
+this example.  Note that the name of your function is taken from the containing
+folder name.  We'll see this come into play later on.
 
 
 ### Running Your First Function
@@ -196,8 +210,9 @@ Hello from Fn!
 The last line of output should be "Hello from Fn!" that was produced
 by the Go statement `fmt.Println("Hello from Fn!")`.
 
-If you ever want more details on what a given fn command is doing behind you can
-add the `--verbose` switch.  Let's rerun with verbose output enabled.
+If you ever want more details on what a given fn command is doing behind the
+scenes you can add the `--verbose` switch.  Let's rerun with verbose output
+enabled.
 
 ![user input](images/userinput.png)
 > `fn --verbose run`
@@ -209,25 +224,25 @@ Step 1/8 : FROM fnproject/go:dev as build-stage
  ---> 57ed8b626466
 Step 2/8 : WORKDIR /function
  ---> Using cache
- ---> 8ad76b29ee3c
+ ---> c83f43743f5c
 Step 3/8 : ADD . /go/src/func/
- ---> 06933e7075cd
+ ---> b0dcb987a280
 Step 4/8 : RUN cd /go/src/func/ && go build -o func
- ---> Running in 4a2c8e77aa59
-Removing intermediate container 4a2c8e77aa59
- ---> b905acf8480d
+ ---> Running in 494a060b5fdb
+Removing intermediate container 494a060b5fdb
+ ---> 6c89d2cf3a6d
 Step 5/8 : FROM fnproject/go
  ---> 10f82b0de851
 Step 6/8 : WORKDIR /function
  ---> Using cache
- ---> 670d3653760d
+ ---> a46fefe41a6c
 Step 7/8 : COPY --from=build-stage /go/src/func/func /function/
  ---> Using cache
- ---> c1d9cc37e6cd
+ ---> 7bb5e7dadecc
 Step 8/8 : ENTRYPOINT ["./func"]
  ---> Using cache
- ---> a1bae1313f8e
-Successfully built a1bae1313f8e
+ ---> 4738aa280fad
+Successfully built 4738aa280fad
 Successfully tagged fndemouser/hello:0.0.1
 
 Hello from Fn!
@@ -235,7 +250,7 @@ Hello from Fn!
 
 ### Understanding fn run
 
-If you have used Docker before the output of `fn run` should look
+If you have used Docker before the output of `fn --verbose run` should look
 familiar--it looks like the output you see when running `docker build`
 with a Dockerfile.  Of course this is exactly what's happening!  When
 you run a function like this Fn is dynamically generating a Dockerfile
@@ -252,7 +267,7 @@ Builds for Creating Tiny Go Images](https://medium.com/travis-on-docker/multi-st
 
 `fn run` is a local operation.  It builds and packages your function
 into a container image which resides on your local machine.  As Fn is
-built on Docker you can use the `docker` cli to see the local
+built on Docker you can use the `docker` command to see the local
 container image you just generated.
 
 You may have a number of Docker images so use the following command
@@ -289,7 +304,6 @@ Deploying hello to app: myapp at path: /hello
 Bumped to version 0.0.2
 Building image fndemouser/hello:0.0.2 ..
 Updating route /hello using image fndemouser/hello:0.0.2...
-
 ```
 
 Functions are grouped into applications so by specifying `--app myapp`
@@ -297,8 +311,8 @@ we're implicitly creating the application "myapp" and associating our
 function with it.
 
 Specifying `--local` does the deployment to the local server but does
-not push the function image to a registry--which would be necessary if
-we were deploying to a remote Fn server.
+not push the function image to a Docker registry--which would be necessary if
+we were deploying to a remote Fn server. 
 
 The output message
 `Updating route /hello using image fndemouser/hello:0.0.2`
@@ -307,19 +321,49 @@ let's us know that the function packaged in the image
 "/hello".  We'll see how to use the route below.
 
 Note that the containing folder name 'hello' was used as the name of the
-generated function container and used as the name of the route that 
+generated Docker container and used as the name of the route that
 container was bound to.
+
+The fn CLI provides a couple of commands to let us see what we've deployed.
+`fn apps list` returns a list of all of the defined applications. 
+
+![user input](images/userinput.png)
+> `fn apps list`
+
+Which, in our case, returns the name of the application we created when we
+deployed our hello function:
+
+```sh
+myapp
+```
+
+We can also see the functions that are defined by an application.  Since
+functions are exposed via routes, the `fn routes list <appname>` command
+is used.  To list the functions included in "myapp" we can type:
+
+![user input](images/userinput.png)
+>`fn routes list myapp`
+
+```sh
+path    image                   endpoint
+/hello  fndemouser/hello:0.0.2  localhost:8080/r/myapp/hello
+```
+
+The output confirms that myapp contains a `hello` function that is implemented
+by the Docker container `fndemouser/hello:0.0.2` which may be invoked via the
+specified URL.  Now that we've confirmed deployment was successsful, let's
+call our function.
 
 ## Calling Your Deployed Function
 
 There are two ways to call your deployed function.  The first is using
-the `fn` cli which makes invoking your function relatively easy.  Type
+the `fn` CLI which makes invoking your function relatively easy.  Type
 the following:
 
 ![user input](images/userinput.png)
 >`fn call myapp /hello`
 
-which results in our familiar message.
+which results in our familiar output message.
 
 ```sh
 Hello from Fn!
@@ -327,12 +371,12 @@ Hello from Fn!
 
 Of course this is unchanged from when you ran the function locally.
 However when you called "myapp /hello" the fn server looked up the
-"myapp" application and then looked for the function bound to the
-"/hello" route.
+"myapp" application and then looked for the Docker container image
+bound to the "/hello" route.
 
 The other way to call your function is via HTTP.  The Fn server
-exposes our deployed function at "http://localhost:8080/r/myapp/hello"
-using the application and route as path elements.
+exposes our deployed function at "http://localhost:8080/r/myapp/hello", a URL
+that incorporates our application and function route as path elements.
 
 Use curl to invoke the function:
 

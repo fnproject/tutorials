@@ -327,9 +327,9 @@ The fn CLI provides a couple of commands to let us see what we've deployed.
 `fn apps list` returns a list of all of the defined applications. 
 
 ![user input](images/userinput.png)
->fn apps list
+> `fn apps list`
 
-Which, in our case, returns the nane of the application we created when we
+Which, in our case, returns the name of the application we created when we
 deployed our hello function:
 
 ```sh
@@ -341,7 +341,7 @@ functions are exposed via routes, the `fn routes list <appname>` command
 is used.  To list the functions included in "myapp" we can type:
 
 ![user input](images/userinput.png)
->fn routes list myapp
+>`fn routes list myapp`
 
 ```sh
 path    image                   endpoint
@@ -350,7 +350,7 @@ path    image                   endpoint
 
 The output confirms that myapp contains a `hello` function that is implemented
 by the Docker container `fndemouser/hello:0.0.2` which may be invoked via the
-specified URL.  Now thate we've confirmed deployment was successsful, let's
+specified URL.  Now that we've confirmed deployment was successsful, let's
 call our function.
 
 ## Calling Your Deployed Function

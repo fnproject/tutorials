@@ -163,6 +163,7 @@ func.yaml created.
 configuration file with contents that should look like:
 
 ```yaml
+name: hello
 version: 0.0.1
 runtime: go
 entrypoint: ./func

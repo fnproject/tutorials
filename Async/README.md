@@ -32,6 +32,7 @@ Now open `func.yaml` and add `type: async`, for example:
 
 ![user input](../images/userinput.png)
 >```yaml
+>name: asyncfn
 >type: async
 >version: 0.0.1
 >runtime: go
@@ -45,7 +46,7 @@ Now let's deploy it:
 >fn deploy --local --app myapp
 >```
 
-Now we've deployed it as an `asyncfn` function so when we call it, it will be queued up to run later.
+Now we've deployed it as an async function so when we call it, it will be queued up to run later.
 
 And call the asyncfn function:
 

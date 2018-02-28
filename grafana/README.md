@@ -47,6 +47,13 @@ Open a terminal window and navigate to the directory containing this example.
 >cd <checked-out-dir>/tutorials/grafana
 >```
 
+Download the prometheus.yml from fn/examples/grafana
+
+>![user input](../images/userinput.png)
+>```shell
+>curl -L0 https://raw.githubusercontent.com/fnproject/fn/master/examples/grafana/prometheus.yml > prometheus.yml
+>```
+
 Examine the provided Prometheus configuration file:
 
 >![user input](../images/userinput.png)

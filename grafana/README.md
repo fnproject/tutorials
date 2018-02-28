@@ -47,6 +47,13 @@ Open a terminal window and navigate to the directory containing this example.
 >cd <checked-out-dir>/tutorials/grafana
 >```
 
+Download the prometheus.yml from fn/examples/grafana
+
+>![user input](../images/userinput.png)
+>```shell
+>curl -L0 https://raw.githubusercontent.com/fnproject/fn/master/examples/grafana/prometheus.yml > prometheus.yml
+>```
+
 Examine the provided Prometheus configuration file:
 
 >![user input](../images/userinput.png)
@@ -164,11 +171,18 @@ Create a datasource to obtain metrics from Prometheus:
 
 The `Fn usage` dashboard demonstrates the first type of metric provided by Fn server: function counts.
 
+In the folder `<checked-out-dir>/tutorials/grafana`, download the `fn_grafana_dashboard.json` from `fn/examples/grafana`
+
+>![user input](../images/userinput.png)
+>```shell
+>curl -L0 https://raw.githubusercontent.com/fnproject/fn/master/examples/grafana/fn_grafana_dashboard.json > fn_grafana_dashboard.json
+>```
+
 Import the dashboard that displays metrics from the Fn server:
 
 >![user input](../images/userinput.png)
 >* Go to http://localhost:5000/dashboard/import  
->* Click **Upload .json file** on the top right hand side of the screen and select the file `fn_grafana_dashboard.json` from the the folder `<checked-out-dir>/tutorials/grafana`
+>* Click **Upload .json file** on the top right hand side of the screen and select the file `fn_grafana_dashboard.json` from the folder `<checked-out-dir>/tutorials/grafana`
 >* Select the Prometheus data source `PromDS` created above
 >* Click **Import**
 
@@ -227,6 +241,13 @@ Each span represents a timed internal operation such as a function call, and has
 If the span is associated with a specific function invocation, the corresponding metric is given the labels `fn_path` and `fn_app` which are set to the function path and application name respectively e.g. `/myfunc (myapp)`.
 
 There are several ways in which these metrics can be used. In this dashboard you can display either a rolling mean value of the operation duration, or you can display the operation rate in operations per second.
+
+In the folder `<checked-out-dir>/tutorials/grafana`, download the `fn_grafana_dashboard2.json` from `fn/examples/grafana`
+
+>![user input](../images/userinput.png)
+>```shell
+>curl -L0 https://raw.githubusercontent.com/fnproject/fn/master/examples/grafana/fn_grafana_dashboard2.json > fn_grafana_dashboard2.json
+>```
 
 Import this dashboard in Grafana:
 
@@ -296,6 +317,13 @@ Below is a **sample** `Fn tracing spans` Grafana Dashboard showing multiple func
 ## Dashboard 3: Docker Statistics Metrics
 
 The `Fn docker stats` dashboard demonstrates the third type of Prometheus metric provided by Fn server: docker statistics.
+
+In the folder `<checked-out-dir>/tutorials/grafana`, download the `fn_grafana_dashboard3.json` from `fn/examples/grafana`
+
+>![user input](../images/userinput.png)
+>```shell
+>curl -L0 https://raw.githubusercontent.com/fnproject/fn/master/examples/grafana/fn_grafana_dashboard3.json > fn_grafana_dashboard3.json
+>```
 
 Import this dashboard in Grafana:
 

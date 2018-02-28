@@ -1,0 +1,26 @@
+/**
+ * Code formatting
+ */
+pre,
+code {
+  @include relative-font-size(0.9375);
+  border: 1px solid $grey-color-light;
+  border-radius: 3px;
+  background-color: #eef;
+}
+
+pre {
+  overflow-x: auto;
+
+}
+
+/**
+ * Blockquotes
+ */
+blockquote {
+  padding-left: 20px;
+  border-left: 4px solid lightgray;
+  /* padding-left: $spacing-unit / 2;*/
+  /* font-type: italic; */
+  letter-spacing: -1px;
+}

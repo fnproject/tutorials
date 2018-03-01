@@ -1,0 +1,13 @@
+title: Fn Tutorials
+theme: minima
+description: >- # this means to ignore newlines until "baseurl:"
+    This site provides tutorials on installing and using the Fn project to build
+    serverless applications.
+baseurl: /tutorials
+markdown: kramdown
+defaults:
+  -
+    scope:
+      path: "" # All files in the project
+    values:
+      layout: "tutorial"

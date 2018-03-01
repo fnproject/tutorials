@@ -11,7 +11,7 @@ In this tutorial we’ll use Fn Flow with the [saga pattern](http://www.cs.corne
 
 ## Before you begin
 
-We recommend you go through [Flow 101](../Flow101) and [Flow 102](../Flow102) to understand what Fn Flow is, how it works and what it's used for.
+We recommend you go through [Flow 101](../Flow101/README.md) and [Flow 102](../Flow102/README.md) to understand what Fn Flow is, how it works and what it's used for.
 
 > As you make your way through this tutorial, look out for this icon ![](../images/userinput.png). Whenever you see it, it's time for you to perform an action.
 

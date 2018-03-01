@@ -238,4 +238,4 @@ So, congratulations - we've covered a lot! You've got a Flow function running, s
 
 ## Learn more
 
-Go to the [Flow 102](../Flow102) tutorial to take your Flows to the next level.
+Go to the [Flow 102](../Flow102/README.md) tutorial to take your Flows to the next level.

@@ -6,10 +6,6 @@ Each of the tutorials below provides a step by step examination and walkthrough 
 
 [Install Fn and deploy your first functions.](Introduction/README.md)
 
-## Fn metrics in Grafana and Prometheus
-
-[Learn how to view Fn server metrics with Grafana and Prometheus](grafana/README.md)
-
 ## Applications
 
 [Learn how to group your functions into an application/API and deploy them together.](Apps/README.md) 
@@ -47,3 +43,7 @@ Get started with Flow with
 ## Fn Flow Saga Pattern
 
 Fn Flow provides a way to orchestrate functions to build sophisticated applications--initially using Java and soon with other programming languages.  [In this tutorial you will learn how to use Fn Flow to implement a Java travel booking system that leverages functions written in a variety of languages.](FlowSaga/README.md)
+
+## Fn metrics in Grafana and Prometheus
+
+[Learn how to view Fn server metrics with Grafana and Prometheus](grafana/README.md)

@@ -22,30 +22,29 @@ can find instructions in the
 
 # Getting Started
 
-Let's start by creating a new function.  In a terminal type the
-following and note the runtime value is **java8**, not just java.  "java"
-defaults to Java 9 but this lab uses Java 8.
+Let's start by creating a new function.  In a terminal type the following:
 
 ![](images/userinput.png)
->`mkdir javafn`
-
-> `cd javafn`
-
->`fn init --runtime java`
+>`fn init --runtime java javafn`
 
 The output will be:
+
 ```sh
+Creating function at: /javafn
 Runtime: java
 Function boilerplate generated.
 func.yaml created.
 ```
+
+![](images/userinput.png)
+> `cd javafn`
 
 The `fn init` command creates an simple function with a bit of boilerplate to get you
 started. The `--runtime` option is used to indicate that the function
 we're going to develop will be written in Java 9, the default version
 as of this writing. A number of other runtimes are also supported.  
 
-If you have the `tree` utility installed
+__If__ you have the `tree` utility installed
 you can see the directory structure that the `init` command has created.
 
 ![](images/userinput.png)

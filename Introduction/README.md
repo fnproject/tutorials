@@ -152,7 +152,7 @@ of arguments and this is explored in other Fn tutorials.
 Let's use the `fn` CLI to initialize this function's configuration.
 
 ![user input](images/userinput.png)
-> `fn init`
+> `fn init --runtime go hello`
 
 ```sh
 Found go function, assuming go runtime.

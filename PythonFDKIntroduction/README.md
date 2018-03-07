@@ -33,6 +33,8 @@ Fn will serve the requests through STDIN and wait on STDOUT for the response and
 In order to make a developer’s life simpler, the Fn team developed a set of libraries for different programming languages like Java, Python, Node, and Go. 
 The main goal of the FDK is to let developers focus on their functions and hide all routine complexities underneath.
 
+Please note that FDK-Python supports only JSON format.
+
 # Create function's boilerplate
 
 >`mkdir pythonfn`
@@ -44,6 +46,7 @@ The main goal of the FDK is to let developers focus on their functions and hide 
 The output will be:
 ```sh
 Runtime: python3.6
+Function boilerplate generated.
 func.yaml created.
 ```
 After that you need to create two files with the following content:
@@ -52,40 +55,40 @@ After that you need to create two files with the following content:
    
 ```python
 import fdk
+import json
 
-from fdk import response
 
-@fdk.coerce_input_to_content_type
-def handler(context, data=None, loop=None):
-    return response.RawResponse(
-        context,
-        status_code=200, 
-        headers={}, 
-        response_data=data
-    )
+def handler(ctx, data=None, loop=None):
+    body = json.loads(data) if len(data) > 0 else {"name": "World"}
+    return "Hello {0}".format(body.get("name"))
 
 
 if __name__ == "__main__":
     fdk.handle(handler)
+
 ```
 
    * `requirements.txt`
  
 ```text
-fdk==0.0.6
+fdk
 ```
 
-Before running your function it's recommended to adjust `func.yaml` by adding the following definition:
+   * `func.yaml`
+
 ```yaml
+name: new-python
+version: 0.0.1
+runtime: python3.6
+entrypoint: python3 func.py
 format: json
-build_image: python:3.6
 ```
 
 Done! Your very simple echo function is ready to be deployed and executed!
 
 ## How to develop with Python's FDK?
 
-Let’s take a look at the echo function that uses the HTTP format:
+Let’s take a look at the echo function:
 ```python
 import fdk
 
@@ -103,10 +106,11 @@ def handler(context, data=None, loop=None):
 
 if __name__ == "__main__":
     fdk.handle(handler)
+
 ```
 
 Getting the FDK is easy because the Fn team is responsible for the FDKs distribution. 
-With Python 3.5 or greater (no more support for Python 2, hooray!!!) specifically, the Fn team published a consumable wheel distribution which you can find in the Warehouse. 
+With Python 3.6 or greater (no more support for Python 2, hooray!!!) specifically, the Fn team published a consumable wheel distribution which you can find in the Warehouse. 
 So the bare minimum requirement here is to write a function with exactly the same signature:
 ```
 def handler(context, data=None, loop=None)
@@ -117,66 +121,23 @@ That’s it! Simple, isn’t it? It takes only a couple of minutes from the idea
    * handle function can be a coroutine (see Python 3 async/await syntax), this is very useful if you prefer async programming over sync
 
 ```python
-import asyncio
 import fdk
+import json
 
 
-@fdk.coerce_input_to_content_type
-async def handler(context, data=None, loop=None):
-    return data
+async def handler(ctx, data=None, loop=None):
+    body = json.loads(data) if len(data) > 0 else {"name": "World"}
+    return "Hello {0}".format(body.get("name"))
+
 
 if __name__ == "__main__":
-    loop = asyncio.get_event_loop()
-    fdk.handle(handler, loop=loop)
+    fdk.handle(handler)
 
 ```
 
-   * through the context developers can access request headers, Fn application and route config as well as format-specific attributes like HTTP version, HTTP request method, etc.
+   * through the context developers can access request headers, Fn application and route config as well as format-specific attributes request method, etc.
 
 You can find more information and code samples here and read more about Fn formats [here](https://github.com/fnproject/fn/blob/master/docs/function-format.md).
-
-# Running your Function
-
-Let's build and run the generated function.  We're working locally and
-won't be pushing our function images to a Docker registry like Docker
-Hub. So before we build let's set `FN_REGISTRY` to a local-only registry
-username like `fndemouser`.
-
->`export FN_REGISTRY=fndemouser`
-
-Now we're ready to run.  Depending on whether this is your first time
-developing a Python function you may or may not see Docker images being
-pulled from Docker Hub.  Once the necessary base images are downloaded
-subsequent operations will be faster.
-
->`echo 'test' | fn run --format json`
-
-Here's what the abbreviated output will look like:
-```text
-Building image test:0.0.3 
-Sending build context to Docker daemon   5.12kB
-Step 1/6 : FROM python:3.6
- ---> c1e459c00dc3
-Step 2/6 : WORKDIR /function
- ---> Using cache
- ---> eec798b79e70
-Step 3/6 : ADD requirements.txt /function/
- ---> Using cache
- ---> 931e0f6d87d6
-Step 4/6 : RUN pip3 install -r requirements.txt
- ---> Using cache
- ---> 49a4a4a207c1
-Step 5/6 : ADD . /function/
- ---> 900011e4a904
-Step 6/6 : ENTRYPOINT python3 func.py
- ---> Running in 6cd678649b3f
- ---> 6bc3fbe5cb7d
-Removing intermediate container 6cd678649b3f
-Successfully built 6bc3fbe5cb7d
-Successfully tagged test:0.0.3
-
-"test"
-```
 
 # Deploying your Python Function
 
@@ -204,10 +165,10 @@ case the route is `/pythonfn`.
 We can use the route to invoke the function via curl and passing the
 JSON input as the body of the call.
 
-> `curl -v http://localhost:8080/r/myapp/pythonfn -d 'test'`
+> `curl -v http://localhost:8080/r/myapp/pythonfn -d '{"name": "John"}'`
 
 ```sh
-"test"
+"Hello John"
 ```
 
 Success!

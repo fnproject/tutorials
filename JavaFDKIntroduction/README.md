@@ -13,14 +13,14 @@ As you make your way through this tutorial, look out for this icon.
 ![](images/userinput.png) Whenever you see it, it's time for you to
 perform an action.
 
-## Prequisites
+## Prerequisites
 
 This tutorial requires you to have both Docker and Fn installed and an
 Fn server running locally.  If you need help with Fn installation you
 can find instructions in the
 [Introduction to Fn](../Introduction/README.md) tutorial.
 
-# Getting Started
+## Getting Started
 
 Let's start by creating a new function.  In a terminal type the following:
 
@@ -37,7 +37,9 @@ func.yaml created.
 ```
 
 ![](images/userinput.png)
-> `cd javafn`
+>```sh
+>cd javafn
+>```
 
 The `fn init` command creates an simple function with a bit of boilerplate to get you
 started. The `--runtime` option is used to indicate that the function
@@ -79,7 +81,9 @@ as well as a function class and function test class.
 Take a look at the contents of the generated func.yaml file.
 
 ![](images/userinput.png)
->`cat func.yaml`
+>```sh
+>cat func.yaml
+>```
 
 ```yaml
 version: 0.0.1
@@ -102,7 +106,7 @@ qualified name of the function class and the method that should be invoked when 
 
 The Java function init also generates a Maven `pom.xml` file to build and test your function.  The pom includes the Fn Java FDK runtime and test libraries your function needs.
 
-# Running your Function
+## Running your Function
 
 Let's build and run the generated function.  We're working locally and
 won't be pushing our function images to a Docker registry like Docker
@@ -152,7 +156,7 @@ Hello, Bob!
 
 Instead of "Hello, world!" the function has read the input string "Bob" from standard input and returned "Hello, Bob!".
 
-# Exploring the Code
+## Exploring the Code
 
 We've generated, compiled, and run the Java function so let's take a
 look at the code.  You may want to open the code in your favorite IDE or editor.
@@ -185,7 +189,7 @@ the Java FDK reads from standard input and automatically puts the
 content into the string passed to the function.  This greatly simplifies
 the function code.
 
-# Testing with JUnit
+## Testing with JUnit
 
 The `fn init` command also generated a JUnit test for the function which uses the
 Java FDK's function test framework.  With this framework you can setup
@@ -249,7 +253,7 @@ Building image fndemouser/javafn:0.0.1 .......
 Function fndemouser/javafn:0.0.1 built successfully.
 ```
 
-# Accepting JSON Input
+## Accepting JSON Input
 
 Let's convert this function to use JSON for its input and output.
 Replace the definition of `HelloFunction` with the following:
@@ -385,7 +389,7 @@ If you re-run the test via `fn -verbose build` we can see that it now passes:
 >`fn --verbose build`
 
 
-# Deploying your Java Function
+## Deploying your Java Function
 
 Now that we have our Java function updated and passing our JUnit tests
 we can move onto deploying it to the Fn server.  As we're running the
@@ -424,7 +428,7 @@ returns:
 
 Success!
 
-# Wrapping Up
+## Wrapping Up
 
 Congratulations! You've just completed an introduction to the Fn Java
 FDK.  There's so much more in the FDK than we can cover in a brief

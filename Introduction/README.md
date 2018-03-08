@@ -192,7 +192,7 @@ func myHandler(ctx context.Context, in io.Reader, out io.Writer) {
 }
 ```
 
-This function looks for JSON input in the form of `{"name", "Bob"}`. If this
+This function looks for JSON input in the form of `{"name": "Bob"}`. If this
 JSON example is passed to the function, the function returns `{"message":"Hello Bob"}`. If no
 JSON data is found, the function returns `{"message":"Hello World"}`.  
 

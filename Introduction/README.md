@@ -28,7 +28,7 @@ Before we can install Fn you'll need:
 easiest thing to do is install [VirtualBox](https://www.virtualbox.org/)
 and run a free Linux virtual machine.
 2. [Docker](https://www.docker.com/) 17.05 (or higher) needs to be
-installed and running. 
+installed and running.
 
 > __NOTE__ In this tutorial we'll work in a purely local development
 mode.  However, when deploying functions to a remote Fn server, a Docker
@@ -47,11 +47,11 @@ From a terminal type the following:
 >`curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh`
 
 Once installed you'll see the Fn version printed out.  You should see
-something similar to the following displayed (although likely with a later 
+something similar to the following displayed (although likely with a later
 version number):
 
 ```sh
-fn version 0.4.44
+fn version 0.4.62
 ```
 
 ### Starting Fn Server
@@ -91,11 +91,11 @@ You should see the version of the fn CLI (client) and server displayed (your ver
 likely differ):
 
 ```sh
-Client version:  0.4.44
+Client version:  0.4.62
 Server version:  0.3.335
 ```
 
-If the server version is "?" then the fn CLI cannot reach the server.  If 
+If the server version is "?" then the fn CLI cannot reach the server.  If
 this happens it's likely you have something else running on port 8080. In this
 case stop the other process, and stop (ctrl-c) and restart the fn server as
 described previously.
@@ -118,82 +118,127 @@ the `FN_REGISTRY` variable to an arbitrary value. Let's use `fndemouser`.
 >`export FN_REGISTRY=fndemouser`
 
 
-With that out of the way, create a new directory named "hello" and cd
-into it:
+With that out of the way, let's create a new function. In the terminal type the
+following.
 
 ![user input](images/userinput.png)
->`mkdir hello`
->
->`cd hello`
+>`fn init --runtime go gofn`
 
-Copy and paste the following Go code into a file named `func.go`.
+The output will be
 
-![user input](images/userinput.png)
->```go
->package main
->
->import (
->  "fmt"
->)
->
->func main() {
->  fmt.Println("Hello from Fn!")
->}
->```
-
-This function just prints "Hello from Fn!" to standard output.  It takes
-no arguments and returns no results. So it's as simple as possible.  Of
-course, you can write functions that accept a number of different types
-of arguments and this is explored in other Fn tutorials.
-
-
-#### Initializing your Function Configuration
-
-Let's use the `fn` CLI to initialize this function's configuration.
-
-![user input](images/userinput.png)
-> `fn init`
-
-```sh
-Found go function, assuming go runtime.
+```yaml
+Creating function at: /gofn
+Runtime: go
+Function boilerplate generated.
 func.yaml created.
 ```
 
-`fn` found your `func.go` file and generated a `func.yaml` function 
-configuration file with contents that should look like:
+The `fn init` command creates an simple function with a bit of boilerplate to
+get you started. The `--runtime` option is used to indicate that the function
+we're going to develop will be written in Go. A number of other runtimes are
+also supported.  Fn creates the simple function along with several supporting files in the `/gofn` directory.
 
-```yaml
-name: hello
-version: 0.0.1
-runtime: go
-entrypoint: ./func
+### Reviewing your Function File
+
+With your function created change into the `/gofn` directory.
+
+![user input](images/userinput.png)
+>`cd gofn`
+
+Now get a list of the directory contents.
+
+![user input](images/userinput.png)
+>`ls`
+
+>```sh
+> Gopkg.toml func.go func.yaml  test.json
+>```
+
+The `func.go` file which contains your actual Go function is generated along
+with several supporting files. To view your Go function type:
+
+![user input](images/userinput.png)
+>cat func.go
+
+```go
+package main
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"io"
+
+	fdk "github.com/fnproject/fdk-go"
+)
+
+func main() {
+	fdk.Handle(fdk.HandlerFunc(myHandler))
+}
+
+type Person struct {
+	Name string `json:"name"`
+}
+
+func myHandler(ctx context.Context, in io.Reader, out io.Writer) {
+	p := &Person{Name: "World"}
+	json.NewDecoder(in).Decode(p)
+	msg := struct {
+		Msg string `json:"message"`
+	}{
+		Msg: fmt.Sprintf("Hello %s", p.Name),
+	}
+	json.NewEncoder(out).Encode(&msg)
+}
 ```
 
-You can see the `func.yaml` contents by typing:
+This function looks for JSON input in the form of `{"name": "Bob"}`. If this
+JSON example is passed to the function, the function returns `{"message":"Hello Bob"}`. If no
+JSON data is found, the function returns `{"message":"Hello World"}`.  
+
+### Understanding func.yaml
+The `fn init` command generated a `func.yaml` function
+configuration file. Let's look at the contents:
 
 ![user input](images/userinput.png)
 >cat func.yaml
 
-
-#### Understanding func.yaml
+```yaml
+name: gofn
+version: 0.0.1
+runtime: go
+entrypoint: ./func
+format: json
+```
 
 The generated `func.yaml` file contains metadata about your function and
 declares a number of properties including:
 
-* the version--automatically starting at 0.0.1
-* the name of the runtime/language--which was set
-automatically based on the presence of `func.go`
-* the name of the executable to invoke when your function is called,
-in this case `./func` 
+* name--the name of the function. Matches the directory name.
+* version--automatically starting at 0.0.1
+* runtime--the name of the runtime/language which was set based on the value set
+in `--runtime`.
+* entrypoint--the name of the executable to invoke when your function is called,
+in this case `./func`
+* format--the function uses JSON as its input/output method ([see: Open Function Format](https://github.com/fnproject/fn/blob/master/docs/developers/function-format.md)).
 
 There are other user specifiable properties but these will suffice for
 this example.  Note that the name of your function is taken from the containing
 folder name.  We'll see this come into play later on.
 
+### Other Function Files
+The `fn init` command generated two other files.
 
-### Running Your First Function
+* `Gopkg.toml` --  the Go dep tool dependency management tool file which
+specifies all the dependencies for your function.
+* `test.json` -- a test file that is used to test your function, it defines an
+input and the output of the function, helps to identify if the function works
+correctly or not. Function testing is not covered in this tutorial.
 
-With the `hello` directory containing `func.go` and `func.yaml` you've
+
+## Running Your First Function
+
+With the `gofn` directory containing `func.go` and `func.yaml` you've
 got everything you need to run the function.  So let's run it and
 observe the output.  Note that the first time you build a
 function of a particular language it takes longer as Fn downloads
@@ -203,12 +248,12 @@ the necessary Docker images.
 > `fn run`
 
 ```sh
-Building image fndemouser/hello:0.0.1 ...
-Hello from Fn!
+Building image fndemouser/gofn:0.0.1 ...
+{"message":"Hello World"}
 ```
 
-The last line of output should be "Hello from Fn!" that was produced
-by the Go statement `fmt.Println("Hello from Fn!")`.
+The last line of output should be `{"message":"Hello World"}` that was produced
+by the Go statement `Msg: fmt.Sprintf("Hello %s", p.Name),`.
 
 If you ever want more details on what a given fn command is doing behind the
 scenes you can add the `--verbose` switch.  Let's rerun with verbose output
@@ -218,38 +263,57 @@ enabled.
 > `fn --verbose run`
 
 ```sh
-Building image fndemouser/hello:0.0.1
-Sending build context to Docker daemon  4.096kB
-Step 1/8 : FROM fnproject/go:dev as build-stage
- ---> 57ed8b626466
-Step 2/8 : WORKDIR /function
+Building image fndemouser/gofn:0.0.1
+Sending build context to Docker daemon  6.144kB
+Step 1/10 : FROM fnproject/go:dev as build-stage
+ ---> fac877f7d14d
+Step 2/10 : WORKDIR /function
  ---> Using cache
- ---> c83f43743f5c
-Step 3/8 : ADD . /go/src/func/
- ---> b0dcb987a280
-Step 4/8 : RUN cd /go/src/func/ && go build -o func
- ---> Running in 494a060b5fdb
-Removing intermediate container 494a060b5fdb
- ---> 6c89d2cf3a6d
-Step 5/8 : FROM fnproject/go
- ---> 10f82b0de851
-Step 6/8 : WORKDIR /function
+ ---> 7df38f6b2ee6
+Step 3/10 : RUN go get -u github.com/golang/dep/cmd/dep
  ---> Using cache
- ---> a46fefe41a6c
-Step 7/8 : COPY --from=build-stage /go/src/func/func /function/
+ ---> 9db3100f5f51
+Step 4/10 : ADD . /go/src/func/
+ ---> cbbe26b6ca1e
+Step 5/10 : RUN cd /go/src/func/ && dep ensure
+ ---> Running in babac3f9e969
+Removing intermediate container babac3f9e969
+ ---> 5c00fa0aab1b
+Step 6/10 : RUN cd /go/src/func/ && go build -o func
+ ---> Running in b725946fa376
+Removing intermediate container b725946fa376
+ ---> bc0cb551e781
+Step 7/10 : FROM fnproject/go
+ ---> 76aed4489768
+Step 8/10 : WORKDIR /function
  ---> Using cache
- ---> 7bb5e7dadecc
-Step 8/8 : ENTRYPOINT ["./func"]
+ ---> cf5797d14252
+Step 9/10 : COPY --from=build-stage /go/src/func/func /function/
  ---> Using cache
- ---> 4738aa280fad
-Successfully built 4738aa280fad
-Successfully tagged fndemouser/hello:0.0.1
+ ---> 662fe6fe0e18
+Step 10/10 : ENTRYPOINT ["./func"]
+ ---> Using cache
+ ---> 7b586506a195
+Successfully built 7b586506a195
+Successfully tagged fndemouser/gofn:0.0.1
 
-Hello from Fn!
+{"message":"Hello World"}
 ```
 
-### Understanding fn run
+You can also pass data to the run command. For example:
 
+![user input](images/userinput.png)
+> `echo -n '{"name":"Bob"}' | fn run`
+
+```sh
+Building image fndemouser/gofn:0.0.1 .....
+{"message":"Hello Bob"}
+```
+
+The JSON data was parsed and since `name` was set to "Bob", that value is passed
+in the output.
+
+### Understanding fn run
 If you have used Docker before the output of `fn --verbose run` should look
 familiar--it looks like the output you see when running `docker build`
 with a Dockerfile.  Of course this is exactly what's happening!  When
@@ -279,7 +343,7 @@ to see only those created by fndemouser:
 You should see something like:
 
 ```sh
-fndemouser/hello                               0.0.1               d64b4a1a15b9        2 minutes ago      6.98MB
+fndemouser/gofn      0.0.1               7b586506a195        5 minutes ago        15MB
 ```
 
 ## Deploying Your First Function
@@ -295,62 +359,62 @@ accessible to other users and systems.
 In your terminal type the following:
 
 ![user input](images/userinput.png)
-> `fn deploy --app myapp --local`
+> `fn deploy --app goapp --local`
 
 You should see output similar to:
 
 ```sh
-Deploying hello to app: myapp at path: /hello
+Deploying gofn to app: goapp at path: /gofn
 Bumped to version 0.0.2
-Building image fndemouser/hello:0.0.2 ..
-Updating route /hello using image fndemouser/hello:0.0.2...
+Building image fndemouser/gofn:0.0.2 .....
+Updating route /gofn using image fndemouser/gofn:0.0.2...
 ```
 
-Functions are grouped into applications so by specifying `--app myapp`
-we're implicitly creating the application "myapp" and associating our
+Functions are grouped into applications so by specifying `--app goapp`
+we're implicitly creating the application "goapp" and associating our
 function with it.
 
 Specifying `--local` does the deployment to the local server but does
 not push the function image to a Docker registry--which would be necessary if
-we were deploying to a remote Fn server. 
+we were deploying to a remote Fn server.
 
 The output message
-`Updating route /hello using image fndemouser/hello:0.0.2`
+`Updating route /gofn using image fndemouser/gofn:0.0.2`
 let's us know that the function packaged in the image
-"fndemouser/hello:0.0.2" has been bound by the Fn server to the route
-"/hello".  We'll see how to use the route below.
+"fndemouser/gofn:0.0.2" has been bound by the Fn server to the route
+"/gofn".  We'll see how to use the route below.
 
-Note that the containing folder name 'hello' was used as the name of the
+Note that the containing folder name 'gofn' was used as the name of the
 generated Docker container and used as the name of the route that
 container was bound to.
 
 The fn CLI provides a couple of commands to let us see what we've deployed.
-`fn apps list` returns a list of all of the defined applications. 
+`fn apps list` returns a list of all of the defined applications.
 
 ![user input](images/userinput.png)
 > `fn apps list`
 
 Which, in our case, returns the name of the application we created when we
-deployed our hello function:
+deployed our gofn function:
 
 ```sh
-myapp
+goapp
 ```
 
 We can also see the functions that are defined by an application.  Since
 functions are exposed via routes, the `fn routes list <appname>` command
-is used.  To list the functions included in "myapp" we can type:
+is used.  To list the functions included in "goapp" we can type:
 
 ![user input](images/userinput.png)
->`fn routes list myapp`
+>`fn routes list goapp`
 
 ```sh
-path    image                   endpoint
-/hello  fndemouser/hello:0.0.2  localhost:8080/r/myapp/hello
+path   image                  endpoint
+/gofn  fndemouser/gofn:0.0.2  localhost:8080/r/goapp/gofn
 ```
 
-The output confirms that myapp contains a `hello` function that is implemented
-by the Docker container `fndemouser/hello:0.0.2` which may be invoked via the
+The output confirms that goapp contains a `gofn` function that is implemented
+by the Docker container `fndemouser/gofn:0.0.2` which may be invoked via the
 specified URL.  Now that we've confirmed deployment was successsful, let's
 call our function.
 
@@ -361,32 +425,44 @@ the `fn` CLI which makes invoking your function relatively easy.  Type
 the following:
 
 ![user input](images/userinput.png)
->`fn call myapp /hello`
+>`fn call goapp /gofn`
 
 which results in our familiar output message.
 
 ```sh
-Hello from Fn!
+{"message":"Hello World"}
 ```
 
 Of course this is unchanged from when you ran the function locally.
-However when you called "myapp /hello" the fn server looked up the
-"myapp" application and then looked for the Docker container image
-bound to the "/hello" route.
+However when you called "goapp /gofn" the fn server looked up the
+"goapp" application and then looked for the Docker container image
+bound to the "/gofn" route.
 
 The other way to call your function is via HTTP.  The Fn server
-exposes our deployed function at "http://localhost:8080/r/myapp/hello", a URL
+exposes our deployed function at "http://localhost:8080/r/goapp/gofn", a URL
 that incorporates our application and function route as path elements.
 
 Use curl to invoke the function:
 
 ![user input](images/userinput.png)
->`curl http://localhost:8080/r/myapp/hello`
+>`curl http://localhost:8080/r/goapp/gofn`
 
 The result is once again the same.
 
 ```sh
-Hello from Fn!
+{"message":"Hello World"}
+```
+
+We can again pass JSON data to out function get the value of name passed to the
+function back.
+
+![user input](images/userinput.png)
+>`curl http://localhost:8080/r/goapp/gofn -d '{"name":"Bob"}'`
+
+The result is once again the same.
+
+```sh
+{"message":"Hello Bob"}
 ```
 
 ## Wrapping Up

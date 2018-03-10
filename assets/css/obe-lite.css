@@ -560,12 +560,6 @@ article ul figure figcaption{
     margin: 5px 0px 0px -40px;
 }
 
-/** Fix images mww 3/9/18*/
-img {
-  max-width: 100%;
-  vertical-align: middle;
-}
-
 /* pre and code tags */
 pre {
     -webkit-overflow-scrolling: touch ;

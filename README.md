@@ -4,17 +4,16 @@ Each of the tutorials below provides a step by step examination and walkthrough 
 
 ## Introduction to Fn
 
-[Install Fn and deploy your first functions.](Introduction/README.md)
+This section shows you how to install Fn and deploy your first function. Pick your preferred language.
+
+* [Go](Introduction/README.md)
+* [Java](JavaFDKIntroduction/README.md)
+* Node.js (coming soon)
+* Ruby (coming soon)
 
 ## Applications
 
 [Learn how to group your functions into an application/API and deploy them together.](Apps/README.md) 
-
-## Testing Functions
-
-Fn has an easy way to write tests for any language, that can ensure you don't break your function contract.
-
-[Learn how to write function tests](Testing/README.md)
 
 ## Asynchronous Functions
 
@@ -25,25 +24,17 @@ Fn has an easy way to write tests for any language, that can ensure you don't br
 [This tutorial provides a simple example of how to
 define an Fn function using a custom built Docker containeer.](ContainerAsFunction/README.md)
 
-## Developing Java Functions
+## Test, Troubleshoot and Monitor
 
-[Use the Java FDK to write functions and unit test them with the JUnit test harness.](JavaFDKIntroduction//README.md)
+* [Testing your Fn functions](Testing/README.md) - Fn provides an easy way to write tests for any language, that can ensure you don't break your function contract
+* [Troubleshooting techniques](Troubleshooting/README.md) - This tutorial focuses on techniques you can use to investigate and resolve issues at both development and deployment time
+* [Metrics and monitoring with Prometheus and Grafana](grafana/README.md) - Learn how to view Fn server metrics with Prometheus and Grafana
 
-## Troubleshooting Fn
+## Fn Flow
 
-Sometimes things aren't working just how you'd like them and you'd like to figure out what's going on.  This tutorial focuses on [troubleshooting techniques](Troubleshooting/README.md) you can use to resolve issues at both development and deployment time.
-
-## Introducing Flow
-
-Get started with Flow with 
+Fn Flow provides a way to orchestrate functions to build sophisticated applications, initially using Java, and soon with other programming languages.
 
 * [Flow 101](Flow101/README.md)
 * [Flow 102](Flow102/README.md)
+* [Fn Flow Saga](FlowSaga/README.md) - In this tutorial you will use Fn Flow to implement a Java travel booking system that leverages functions written in a variety of languages
 
-## Fn Flow Saga Pattern
-
-Fn Flow provides a way to orchestrate functions to build sophisticated applications--initially using Java and soon with other programming languages.  [In this tutorial you will learn how to use Fn Flow to implement a Java travel booking system that leverages functions written in a variety of languages.](FlowSaga/README.md)
-
-## Fn metrics in Grafana and Prometheus
-
-[Learn how to view Fn server metrics with Grafana and Prometheus](grafana/README.md)

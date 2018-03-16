@@ -8,7 +8,9 @@ Install Fn and deploy your first functions. Select your language:
 * [Go](Introduction/README.md)
 * [Java](JavaFDKIntroduction//README.md)
 * Node.js (Coming Soon!)
+* Python (Coming Soon!)
 * Ruby (Coming Soon!)
+* Docker (Coming Soon!)
 
 ## Explore Fn
 * [Create Apps with Fn](Apps/README.md) - Learn how to group your functions into an application/API and deploy them together.

@@ -19,7 +19,7 @@ body {
 }
 
 h1 {
-	font-size: 2.4rem;
+	font-size: 2rem;
     font-weight: normal;
 	line-height: 1.1em;
 	color: #D24541;
@@ -28,17 +28,17 @@ h1 {
 }
 
 h2 {
-	font-size: 2rem;
+	font-size: 1.6rem;
     font-weight: normal;
 	line-height: 1.2em;
-    color: #145C93;
+    color: black;
     background-color: #E4F0FA;
 	margin: 1rem 0 1rem 1rem;
     padding: 5px 0px 5px 5px;
 }
 
 h3 {
-	font-size: 1.6rem;
+	font-size: 1.2rem;
 	line-height: 1.2em;
 	font-weight: normal;
     color: #145C93;
@@ -47,7 +47,7 @@ h3 {
 
 
 h4 {
-	font-size: 1.2rem;
+	font-size: 1.1rem;
 	line-height: 1.2em;
 	font-weight: normal;
     color: #145C93;

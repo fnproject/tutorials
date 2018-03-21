@@ -242,7 +242,7 @@ You can see the `withBody()` method used to specify the value of the
 function input.
 
 You can run the tests by building your function with `fn build`.  This
-will cause Maven to compile and run the updated test class.  You can also invoke your tests directly from Maven using `mvn test` or directly from your IDE.
+will cause Maven to compile and run the updated test class.  You can also invoke your tests directly from Maven using `mvn test` or from your IDE.
 
 ![](images/userinput.png)
 >`fn build`

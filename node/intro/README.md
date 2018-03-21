@@ -50,7 +50,7 @@ something similar to the following displayed (although likely with a later
 version number):
 
 ```sh
-fn version 0.4.65
+fn version 0.4.66
 ```
 
 ### Starting Fn Server
@@ -90,7 +90,7 @@ You should see the version of the fn CLI (client) and server displayed (your ver
 likely differ):
 
 ```sh
-Client version:  0.4.65
+Client version:  0.4.66
 Server version:  0.3.335
 ```
 
@@ -158,7 +158,9 @@ The `func.js` file which contains your actual Node function is generated along
 with several supporting files. To view your Node function type:
 
 ![user input](images/userinput.png)
->`cat func.js`
+>```sh
+>cat func.js
+>```
 
 ```js
 var fdk=require('@fnproject/fdk');
@@ -182,7 +184,9 @@ The `fn init` command generated a `func.yaml` function
 configuration file. Let's look at the contents:
 
 ![user input](images/userinput.png)
+>```sh
 >cat func.yaml
+>```
 
 ```yaml
 name: nodefn
@@ -196,7 +200,7 @@ The generated `func.yaml` file contains metadata about your function and
 declares a number of properties including:
 
 * name--the name of the function. Matches the directory name.
-* version--automatically starting at 0.0.1
+* version--automatically starting at 0.0.1.
 * runtime--the name of the runtime/language which was set based on the value set
 in `--runtime`.
 * entrypoint--the name of the executable to invoke when your function is called,
@@ -277,7 +281,9 @@ Successfully tagged fndemouser/nodefn:0.0.1
 You can also pass data to the run command. For example:
 
 ![user input](images/userinput.png)
-> `echo -n '{"name":"Bob"}' | fn run`
+>```sh
+>echo -n '{"name":"Bob"}' | fn run
+>```
 
 ```sh
 Building image fndemouser/gofn:0.0.1 .....
@@ -333,19 +339,19 @@ accessible to other users and systems.
 In your terminal type the following:
 
 ![user input](images/userinput.png)
-> `fn deploy --app goapp --local`
+> `fn deploy --app nodeapp --local`
 
 You should see output similar to:
 
 ```sh
-Deploying gofn to app: goapp at path: /gofn
+Deploying nodefn to app: nodeapp at path: /nodefn
 Bumped to version 0.0.2
-Building image fndemouser/gofn:0.0.2 .....
-Updating route /gofn using image fndemouser/gofn:0.0.2...
+Building image fndemouser/nodefn:0.0.2 .
+Updating route /nodefn using image fndemouser/nodefn:0.0.2...
 ```
 
-Functions are grouped into applications so by specifying `--app goapp`
-we're implicitly creating the application "goapp" and associating our
+Functions are grouped into applications so by specifying `--app nodeapp`
+we're implicitly creating the application "nodeapp" and associating our
 function with it.
 
 Specifying `--local` does the deployment to the local server but does
@@ -353,12 +359,12 @@ not push the function image to a Docker registry--which would be necessary if
 we were deploying to a remote Fn server.
 
 The output message
-`Updating route /gofn using image fndemouser/gofn:0.0.2`
+`Updating route /nodefn using image fndemouser/nodefn:0.0.2...`
 let's us know that the function packaged in the image
-"fndemouser/gofn:0.0.2" has been bound by the Fn server to the route
-"/gofn".  We'll see how to use the route below.
+"fndemouser/nodefn:0.0.2" has been bound by the Fn server to the route
+"/nodefn".  We'll see how to use the route below.
 
-Note that the containing folder name 'gofn' was used as the name of the
+Note that the containing folder name 'nodefn' was used as the name of the
 generated Docker container and used as the name of the route that
 container was bound to.
 
@@ -372,7 +378,7 @@ Which, in our case, returns the name of the application we created when we
 deployed our gofn function:
 
 ```sh
-goapp
+nodeapp
 ```
 
 We can also see the functions that are defined by an application.  Since
@@ -380,16 +386,16 @@ functions are exposed via routes, the `fn routes list <appname>` command
 is used.  To list the functions included in "goapp" we can type:
 
 ![user input](images/userinput.png)
->`fn routes list goapp`
+>`fn routes list nodeapp`
 
 ```sh
-path   image                  endpoint
-/gofn  fndemouser/gofn:0.0.2  localhost:8080/r/goapp/gofn
+path    image			        endpoint
+/nodefn fndemouser/nodefn:0.0.2 localhost:8080/r/nodeapp/nodefn
 ```
 
-The output confirms that goapp contains a `gofn` function that is implemented
-by the Docker container `fndemouser/gofn:0.0.2` which may be invoked via the
-specified URL.  Now that we've confirmed deployment was successsful, let's
+The output confirms that nodeapp contains a `nodefn` function that is implemented
+by the Docker container `fndemouser/nodefn:0.0.2` which may be invoked via the
+specified URL.  Now that we've confirmed deployment was successful, let's
 call our function.
 
 ## Calling Your Deployed Function
@@ -399,7 +405,7 @@ the `fn` CLI which makes invoking your function relatively easy.  Type
 the following:
 
 ![user input](images/userinput.png)
->`fn call goapp /gofn`
+>`fn call nodeapp /nodefn`
 
 which results in our familiar output message.
 
@@ -408,18 +414,18 @@ which results in our familiar output message.
 ```
 
 Of course this is unchanged from when you ran the function locally.
-However when you called "goapp /gofn" the fn server looked up the
-"goapp" application and then looked for the Docker container image
-bound to the "/gofn" route.
+However when you called "nodeapp /nodefn" the fn server looked up the
+"nodeapp" application and then looked for the Docker container image
+bound to the "/nodefn" route.
 
 The other way to call your function is via HTTP.  The Fn server
-exposes our deployed function at "http://localhost:8080/r/goapp/gofn", a URL
+exposes our deployed function at "http://localhost:8080/r/nodeapp/nodefn", a URL
 that incorporates our application and function route as path elements.
 
 Use curl to invoke the function:
 
 ![user input](images/userinput.png)
->`curl http://localhost:8080/r/goapp/gofn`
+>`curl http://localhost:8080/r/nodeapp/nodefn`
 
 The result is once again the same.
 
@@ -431,7 +437,7 @@ We can again pass JSON data to out function get the value of name passed to the
 function back.
 
 ![user input](images/userinput.png)
->`curl http://localhost:8080/r/goapp/gofn -d '{"name":"Bob"}'`
+>`curl http://localhost:8080/r/nodeapp/nodefn -d '{"name":"Bob"}'`
 
 The result is once again the same.
 

@@ -91,7 +91,7 @@ likely differ):
 
 ```sh
 Client version:  0.4.66
-Server version:  0.3.335
+Server version:  0.3.385
 ```
 
 If the server version is "?" then the fn CLI cannot reach the server.  If
@@ -104,7 +104,7 @@ described previously.
 Let's start with a very simple "hello world" function written in [Node.js
 JavaScript](https://nodejs.org/). Don't worry, you don't need to know Node!  In
 fact you don't even need to have Node installed on your development machine as
-Fn provides the necessary Node compiler and tools as a Docker container.  Let's
+Fn provides the necessary Node tools as a Docker container.  Let's
 walk through your first function to become familiar with the process and how Fn
 supports development.
 
@@ -360,7 +360,7 @@ we were deploying to a remote Fn server.
 
 The output message
 `Updating route /nodefn using image fndemouser/nodefn:0.0.2...`
-let's us know that the function packaged in the image
+lets us know that the function packaged in the image
 "fndemouser/nodefn:0.0.2" has been bound by the Fn server to the route
 "/nodefn".  We'll see how to use the route below.
 
@@ -383,7 +383,7 @@ nodeapp
 
 We can also see the functions that are defined by an application.  Since
 functions are exposed via routes, the `fn routes list <appname>` command
-is used.  To list the functions included in "goapp" we can type:
+is used.  To list the functions included in "nodeapp" we can type:
 
 ![user input](images/userinput.png)
 >`fn routes list nodeapp`
@@ -433,7 +433,7 @@ The result is once again the same.
 {"message":"Hello World"}
 ```
 
-We can again pass JSON data to out function get the value of name passed to the
+We can again pass JSON data to our function get the value of name passed to the
 function back.
 
 ![user input](images/userinput.png)

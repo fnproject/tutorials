@@ -344,7 +344,7 @@ accessible to other users and systems.
 In your terminal type the following:
 
 ![user input](images/userinput.png)
-> `fn deploy --app rubyyapp --local`
+> `fn deploy --app rubyapp --local`
 
 You should see output similar to:
 

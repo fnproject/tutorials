@@ -7,9 +7,9 @@ Install Fn and deploy your first functions. Select your language:
 
 * [Go](Introduction/README.md)
 * [Java](JavaFDKIntroduction//README.md)
-* Node.js (Coming Soon!)
+* [Node.js](node/intro/README.md)
+* [Ruby](ruby/intro/README.md)
 * Python (Coming Soon!)
-* Ruby (Coming Soon!)
 * Docker (Coming Soon!)
 
 ## Explore Fn

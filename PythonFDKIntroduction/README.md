@@ -178,3 +178,7 @@ Success!
 Congratulations! You've just completed an introduction to the Fn Python FDK.
 There's so much more in the FDK than we can cover in a brief
 introduction but we'll go deeper in subsequent tutorials.
+
+# Warning
+
+Please note that both `fn test` and `fn run` does not work for FDK-Python until the [following issue](https://github.com/fnproject/cli/issues/156) gets resolved.

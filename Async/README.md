@@ -26,7 +26,7 @@ Let's create a function and make it async:
 >```sh
 >fn init --runtime go asyncfn
 >cd asyncfn
-```
+>```
 
 Now open `func.yaml` and add `type: async`, for example:
 
@@ -37,7 +37,7 @@ Now open `func.yaml` and add `type: async`, for example:
 >version: 0.0.1
 >runtime: go
 >entrypoint: ./func
-```
+>```
 
 Now let's deploy it:
 

@@ -102,7 +102,7 @@ In the case of a Java function, the following properties are created:
 qualified name of the function class and the method that should be invoked when your `javafn` function is called.
 * **build_image:** the image used to build your function's image.
 * **run_image:** the image your function runs in.
-* **format:** the input/output formate used by the function to communication. The default is to use `http` headers.
+* **format:** the communication protocol format used by the function.
 
 The Java function init also generates a Maven `pom.xml` file to build and test your function.  The pom includes the Fn Java FDK runtime and test libraries your function needs.
 
@@ -242,8 +242,7 @@ You can see the `withBody()` method used to specify the value of the
 function input.
 
 You can run the tests by building your function with `fn build`.  This
-will cause Maven to compile and run the updated test class.  If you
-opened the code in an IDE you can run the tests directly from there.
+will cause Maven to compile and run the updated test class.  You can also invoke your tests directly from Maven using `mvn test` or from your IDE.
 
 ![](images/userinput.png)
 >`fn build`

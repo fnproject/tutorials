@@ -10,18 +10,37 @@
         <link rel="icon" type="image/png" sizes="32x32" href="{{ site.baseurl }}/favicon-32.png">
         <link rel="stylesheet" href="{{ site.baseurl }}/assets/main.css">
         <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/normalize.min.css">
-        <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/font-awesome.min.css">
         <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/obe-lite.css">
         <script src="{{ site.baseurl }}/assets/js/jquery-1.11.0.min.js"></script>
         <script src="{{ site.baseurl }}/assets/js/jquery-ui-1.10.4.custom.js"></script>
         <script src="{{ site.baseurl }}/assets/js/jquery.tocify.jd.js"></script>
         <script src="{{ site.baseurl }}/assets/js/leftnav.js"></script>
         <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/fn.css">
+        <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
     </head>
     <body>
         <header>
             <div class="w1024"> <a href="https://github.com/fnproject" target="_blank">
               <img src="{{ site.baseurl }}/assets/images/fn-logo-trans-sm.png" alt="fn-logo" height="90px" width="180px"></a>
+<!-- Button bar code - complete -->
+<!-- Contains all CSS, JavaScript and HTML -->
+              <style type="text/css">
+#buttonbar{ float: right; margin-top: 3em; margin-right: 1em; color: red; }
+#buttonbar a{ color: black; }
+
+[rel="popover"]{ cursor: pointer; display:inline-block; /* chrome-fix */ }
+              </style>
+    <script> <!-- Triggers popup text -->
+        $(document).ready(function() {
+            $("[rel=popover]").popover({'trigger':'hover'});
+        });
+    </script>
+              <div id="buttonbar">
+                  <a href="https://fnproject.io/tutorials" alt="Home Button" rel="popover" title="Tutorials Home"><i class="fas fa-home"></i></a>&nbsp;&nbsp;
+                  <a href="{{site.github.repository_url}}/blob/master/{{page.path}}" alt="Edit Button" rel="popover" title="Edit"><i class="fas fa-edit"></i></a>&nbsp;&nbsp;
+                  <a href="https://github.com/fnproject/tutorials/issues" alt="Report an Issue Button" rel="popover" title="Report an Issue"><i class="fas fa-exclamation-circle"></i></a>&nbsp;&nbsp;
+              </div>
+<!-- End Button bar code -->
             </div>
         </header>
         <!--end header-->

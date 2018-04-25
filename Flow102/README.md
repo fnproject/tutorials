@@ -68,11 +68,12 @@ bar
 
 ## Creating our Flow function
 
-In a new directory called `word-flow`:
+Run the following command to create a new directory called `word-flow`:
 
 >![user input](../images/userinput.png)
 >```shell
->fn init --runtime=java
+>fn init --runtime=java word-flow
+>cd word-flow
 >```
 
 Flow has a comprehensive test framework, but lets concentrate on playing with the code for the time being:

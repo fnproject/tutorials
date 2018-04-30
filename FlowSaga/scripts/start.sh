@@ -2,7 +2,7 @@
 
 fn start -d
 
-DOCKER_LOCALHOST=$(docker inspect --type container -f '{{.NetworkSettings.Gateway}}' fnserver)
+DOCKER_LOCALHOST=$(docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}')
 
 docker run --rm  \
        -p 8081:8081 \

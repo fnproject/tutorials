@@ -138,18 +138,18 @@ We'll want some test data:
 >curl http://www.gutenberg.org/files/1524/1524-0.txt > hamlet.txt
 >```
 
-Set the DOCKER_LOCALHOST environment variable:
+Set the FLOWSERVER_IP environment variable:
 
 >![user input](../images/userinput.png)
 >```shell
->export DOCKER_LOCALHOST=$(docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}')
+>FLOWSERVER_IP=$(docker inspect --type container -f '{{.NetworkSettings.IPAddress}}' flowserver)
 >```
 
 Configure the app with the location of the completer:
 
 >![user input](../images/userinput.png)
 >```shell
->fn apps config set flow102 COMPLETER_BASE_URL "http://$DOCKER_LOCALHOST:8081"
+>fn apps config set flow102 COMPLETER_BASE_URL "http://$FLOWSERVER_IP:8081"
 >```
 
 Deploy the function:

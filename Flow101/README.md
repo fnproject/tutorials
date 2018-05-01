@@ -86,7 +86,7 @@ The **Flow Server** needs to know how to call the Fn server, so ask Docker which
 
 >![user input](../images/userinput.png)
 >```shell
->DOCKER_LOCALHOST=$(docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}')
+>FNSERVER_IP=$(docker inspect --type container -f '{{.NetworkSettings.IPAddress}}' fnserver)
 >```
 
 Start the **Flow Server**:
@@ -94,22 +94,24 @@ Start the **Flow Server**:
 >![user input](../images/userinput.png)
 >```shell
 >docker run --rm -d \
->       -p 8081:8081 \
->       -e API_URL="http://$DOCKER_LOCALHOST:8080/r" \
->       -e no_proxy=$DOCKER_LOCALHOST \
->       --name completer \
->       fnproject/flow:latest
+>      -p 8081:8081 \
+>      -e API_URL="http://$FNSERVER_IP:8080/r" \
+>      -e no_proxy=$FNSERVER_IP \
+>      --name flowserver \
+>      fnproject/flow:latest
 >```
 
 Then start the Flow **UI**:
 
 >![user input](../images/userinput.png)
 >```shell
+>FLOWSERVER_IP=$(docker inspect --type container -f '{{.NetworkSettings.IPAddress}}' flowserver)
+>
 >docker run --rm -d \
 >       -p 3002:3000 \
 >       --name flowui \
->       -e API_URL=http://$DOCKER_LOCALHOST:8080 \
->       -e COMPLETER_BASE_URL=http://$DOCKER_LOCALHOST:8081 \
+>       -e API_URL=http://$FNSERVER_IP:8080 \
+>       -e COMPLETER_BASE_URL=http://$FLOWSERVER_IP:8081 \
 >       fnproject/flow:ui
 >```
 
@@ -175,7 +177,7 @@ Then configure the function to talk to the Flow Server.
 
 >![user input](../images/userinput.png)
 >```shell
->fn apps config set flow101 COMPLETER_BASE_URL "http://$DOCKER_LOCALHOST:8081"
+>fn apps config set flow101 COMPLETER_BASE_URL "http://$FLOWSERVER_IP:8081"
 >```
 
 You can now invoke the function using `fn call`:

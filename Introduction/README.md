@@ -7,7 +7,7 @@ about the core Fn concepts like applications and routes.
 
 ### Before you Begin
 * Set aside about 15 minutes to complete this tutorial.
-* Before starting this tutorial, complete the [Install Fn Tutorial](../../install/README.md). Make sure you have the Fn server installed and running before you continue with this tutorial.
+* Before starting this tutorial, complete the [Install Fn Tutorial](../install/README.md). Make sure you have the Fn server installed and running before you continue with this tutorial.
 * As you make your way through this tutorial, look out for this icon.
 ![](images/userinput.png) Whenever you see it, it's time for you to
 perform an action.

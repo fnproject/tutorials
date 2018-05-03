@@ -3,7 +3,7 @@
 Each of the tutorials below provides a step by step examination and walkthrough of a specific Fn feature or component.  Check back soon as new tutorials are being added regularly.
 
 ## Introduction to Fn
-Install Fn and deploy your first functions. Select your language:
+[Install Fn](install/README.md) and deploy your first functions. Select your language:
 
 * [Go](Introduction/README.md)
 * [Java](JavaFDKIntroduction//README.md)

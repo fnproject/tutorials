@@ -7,14 +7,14 @@ about the core Fn concepts like applications and routes.
 
 ### Before you Begin
 * Set aside about 15 minutes to complete this tutorial.
-* Before starting this tutorial, complete the [Install Fn Tutorial](../install/README.md). Make sure you have the Fn server installed and running before you continue with this tutorial.
+* Make sure Fn server is up and running by completing the [Install and Start Fn Tutorial](../install/README.md).
 
 > As you make your way through this tutorial, look out for this icon.
 ![](images/userinput.png) Whenever you see it, it's time for you to
 perform an action.
 
 ## Your First Function
-Let's start with a very simple "hello world" function written in
+Now that Fn is up and running, let's start with a very simple "hello world" function written in
 [Go](https://golang.org/). Don't worry, you don't need to know Go!  In
 fact you don't even need to have Go installed on your development
 machine as Fn provides the necessary Go compiler and tools as a Docker

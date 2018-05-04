@@ -1,4 +1,4 @@
-# Introduction to Fn with Node
+# Introduction to Fn with Node.js
 Fn is a lightweight Docker-based serverless functions platform you can run on
 your laptop, server, or cloud.  In this introductory tutorial we'll walk through
 developing a function using the JavaScript programming language and Node.js

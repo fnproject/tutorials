@@ -3,7 +3,9 @@
 Each of the tutorials below provides a step by step examination and walkthrough of a specific Fn feature or component.  Check back soon as new tutorials are being added regularly.
 
 ## Introduction to Fn
-Install Fn and deploy your first functions. Select your language:
+Before deploying your first function, you need to [install the Fn cli and start an Fn Server](install/README.md). 
+
+Now that the Fn Server is up and running, you can deploy your first function. Select your preferred language:
 
 * [Go](Introduction/README.md)
 * [Java](JavaFDKIntroduction//README.md)

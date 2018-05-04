@@ -357,7 +357,7 @@ that incorporates our application and function route as path elements.
 Use curl to invoke the function:
 
 ![user input](images/userinput.png)
->`curl http://localhost:8080/r/goapp/gofn`
+>`curl -H "Content-Type: application/json" http://localhost:8080/r/goapp/gofn`
 
 The result is once again the same.
 
@@ -369,7 +369,7 @@ We can again pass JSON data to out function get the value of name passed to the
 function back.
 
 ![user input](images/userinput.png)
->`curl http://localhost:8080/r/goapp/gofn -d '{"name":"Bob"}'`
+>`curl -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/r/goapp/gofn`
 
 The result is once again the same.
 

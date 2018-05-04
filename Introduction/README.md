@@ -1,108 +1,20 @@
-# Introduction to Fn
+# Introduction to Fn with Go
+Fn is a lightweight Docker-based serverless functions platform you can run on
+your laptop, server, or cloud.  In this introductory tutorial we'll walk through
+developing a function using the Go programming language (without installing any
+Go tools!) and deploying that function to a local Fn server.  We'll also learn
+about the core Fn concepts like applications and routes.
 
-Fn is a lightweight Docker-based serverless functions platform you can
-run on your laptop, server, or cloud.  In this introductory tutorial
-we'll walk through installing Fn, develop a function using the Go
-programming language (without installing any Go tools!) and
-deploy them to a local Fn server.  We'll also learn about the core Fn
-concepts like applications and routes.
+### Before you Begin
+* Set aside about 15 minutes to complete this tutorial.
+* Make sure Fn server is up and running by completing the [Install and Start Fn Tutorial](../install/README.md).
 
-So let's get started!
-
-As you make your way through this tutorial, look out for this icon.
+> As you make your way through this tutorial, look out for this icon.
 ![](images/userinput.png) Whenever you see it, it's time for you to
 perform an action.
 
-
-## Installing Fn
-
-Setting up a working Fn install is a two-step process.  First you need
-to ensure you have the necessary prerequisites and then you can install
-Fn itself.
-
-### Prerequisites
-
-Before we can install Fn you'll need:
-
-1. A computer running Linux or MacOS.  If you have a Windows machine the
-easiest thing to do is install [VirtualBox](https://www.virtualbox.org/)
-and run a free Linux virtual machine.
-2. [Docker](https://www.docker.com/) 17.05 (or higher) needs to be
-installed and running.
-
-> __NOTE__ In this tutorial we'll work in a purely local development
-mode.  However, when deploying functions to a remote Fn server, a Docker
-Hub (or other Docker registry) account is required.
-
-That's it.  You can use your favorite IDE for function development.
-However, for this tutorial, an IDE isn't necessary.
-
-
-### Downloading and Installing Fn
-
-From a terminal type the following:
-
-
-![](images/userinput.png)
->`curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh`
-
-Once installed you'll see the Fn version printed out.  You should see
-something similar to the following displayed (although likely with a later
-version number):
-
-```sh
-fn version 0.4.62
-```
-
-### Starting Fn Server
-
-The final install step is to start the Fn server.  Since Fn runs on
-Docker it'll need to be up and running too.
-
-To start Fn you can use the `fn` command line interface (CLI).  Type the
-following but note that the process will run in the foreground so that
-it's easy to stop with Ctrl-C:
-
-![user input](images/userinput.png)
->`fn start`
-
-You should see output similar to:
-
-```sh
-time="2017-09-18T14:37:13Z" level=info msg="datastore dialed" datastore=sqlite3 max_idle_connections=256
-time="2017-09-18T14:37:13Z" level=info msg="available memory" ram=1655975936
-time="2017-09-18T14:37:13Z" level=info msg="Serving Functions API on address `:8080`"
-
-      ______
-     / ____/___
-    / /_  / __ \
-   / __/ / / / /
-  /_/   /_/ /_/
-```
-
-Let's verify everthing is up and running correctly.
-
-**Open a new terminal** and run the following:
-
-![user input](images/userinput.png)
->`fn version`
-
-You should see the version of the fn CLI (client) and server displayed (your version will
-likely differ):
-
-```sh
-Client version:  0.4.62
-Server version:  0.3.335
-```
-
-If the server version is "?" then the fn CLI cannot reach the server.  If
-this happens it's likely you have something else running on port 8080. In this
-case stop the other process, and stop (ctrl-c) and restart the fn server as
-described previously.
-
 ## Your First Function
-
-Let's start with a very simple "hello world" function written in
+Now that Fn is up and running, let's start with a very simple "hello world" function written in
 [Go](https://golang.org/). Don't worry, you don't need to know Go!  In
 fact you don't even need to have Go installed on your development
 machine as Fn provides the necessary Go compiler and tools as a Docker
@@ -158,7 +70,7 @@ The `func.go` file which contains your actual Go function is generated along
 with several supporting files. To view your Go function type:
 
 ![user input](images/userinput.png)
->cat func.go
+> `cat func.go`
 
 ```go
 package main
@@ -201,7 +113,7 @@ The `fn init` command generated a `func.yaml` function
 configuration file. Let's look at the contents:
 
 ![user input](images/userinput.png)
->cat func.yaml
+> `cat func.yaml`
 
 ```yaml
 name: gofn
@@ -445,7 +357,7 @@ that incorporates our application and function route as path elements.
 Use curl to invoke the function:
 
 ![user input](images/userinput.png)
->`curl http://localhost:8080/r/goapp/gofn`
+>`curl -H "Content-Type: application/json" http://localhost:8080/r/goapp/gofn`
 
 The result is once again the same.
 
@@ -457,7 +369,7 @@ We can again pass JSON data to out function get the value of name passed to the
 function back.
 
 ![user input](images/userinput.png)
->`curl http://localhost:8080/r/goapp/gofn -d '{"name":"Bob"}'`
+>`curl -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/r/goapp/gofn`
 
 The result is once again the same.
 
@@ -467,8 +379,7 @@ The result is once again the same.
 
 ## Wrapping Up
 
-Congratulations!  In this tutorial you've accomplished a lot.  You've
-installed Fn, started up an Fn server, created your first function,
-run it locally, and then deployed it where it can be invoked over HTTP.
+Congratulations! In this tutorial you've accomplished a lot. You've created your first 
+function, run it locally, deployed it your local Fn server and invoked it over HTTP.
 
 **Go:** [Back to Contents](../README.md)

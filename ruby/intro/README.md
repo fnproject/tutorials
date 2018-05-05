@@ -9,9 +9,9 @@ learn about the core Fn concepts like applications and routes.
 * Set aside about 15 minutes to complete this tutorial.
 * Make sure Fn server is up and running by completing the [Install and Start Fn Tutorial](../../install/README.md).
 
-> `As you make your way through this tutorial, look out for this icon.
+> As you make your way through this tutorial, look out for this icon.
 ![](images/userinput.png) Whenever you see it, it's time for you to
-perform an action.`
+perform an action.
 
 ## Your First Function
 Now that Fn server is up and running, let's start with a very simple "hello world" function written in
@@ -109,7 +109,7 @@ configuration file. Let's look at the contents:
 
 ![user input](images/userinput.png)
 >```sh
->`cat func.yaml`
+>cat func.yaml
 >```
 
 ```yaml
@@ -376,7 +376,7 @@ The result is once again the same.
 ## Wrapping Up
 
 Congratulations!  In this tutorial you've accomplished a lot.  You've
-installed Fn, started up an Fn server, created your first function,
-run it locally, and then deployed it where it can be invoked over HTTP.
+created your first function, run it locally, deployed it to your local 
+Fn server and invoked it over HTTP.
 
 **Go:** [Back to Contents](../README.md)

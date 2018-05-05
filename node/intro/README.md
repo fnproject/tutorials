@@ -15,7 +15,7 @@ routes.
 perform an action.
 
 ## Your First Function
-Let's start with a very simple "hello world" function written in [Node.js
+Now that Fn server is up and running, let's start with a very simple "hello world" function written in [Node.js
 JavaScript](https://nodejs.org/). Don't worry, you don't need to know Node!  In
 fact you don't even need to have Node installed on your development machine as
 Fn provides the necessary Node tools as a Docker container.  Let's

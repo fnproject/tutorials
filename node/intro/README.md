@@ -361,8 +361,8 @@ The result is once again the same.
 
 ## Wrapping Up
 
-Congratulations!  In this tutorial you've accomplished a lot.  You've
-installed Fn, started up an Fn server, created your first function,
-run it locally, and then deployed it where it can be invoked over HTTP.
+Congratulations!  In this tutorial you've accomplished a lot.  You've 
+created your first function, run it locally, deployed it to your local 
+Fn server and invoked it over HTTP.
 
 **Go:** [Back to Contents](../README.md)

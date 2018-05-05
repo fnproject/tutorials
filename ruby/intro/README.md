@@ -14,7 +14,7 @@ learn about the core Fn concepts like applications and routes.
 perform an action.`
 
 ## Your First Function
-Now that Fn is up and running, let's start with a very simple "hello world" function written in
+Now that Fn server is up and running, let's start with a very simple "hello world" function written in
 [Ruby](https://www.ruby-lang.org/). Don't worry, you don't need to know Ruby!
 In fact you don't even need to have Ruby installed on your development machine
 as Fn provides the necessary Ruby compiler and tools as a Docker container.

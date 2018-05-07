@@ -59,8 +59,11 @@ import json
 
 
 def handler(ctx, data=None, loop=None):
-    body = json.loads(data) if len(data) > 0 else {"name": "World"}
-    return "Hello {0}".format(body.get("name"))
+    name = "World"
+    if data and len(data) > 0:
+        body = json.loads(data)
+        name = body.get("name")
+    return {"message": "Hello {0}".format(name)}
 
 
 if __name__ == "__main__":
@@ -91,17 +94,15 @@ Done! Your very simple echo function is ready to be deployed and executed!
 Let’s take a look at the echo function:
 ```python
 import fdk
+import json
 
-from fdk import response
 
-@fdk.coerce_input_to_content_type
-def handler(context, data=None, loop=None):
-    return response.RawResponse(
-        context,
-        status_code=200, 
-        headers={}, 
-        response_data=data
-    )
+def handler(ctx, data=None, loop=None):
+    name = "World"
+    if data and len(data) > 0:
+        body = json.loads(data)
+        name = body.get("name")
+    return {"message": "Hello {0}".format(name)}
 
 
 if __name__ == "__main__":
@@ -125,9 +126,13 @@ import fdk
 import json
 
 
-async def handler(ctx, data=None, loop=None):
-    body = json.loads(data) if len(data) > 0 else {"name": "World"}
-    return "Hello {0}".format(body.get("name"))
+def handler(ctx, data=None, loop=None):
+    name = "World"
+    if data and len(data) > 0:
+        body = json.loads(data)
+        name = body.get("name")
+    return {"message": "Hello {0}".format(name)}
+
 
 
 if __name__ == "__main__":
@@ -138,6 +143,20 @@ if __name__ == "__main__":
    * through the context developers can access request headers, Fn application and route config as well as format-specific attributes request method, etc.
 
 You can find more information and code samples here and read more about Fn formats [here](https://github.com/fnproject/fn/blob/master/docs/function-format.md).
+
+# First run
+
+To check if you functions runs well Fn CLI offers nifty feature: `fn run`.
+It helps you identify whether function's code can be packaged and executed using a wrapper above Docker CLI:
+
+>`fn run`
+
+```bash
+Building image fndemouser/pythonfn:0.0.1 ..........................................
+{"message":"Hello World"}
+```
+
+This is an initial but still very meaningful step towards setting up a real serverless function with Fn server.
 
 # Deploying your Python Function
 
@@ -178,7 +197,3 @@ Success!
 Congratulations! You've just completed an introduction to the Fn Python FDK.
 There's so much more in the FDK than we can cover in a brief
 introduction but we'll go deeper in subsequent tutorials.
-
-# Warning
-
-Please note that both `fn test` and `fn run` does not work for FDK-Python until the [following issue](https://github.com/fnproject/cli/issues/156) gets resolved.

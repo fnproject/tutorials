@@ -8,9 +8,6 @@ As you make your way through this tutorial, look out for this icon.
 ![](images/userinput.png) Whenever you see it, it's time for you to
 perform an action.
 
-
-## Installing Fn
-
 Setting up a working Fn install is a two-step process.  First you need
 to ensure you have the necessary prerequisites and then you can install
 Fn itself.

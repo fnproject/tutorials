@@ -1,4 +1,4 @@
-# Introduction
+# Introduction to fdk-python
 
 This tutorial introduces the 
 [Fn Python FDK (Function Development Kit)](https://github.com/fnproject/fdk-python). 
@@ -49,7 +49,7 @@ Runtime: python3.6
 Function boilerplate generated.
 func.yaml created.
 ```
-After that you need to create two files with the following content:
+The Fn CLI created the following files in the directory:
 
    * `func.py`
    
@@ -187,7 +187,7 @@ JSON input as the body of the call.
 > `curl -v http://localhost:8080/r/myapp/pythonfn -d '{"name": "John"}'`
 
 ```sh
-"Hello John"
+{"message":"Hello John"}
 ```
 
 Success!

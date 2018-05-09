@@ -73,6 +73,21 @@ time="2017-09-18T14:37:13Z" level=info msg="Serving Functions API on address `:8
 
 **Note:** The Fn server creates a temporary `data` directory it uses to store metadata. If you want to retain this data after a restart, make sure you start Fn server in the same directory.
 
+#### Changing the Fn Server Port
+Fn Server starts on port 8080 by default. To change the value use the `--port` or the `-p` option. For example
+
+```sh
+fn server --port 8081
+fn server -p 8081
+```
+
+In addition after changing the port, the Fn client must be configured for the new port value using the `FN_API_URL` environment variable or setting the `api_url` using Fn [contexts](https://github.com/fnproject/cli/blob/master/CONTEXT.md). For example
+
+```sh
+export FN_API_URL=http://127.0.0.1:8081
+```
+
+
 ## Testing the Install
 Let's verify everthing is up and running correctly.
 

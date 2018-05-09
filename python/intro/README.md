@@ -18,9 +18,9 @@ perform an action.
 Let's start with a very simple "hello world" function written in
 [Python](https://www.python.org/). Don't worry, you don't need to know Python!
 In fact you don't even need to have Python installed on your development machine
-as Fn provides the necessary Python compiler and tools as a Docker container.
-Let's walk through your first function to become familiar with the process and
-how Fn supports development.
+as Fn provides the necessary Python interpreter and build tools as a Docker
+container. Let's walk through your first function to become familiar with the
+process and how Fn supports development.
 
 Before we start developing we need to set the `FN_REGISTRY`
 environment variable.  Normally, it's set to your Docker Hub username.
@@ -178,41 +178,35 @@ enabled.
 >```
 
 ```yaml
-Building image pythonfn:0.0.1
+Building image fndemouser/pythonfn:0.0.1
 Sending build context to Docker daemon  6.144kB
-Step 1/6 : FROM python:3.6
-3.6: Pulling from library/python
-f2b6b4884fc8: Pull complete
-4fb899b4df21: Pull complete
-74eaa8be7221: Pull complete
-2d6e98fe4040: Pull complete
-414666f7554d: Pull complete
-135a494fed80: Pull complete
-6ca3f38fdd4d: Pull complete
-4de6fcaa1241: Pull complete
-Digest: sha256:f76c4384f42bbb9065aff0a444c2d61f7ba3d9d44873976b4179b4e34280c6bb
-Status: Downloaded newer image for python:3.6
- ---> 07d72c0beb99
-Step 2/6 : WORKDIR /function
-Removing intermediate container 9351c142b904
- ---> 3ce33feb8e51
-Step 3/6 : ADD requirements.txt /function/
- ---> f41ea90c9672
-Step 4/6 : RUN pip3 install -r requirements.txt
- ---> Running in b20ba0ee4603
-Collecting fdk (from -r requirements.txt (line 1))
-  Downloading fdk-0.0.25-py2.py3-none-any.whl
-Collecting iso8601==0.1.12 (from fdk->-r requirements.txt (line 1))
-  Downloading iso8601-0.1.12-py2.py3-none-any.whl
-... # Truncated for brevity
-Step 5/6 : ADD . /function/
- ---> 392b18c683d0
-Step 6/6 : ENTRYPOINT ["python3", "func.py"]
- ---> Running in 29f238ca5b19
-Removing intermediate container 29f238ca5b19
- ---> 2e4c259d3723
-Successfully built 2e4c259d3723
-Successfully tagged pythonfn:0.0.1
+Step 1/8 : FROM python:3.6-slim-stretch
+ ---> 29ea9c0b39c6
+Step 2/8 : WORKDIR /function
+ ---> Using cache
+ ---> 49c4ceb15089
+Step 3/8 : RUN apt-get update && apt-get install --no-install-recommends -qy build-essential gcc
+ ---> Using cache
+ ---> 74ae03115b83
+Step 4/8 : ADD requirements.txt /function/
+ ---> Using cache
+ ---> 1e22dc8f6484
+Step 5/8 : RUN pip3 install --no-cache --no-cache-dir -r requirements.txt
+ ---> Using cache
+ ---> e8111d7a000a
+Step 6/8 : ADD . /function/
+ ---> 04fac78c1807
+Step 7/8 : RUN rm -fr ~/.cache/pip /tmp* requirements.txt func.yaml Dockerfile .venv
+ ---> Running in 6825550c0375
+Removing intermediate container 6825550c0375
+ ---> 81715c7bedb8
+Step 8/8 : ENTRYPOINT ["python3", "func.py"]
+ ---> Running in fe29eba8a748
+Removing intermediate container fe29eba8a748
+ ---> 25d2d8306bec
+Successfully built 25d2d8306bec
+Successfully tagged fndemouser/pythonfn:0.0.1
+
 {"message":"Hello World"}
 ```
 
@@ -238,15 +232,6 @@ with a Dockerfile.  Of course this is exactly what's happening!  When
 you run a function like this Fn is dynamically generating a Dockerfile
 for your function, building a container, and then running it.
 
-> __NOTE__: Fn is actually using two images.  The first contains
-the language compiler and is used to generate a binary.  The second
-image packages only the generated binary and any necessary language
-runtime components. Using this strategy, the final function image size
-can be kept as small as possible.  Smaller Docker images are naturally
-faster to push and pull from a repository which improves overall
-performance.  For more details on this technique see [Multi-Stage Docker
-Builds for Creating Tiny Go Images](https://medium.com/travis-on-docker/multi-stage-docker-builds-for-creating-tiny-go-images-e0e1867efe5a).
-
 `fn run` is a local operation.  It builds and packages your function
 into a container image which resides on your local machine.  As Fn is
 built on Docker you can use the `docker` command to see the local
@@ -263,7 +248,7 @@ to see only those created by fndemouser:
 You should see something like:
 
 ```sh
-fndemouser/pythonfn   0.0.1               12f4f19c510c        About a minute ago   717MB
+fndemouser/pythonfn   0.0.1               25d2d8306bec        About a minute ago   361MB
 ```
 
 ## Deploying Your First Function
@@ -378,7 +363,7 @@ Use curl to invoke the function:
 
 The result is once again the same.
 
-```js
+```json
 {"message":"Hello World"}
 ```
 
@@ -392,7 +377,7 @@ function back.
 
 The result is once again the same.
 
-```js
+```json
 {"message":"Hello Bob"}
 ```
 

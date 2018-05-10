@@ -96,7 +96,7 @@ Fn Server starts on port 8080 by default. To use a different port use the `--por
 
 ![user input](images/userinput.png)
 >```sh
->fn server -p 8081
+>fn start -p 8081
 >```
 
 When using a non-default port, you must point the `fn` CLI to the new port using 

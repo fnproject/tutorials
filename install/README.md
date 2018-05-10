@@ -73,7 +73,7 @@ time="2018-05-10T11:32:49Z" level=info msg="sync and async cpu reservations" cpu
       / /_  / __ \
      / __/ / / / /
     /_/   /_/ /_/
-        v0.3.429
+        v0.3.439
 
 time="2018-05-10T11:32:49Z" level=info msg="Fn serving on `:8080`" type=full
 ```
@@ -123,7 +123,7 @@ version will likely differ):
 
 ```sh
 Client version:  0.4.87
-Server version:  0.3.429
+Server version:  0.3.439
 ```
 
 **Note:** If the server version is "?" then the `fn` CLI cannot reach the Fn server.  

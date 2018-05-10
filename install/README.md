@@ -4,15 +4,12 @@ Fn is a lightweight Docker-based serverless functions platform you can
 run on your laptop, server, or cloud.  In this installation tutorial
 we'll walk through installing Fn.
 
-As you make your way through this tutorial, look out for this icon.
-![](images/userinput.png) Whenever you see it, it's time for you to
-perform an action.
+Setting up a working Fn installation involves these three simple steps:
+* Ensure you have the necessary prerequisites
+* Download the `fn` command line interface (CLI) utility
+* Run `fn start` command which will download the Fn server docker image and start the Fn server
 
-Setting up a working Fn install is a two-step process.  First you need
-to ensure you have the necessary prerequisites and then you can install
-Fn itself.
-
-## Prerequisites
+### Before you Begin
 
 Before we can install Fn you'll need:
 
@@ -22,92 +19,116 @@ and run a free Linux virtual machine.
 2. [Docker](https://www.docker.com/) 17.05 (or higher) needs to be
 installed and running.
 
-> __NOTE__ In this tutorial we'll work in a purely local development
-mode.  However, when deploying functions to a remote Fn server, a Docker
-Hub (or other Docker registry) account is required.
+> As you make your way through this tutorial, look out for this icon.
+![](images/userinput.png) Whenever you see it, it's time for you to
+perform an action.
 
-That's it.  You can use your favorite IDE for function development.
-However, for this tutorial, an IDE isn't necessary.
-
-
-## Downloading and Installing Fn
+## Download and Install the fn CLI
 
 From a terminal type the following:
 
 ![](images/userinput.png)
->`curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh`
+>```sh
+>curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
+>```
 
-Once installed you'll see the Fn version printed out.  You should see
+Once installed you'll see the `fn` CLI version printed out.  You should see
 something similar to the following displayed (although likely with a later
 version number):
 
 ```sh
-fn version 0.4.62
+fn version 0.4.87
+
+        ______
+       / ____/___
+      / /_  / __ \
+     / __/ / / / /
+    /_/   /_/ /_/`
+    
 ```
 
-## Starting Fn Server
+## Start the Fn Server
 
 The final install step is to start the Fn server.  Since Fn runs on
 Docker it'll need to be up and running too.
 
-To start Fn you can use the `fn` command line interface (CLI).  Type the
-following but note that the process will run in the foreground so that
-it's easy to stop with Ctrl-C:
+To start the Fn server you use the `fn` CLI. Run the `fn start` command. This will 
+download the Fn server docker image and start the Fn Server on port 8080 by default. 
+Note that this process runs in the foreground so that it's easy to stop with Ctrl-C:
 
 ![user input](images/userinput.png)
->`fn start`
+>```sh
+>fn start
+>```
 
-You should see output similar to:
+If the Fn Server starts up successfully, you should see output similar to:
 
 ```sh
-time="2017-09-18T14:37:13Z" level=info msg="datastore dialed" datastore=sqlite3 max_idle_connections=256
-time="2017-09-18T14:37:13Z" level=info msg="available memory" ram=1655975936
-time="2017-09-18T14:37:13Z" level=info msg="Serving Functions API on address `:8080`"
+...
+time="2018-05-10T11:32:49Z" level=info msg="available cpu" availCPU=2000 totalCPU=2000
+time="2018-05-10T11:32:49Z" level=info msg="sync and async cpu reservations" cpuAsync=1600 cpuAsyncHWMark=1280 cpuSync=400
 
-      ______
-     / ____/___
-    / /_  / __ \
-   / __/ / / / /
-  /_/   /_/ /_/
+        ______
+       / ____/___
+      / /_  / __ \
+     / __/ / / / /
+    /_/   /_/ /_/
+        v0.3.439
+
+time="2018-05-10T11:32:49Z" level=info msg="Fn serving on `:8080`" type=full
 ```
 
 **Note:** The Fn server creates a temporary `data` directory it uses to store metadata. If you want to retain this data after a restart, make sure you start Fn server in the same directory.
 
-#### Changing the Fn Server Port
-Fn Server starts on port 8080 by default. To change the value use the `--port` or the `-p` option. For example
+If you have some other process running on port 8080, `fn start` will 
+fail with the following error:
 
 ```sh
-fn server --port 8081
-fn server -p 8081
+docker: Error response from daemon: driver failed programming external connectivity on endpoint fnserver (d9478f85df4ef97d23d618c2318c243f1e8b65d69ca2547d889d80b148c5be09): Error starting userland proxy: Bind for 0.0.0.0:8080 failed: port is already allocated.
+2018/05/10 16:49:25 error: processed finished with error exit status 125
 ```
 
-In addition after changing the port, the Fn client must be configured for the new port value using the `FN_API_URL` environment variable or setting the `api_url` using Fn [contexts](https://github.com/fnproject/cli/blob/master/CONTEXT.md). For example
+In this case you can stop the other process and run `fn start` again. Alternatively, 
+you can start Fn server on a different port.
+
+#### Start the Fn Server on a Different Port
+Fn Server starts on port 8080 by default. To use a different port use the `--port` or the `-p` option. For example
+
+![user input](images/userinput.png)
+>```sh
+>fn start -p 8081
+>```
+
+When using a non-default port, you must point the `fn` CLI to the new port using 
+the `FN_API_URL` environment variable:
 
 ```sh
 export FN_API_URL=http://127.0.0.1:8081
 ```
 
+Alternatively, you can also set the `api_url` using Fn [contexts](https://github.com/fnproject/cli/blob/master/CONTEXT.md).
 
-## Testing the Install
+## Test the Install
 Let's verify everthing is up and running correctly.
 
 **Open a new terminal** and run the following:
 
 ![user input](images/userinput.png)
->`fn version`
+>```sh
+>fn version
+>```
 
 You should see the version of the fn CLI (client) and server displayed (your
 version will likely differ):
 
 ```sh
-Client version:  0.4.62
-Server version:  0.3.335
+Client version:  0.4.87
+Server version:  0.3.439
 ```
 
-If the server version is "?" then the fn CLI cannot reach the server.  If
-this happens it's likely you have something else running on port 8080. In this
-case stop the other process, and stop (**ctrl-c**) and restart the fn server as
-described previously.
+**Note:** If the server version is "?" then the `fn` CLI cannot reach the Fn server.  
+If this happens it's likely you have something else running on port 8080 or you 
+started the server on a different port but forgot to set the `FN_API_URL`. 
 
 ## Learn More
 

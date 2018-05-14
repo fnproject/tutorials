@@ -12,15 +12,16 @@ functions written in Python.
 ## What is an FDK?
 
 The Fn Project allows developers to choose the intercommunication protocol
-format between an application and serverless function.  There are currently
+format between an application and a serverless function.  There are currently
 three different formats that Fn defines:
 
 * default: whatever an application sends inside the HTTP request body will be transferred to the function
-* HTTP: the function receives the full HTTP request
-* JSON: the function receives a JSON object very similar to CNCF OpenEvents
+* JSON: the function receives a JSON object similar to the [CNCF Cloud Event Format](https://github.com/cloudevents/spec/blob/master/spec.md)
+* cloudevent: the function receives a JSON object using the [CNCF Cloud Event Format](https://github.com/cloudevents/spec/blob/master/spec.md).
 
-What is the difference between these formats? Why are there three and not just
-one?
+What is the difference between these
+[formats](https://github.com/fnproject/fn/blob/master/docs/developers/function-format.md)?
+Why are there three and not just one?
 
 The short answer is the default format is applied only to cold functions.
 A cold function container lives no longer than the time needed to process
@@ -28,12 +29,14 @@ a single request.  This means higher latencies due to container start/stop
 times, etc.  In a high performance, low latency situation this may not be
 acceptable.
 
-In contrast, HTTP and JSON formats are applied to hot functions. A hot function
-stays alive as long as there are more requests to process, defined by an
-`idle_timeout` value. For a developer, the HTTP format feels like talking to a
-web server because it uses simple HTTP methods. The JSON format is a bit
-different because Fn automatically assembles a JSON object from the HTTP
-request.
+In contrast, JSON and CloudEvents formats are applied to hot functions. A hot
+function stays alive as long as there are more requests to process, defined by
+an `idle_timeout` value. For a developer, the JSON format is a bit different
+because Fn automatically assembles a JSON object from the HTTP request. The
+CloudEvents format differs in that is explicitly stores JSON data using the
+[CNCF CloudEvents
+Format](https://github.com/cloudevents/spec/blob/master/spec.md). Effectively,
+when JSON data is stored, additional metadata is added.
 
 So what is an FDK and why do we need it? No matter what kind of format is
 defined for a particular function, Fn serves the requests through STDIN, waits
@@ -206,7 +209,7 @@ You use the route to invoke the function via curl, passing the
 JSON input as the body of the call.
 
 >```sh
-> curl -v http://localhost:8080/r/myapp/pythonfn -d '{"name": "John"}'
+> curl -v -H "Content-Type: application/json" -d '{"name": "John"}' http://localhost:8080/r/myapp/pythonfn 
 >```
 
 ```sh

@@ -74,9 +74,9 @@ Now get a list of the directory contents.
 > ls
 >```
 
->```sh
-> func.js func.yaml package.json test.json
->```
+```sh
+func.js func.yaml package.json test.json
+```
 
 The `func.js` file which contains your actual Node function is generated along
 with several supporting files. To view your Node function type:
@@ -109,7 +109,7 @@ configuration file. Let's look at the contents:
 
 ![user input](images/userinput.png)
 >```sh
->cat func.yaml
+> cat func.yaml
 >```
 
 ```yaml
@@ -210,7 +210,7 @@ You can also pass data to the run command. For example:
 
 ![user input](images/userinput.png)
 >```sh
->echo -n '{"name":"Bob"}' | fn run
+> echo -n '{"name":"Bob"}' | fn run
 >```
 
 ```sh
@@ -247,7 +247,7 @@ to see only those created by fndemouser:
 
 ![user input](images/userinput.png)
 >```sh
->`docker images | grep fndemouser`
+> docker images | grep fndemouser
 >```
 
 You should see something like:
@@ -270,7 +270,7 @@ In your terminal type the following:
 
 ![user input](images/userinput.png)
 >```sh
-> `fn deploy --app nodeapp --local`
+> fn deploy --app nodeapp --local
 >```
 
 You should see output similar to:

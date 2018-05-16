@@ -11,7 +11,7 @@ Now that the Fn Server is up and running, you can deploy your first function. Se
 * [Java](JavaFDKIntroduction//README.md)
 * [Node.js](node/intro/README.md)
 * [Ruby](ruby/intro/README.md)
-* Python (Coming Soon!)
+* [Python](python/intro/README.md)
 * Docker (Coming Soon!)
 
 ## Explore Fn

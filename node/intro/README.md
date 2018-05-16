@@ -206,11 +206,11 @@ Successfully tagged fndemouser/nodefn:0.0.1
 {"message":"Hello World"}
 ```
 
-You can also pass data to the run command. For example:
+You can also pass data to the run command. Set the content type for the data passed. For example:
 
 ![user input](images/userinput.png)
 >```sh
-> echo -n '{"name":"Bob"}' | fn run
+> echo -n '{"name":"Bob"}' | fn run --content-type application/json
 >```
 
 ```sh

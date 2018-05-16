@@ -80,7 +80,7 @@ with several supporting files. To view your Ruby function type:
 
 ![user input](images/userinput.png)
 >```sh
->cat func.rb
+> cat func.rb
 >```
 
 ```ruby
@@ -117,7 +117,7 @@ configuration file. Let's look at the contents:
 
 ![user input](images/userinput.png)
 >```sh
->cat func.yaml
+> cat func.yaml
 >```
 
 ```yaml
@@ -221,7 +221,7 @@ You can also pass data to the run command. For example:
 
 ![user input](images/userinput.png)
 >```sh
->`echo -n '{"name":"Bob"}' | fn run`
+> echo -n '{"name":"Bob"}' | fn run
 >```
 
 ```yaml

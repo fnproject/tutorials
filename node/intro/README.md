@@ -28,14 +28,20 @@ However in this tutorial we'll work in local development mode so we can set
 the `FN_REGISTRY` variable to an arbitrary value. Let's use `fndemouser`.
 
 ![user input](images/userinput.png)
->`export FN_REGISTRY=fndemouser`
+>```
+> export FN_REGISTRY=fndemouser
+>```
+
+
 
 
 With that out of the way, let's create a new function. In the terminal type the
 following.
 
 ![user input](images/userinput.png)
->`fn init --runtime node nodefn`
+>```
+> fn init --runtime node nodefn
+>```
 
 The output will be
 
@@ -57,23 +63,27 @@ files in the `/nodefn` directory.
 With your function created change into the `/nodefn` directory.
 
 ![user input](images/userinput.png)
->`cd nodefn`
+>```
+> cd nodefn
+>```
 
 Now get a list of the directory contents.
 
 ![user input](images/userinput.png)
->`ls`
-
->```sh
-> func.js func.yaml package.json test.json
 >```
+> ls
+>```
+
+```sh
+func.js func.yaml package.json test.json
+```
 
 The `func.js` file which contains your actual Node function is generated along
 with several supporting files. To view your Node function type:
 
 ![user input](images/userinput.png)
 >```sh
->cat func.js
+> cat func.js
 >```
 
 ```js
@@ -99,7 +109,7 @@ configuration file. Let's look at the contents:
 
 ![user input](images/userinput.png)
 >```sh
->cat func.yaml
+> cat func.yaml
 >```
 
 ```yaml
@@ -142,7 +152,9 @@ function of a particular language it takes longer as Fn downloads
 the necessary Docker images.
 
 ![user input](images/userinput.png)
-> `fn run`
+>```sh
+> fn run
+>```
 
 ```sh
 Building image fndemouser/nodefn:0.0.1 ...
@@ -157,7 +169,9 @@ scenes you can add the `--verbose` switch.  Let's rerun with verbose output
 enabled.
 
 ![user input](images/userinput.png)
-> `fn --verbose run`
+>```sh
+> fn --verbose run
+>```
 
 ```sh
 Building image fndemouser/nodefn:0.0.1
@@ -196,7 +210,7 @@ You can also pass data to the run command. For example:
 
 ![user input](images/userinput.png)
 >```sh
->echo -n '{"name":"Bob"}' | fn run
+> echo -n '{"name":"Bob"}' | fn run
 >```
 
 ```sh
@@ -232,7 +246,9 @@ You may have a number of Docker images so use the following command
 to see only those created by fndemouser:
 
 ![user input](images/userinput.png)
->`docker images | grep fndemouser`
+>```sh
+> docker images | grep fndemouser
+>```
 
 You should see something like:
 
@@ -253,7 +269,9 @@ accessible to other users and systems.
 In your terminal type the following:
 
 ![user input](images/userinput.png)
-> `fn deploy --app nodeapp --local`
+>```sh
+> fn deploy --app nodeapp --local
+>```
 
 You should see output similar to:
 
@@ -286,7 +304,9 @@ The fn CLI provides a couple of commands to let us see what we've deployed.
 `fn apps list` returns a list of all of the defined applications.
 
 ![user input](images/userinput.png)
-> `fn apps list`
+>```sh
+> fn apps list
+>```
 
 Which, in our case, returns the name of the application we created when we
 deployed our gofn function:
@@ -300,7 +320,9 @@ functions are exposed via routes, the `fn routes list <appname>` command
 is used.  To list the functions included in "nodeapp" we can type:
 
 ![user input](images/userinput.png)
->`fn routes list nodeapp`
+>```sh
+> fn routes list nodeapp
+>```
 
 ```sh
 path    image			        endpoint
@@ -319,7 +341,9 @@ the `fn` CLI which makes invoking your function relatively easy.  Type
 the following:
 
 ![user input](images/userinput.png)
->`fn call nodeapp /nodefn`
+>```sh
+> fn call nodeapp /nodefn
+>```
 
 which results in our familiar output message.
 
@@ -339,7 +363,9 @@ that incorporates our application and function route as path elements.
 Use curl to invoke the function:
 
 ![user input](images/userinput.png)
->`curl -H "Content-Type: application/json" http://localhost:8080/r/nodeapp/nodefn`
+>```sh
+> curl -H "Content-Type: application/json" http://localhost:8080/r/nodeapp/nodefn
+>```
 
 The result is once again the same.
 
@@ -351,7 +377,9 @@ We can again pass JSON data to our function get the value of name passed to the
 function back.
 
 ![user input](images/userinput.png)
->`curl -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/r/nodeapp/nodefn`
+>```
+> curl -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/r/nodeapp/nodefn 
+>```
 
 The result is once again the same.
 

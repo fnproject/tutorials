@@ -44,16 +44,18 @@ fn version 0.4.87
       / /_  / __ \
      / __/ / / / /
     /_/   /_/ /_/`
-    
+
 ```
+
+**Note:** If the above script does not work or you prefer to install the `fn` CLI manually. [Jump down to the manual installation instructions](#fn-manual-install).
 
 ## Start the Fn Server
 
 The final install step is to start the Fn server.  Since Fn runs on
 Docker it'll need to be up and running too.
 
-To start the Fn server you use the `fn` CLI. Run the `fn start` command. This will 
-download the Fn server docker image and start the Fn Server on port 8080 by default. 
+To start the Fn server you use the `fn` CLI. Run the `fn start` command. This will
+download the Fn server docker image and start the Fn Server on port 8080 by default.
 Note that this process runs in the foreground so that it's easy to stop with Ctrl-C:
 
 ![user input](images/userinput.png)
@@ -80,7 +82,7 @@ time="2018-05-10T11:32:49Z" level=info msg="Fn serving on `:8080`" type=full
 
 **Note:** The Fn server creates a temporary `data` directory it uses to store metadata. If you want to retain this data after a restart, make sure you start Fn server in the same directory.
 
-If you have some other process running on port 8080, `fn start` will 
+If you have some other process running on port 8080, `fn start` will
 fail with the following error:
 
 ```sh
@@ -88,7 +90,7 @@ docker: Error response from daemon: driver failed programming external connectiv
 2018/05/10 16:49:25 error: processed finished with error exit status 125
 ```
 
-In this case you can stop the other process and run `fn start` again. Alternatively, 
+In this case you can stop the other process and run `fn start` again. Alternatively,
 you can start Fn server on a different port.
 
 #### Start the Fn Server on a Different Port
@@ -99,7 +101,7 @@ Fn Server starts on port 8080 by default. To use a different port use the `--por
 >fn start -p 8081
 >```
 
-When using a non-default port, you must point the `fn` CLI to the new port using 
+When using a non-default port, you must point the `fn` CLI to the new port using
 the `FN_API_URL` environment variable:
 
 ```sh
@@ -127,8 +129,67 @@ Server version:  0.3.439
 ```
 
 **Note:** If the server version is "?" then the `fn` CLI cannot reach the Fn server.  
-If this happens it's likely you have something else running on port 8080 or you 
-started the server on a different port but forgot to set the `FN_API_URL`. 
+If this happens it's likely you have something else running on port 8080 or you
+started the server on a different port but forgot to set the `FN_API_URL`.
+
+
+## Fn Manual Install
+The steps to install Fn manually are described in this section. The system requirements are the same as those outlined for the script installation.
+
+### Download Fn CLI
+Download the CLI for your operating system. For this example, files are saved to the `~/Downloads` directory.
+
+1. Open the Fn project release directory in your browser: <https://github.com/fnproject/cli/releases/>
+    * You should see a list of executables for supported operating systems.
+2. Click on the Fn executable for your operating system.
+3. Save the file locally.
+
+Sample executables:
+
+| Operating System | Executable |
+| ------------- |:-------------:|
+| MacOS | fn_mac |
+| Linux | fn_linux |
+| Alpine Linux | fn_alpine |
+| Windows | fn.exe |
+
+### Copy/Install the Executable
+Now make the Fn file executable and available on your machine.
+
+
+#### For MacOS Systems
+* Open a Terminal Window.
+* Copy the file to executable directory with the correct name.
+
+>**Note:** If you use homebrew, the following commands should work fine. If you do not, you may need to precede the commands with `sudo`.
+
+>```sh
+> mv ~/Downloads/fn_mac /usr/local/bin/fn
+>```
+
+* Make the file executable:
+
+>```sh
+> chmod +x /usr/local/bin/fn
+>```
+
+#### For Linux Systems
+* Open a Terminal Window.
+* Copy the file to executable directory with the correct name:
+
+>```sh
+> sudo mv ~/Downloads/fn_linux /usr/local/bin/fn
+>```
+
+* Make the file executable:
+
+>```sh
+> sudo chmod +x /usr/local/bin/fn
+>```
+
+#### For Windows Systems
+For Windows the current recommendation is to run Fn in Linux virtual machine on Windows. You can do with with [VirtualBox](https://www.virtualbox.org/) or other commercial VM software.
+
 
 ## Learn More
 

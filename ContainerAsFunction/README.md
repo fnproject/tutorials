@@ -2,7 +2,7 @@
 
 This tutorial walks through how to use a custom Docker image to define an
 Fn function.  Although Fn functions are packaged as Docker images, when
-developing functions using the fn CLI developers are not directly exposed
+developing functions using the Fn CLI developers are not directly exposed
 to the underlying Docker platform.  Docker isn't hidden (you can see
 Docker build output and image names and tags in routes), but you aren't
 required to be very Docker-savvy to develop functions with Fn.
@@ -19,7 +19,7 @@ perform an action.
 
 This tutorial requires you to have both Docker and Fn installed. If you need
 help with Fn installation you can find instructions in the
-[Introduction to Fn](../Introduction/README.md) tutorial.
+[Install and Start Fn Tutorial](../install/README.md).
 
 # Getting Started
 
@@ -32,7 +32,12 @@ To make it possible to push images you need to authenticate yourself with your
 Docker repository (default is Docker Hub).
 
 ![](images/userinput.png)
->`docker login`
+>```
+> docker login
+>```
+
+NOTE: Depending on how you've installed Docker you may need to prefix `docker`
+commands with `sudo`.
 
 ## Start Fn Server
 
@@ -42,16 +47,19 @@ new terminal for this.
 
 1. Define the FN_REGISTRY environment variable to point the Fn server to where
 it should pull function images from. If using the default Docker Hub registry 
-you just need to specify
-your docker user id:
+you just need to specify your docker user id:
 
    ![](images/userinput.png)
-   >`export FN_REGISTRY=<yourdockerid>`
+   >```
+   > export FN_REGISTRY=<your-docker-id>
+   >```
 
-2. Start the Fn server using the `fn` cli:
+2. If it isn't already running, start the Fn server using the `fn` cli:
 
    ![](images/userinput.png)
-   >`fn start`
+   >```
+   > fn start
+   >```
 
 ## A Custom Function Container Image
 
@@ -112,12 +120,16 @@ In your working directory, build and run the image as you would any Docker image
 1. Build your function container image with `docker build`:
 
    ![](images/userinput.png)
-   >`docker build . -t <yourdockerid>/node-hello:0.0.1`
+   >```
+   > docker build . -t <your-docker-id>/node-hello:0.0.1
+   >```
 
 2. Test the image by running it with no input:
 
    ![](images/userinput.png)
-   >`docker run --rm <yourdockerid>/node-hello:0.0.1`
+   >```
+   > docker run --rm <your-docker-id>/node-hello:0.0.1
+   >```
 
    The output should be:
    ```
@@ -127,7 +139,9 @@ In your working directory, build and run the image as you would any Docker image
 3. Test the image by running it with a name parameter:
 
    ![](images/userinput.png)
-   >`echo -n "Jane" | docker run -i --rm <yourdockerid>/node-hello:0.0.1`
+   >```
+   > echo -n "Jane" | docker run -i --rm <your-docker-id>/node-hello:0.0.1
+   >```
 
    The output should be the same as be except "Jane" in place of "World":
 
@@ -143,11 +157,13 @@ When developing locally you don't need to deploy to Docker Hub--the
 local Fn server can find your function image on the local machine. But
 eventually you are going to want to run your function on a remote
 Fn server which requires you to publish your function image in
-a repository like Docker Hub.  You can do this with a standard `docker push` 
+a repository like Docker Hub. You can do this with a standard `docker push` 
 but again this step is optional when we're working locally.
 
 ![](images/userinput.png)
->`docker push <yourdockerid>/node-hello:0.0.1`
+>```
+> docker push <your-docker-id>/node-hello:0.0.1
+>```
 
 ## Creating the Fn App and Defining the Route
 
@@ -161,7 +177,9 @@ and can contain configuration values that are shared across all functions in
 that application:
 
    ![](images/userinput.png)
-   >`fn apps create demoapp`
+   >```
+   > fn apps create demoapp
+   >```
 
    ```
    Successfully created app:  demoapp
@@ -170,7 +188,9 @@ that application:
 2. We then create a route that uses our manually built container image:
 
    ![](images/userinput.png)
-   >`fn routes create demoapp /hello -i <yourdockerid>/node-hello:0.0.1`
+   >```
+   > fn routes create demoapp /hello -i <your-docker-id>/node-hello:0.0.1
+   >```
 
    ```xml
    /hello created with <yourdockerid>/node-hello:0.0.1
@@ -180,13 +200,15 @@ that application:
 defined for an application:
 
    ![](images/userinput.png)
-   >`fn routes list demoapp`
+   >```
+   > fn routes list demoapp
+   >```
 
    You should see something like:
 
    ```xml
    path    image                            endpoint
-   /hello  <yourdockerid>/node-hello:0.0.1  localhost:8080/r/demoapp/hello
+   /hello  <your-docker-id>/node-hello:0.0.1  localhost:8080/r/demoapp/hello
    ```
 
 At this point all the Fn server has is configuration metadata.
@@ -197,13 +219,15 @@ not until that route is invoked that this metadata is used.
 ## Calling the Function
 
 Calling a function that was created through a manually defined route is no
-different from calling a function defined using `fn deploy`--which is exactly
+different from calling a function defined using `fn deploy`, which is exactly
 as intended!
 
 1. Call the function using `fn call`:
 
    ![](images/userinput.png)
-   >`echo -n "Jane" | fn call demoapp /hello`
+   >```
+   > echo -n "Jane" | fn call demoapp /hello
+   >```
 
    This will produce the expected output:
 
@@ -211,12 +235,14 @@ as intended!
    Hello Jane from Node!
    ```
 
-2. Call the function with curl using it's http endpoint.  You can find out the
+2. Call the function with curl using its http endpoint. You can find out the
 endpoints for each of your routes using the `fn routes list` command we used
 above.
 
    ![](images/userinput.png)
-   >`curl -d "Jane" http://localhost:8080/r/demoapp/hello`
+   >```
+   > curl -d "Jane" http://localhost:8080/r/demoapp/hello
+   >```
 
    This will produce exactly the same output as when using `fn call`, as 
    expected.
@@ -224,15 +250,127 @@ above.
    ```sh
    Hello Jane from Node!
    ```
-When the function is invoked, regardless of the mechanism, the Fn server 
-looks up the function image name and tag associated with the route and 
-has Docker run a container. If the required image is not already available
+
+When the function is invoked, regardless of the mechanism, the Fn server
+looks up the function image name and tag associated with the route and creates
+a container with that image. If the required image is not already available
 locally then Docker will attempt to pull the image from the Docker registry.
 
 In our local development scenario, the image is already on the local machine
 so you won't see a 'pull' message in the Fn server log.
 
+# Using Fn's Dockerfile Support
+
+Now that you've successfully manually built and deployed a Docker image as a
+function, let's use Fn's built in Docker runtime support to simplify things.
+By providing a `func.yaml` file for your function you can use the Fn CLI to
+build, run, and deploy Docker image-based functions exactly as you would when
+working wth Java, Node, or any other Fn supported programming language based
+function.
+
+![](images/userinput.png) Copy/paste the following into a file named
+`func.yaml`:
+
+```yaml
+name: node-hello
+version: 0.0.1
+runtime: docker
+path: /hello2
+```
+
+This file defines a function with the same name and initial version as the
+image we created earlier, identifies the function runtime as `docker`
+rather than one of the Fn supported programming languages, and specifies the
+path (i.e., route) to the function when it is eventually deployed. The path is
+set to `hello2` to distinguish it from the manually deployed function.
+
+Note: If `path:` is not specified the path will default to the containing folder
+name.
+
+With the `func.yaml` defined you can now easily build the function:
+
+   ![](images/userinput.png)
+   >```
+   > fn build
+   >```
+
+   ```xml
+   Building image <your-docker-id>/node-hello:0.0.1
+   Function <your-docker-id>/node-hello:0.0.1 built successfully.
+   ```
+
+You can run the function with `fn run`:
+
+   ![](images/userinput.png)
+   >```
+   > fn run
+   >```
+
+   ```xml
+   Building image <your-docker-id>/node-hello:0.0.1
+   Hello World from Node!
+   ```
+
+And you can pipe input into the function just like you did when using
+`docker run`:
+
+   ![](images/userinput.png)
+   >```
+   > echo -n "Jane" | fn run
+   >```
+
+   ```xml
+   Building image <your-docker-id>/node-hello:0.0.1
+   Hello Jane from Node!
+   ```
+
+Deploying a function using `fn deploy` is much simpler than a manual deployment
+as it'll both push your container image and define the function route with one
+command:
+
+  ![](images/userinput.png)
+   >```
+   > fn deploy --app demoapp
+   >```
+
+   ```
+  Deploying node-hello to app: demoapp at path: /hello2
+  Bumped to version 0.0.2
+  Building image <your-docker-id>/node-hello:0.0.2
+  Updating route /hello2 using image <your-docker-id>/node-hello:0.0.2...
+   ```
+
+`fn deploy` orchestrates the push and route definition and it also "bumps",
+or increments, the version number each time a function is deployed.
+
+Once deployed you can use `fn call` to invoke the function or use `curl`
+just like you did when you manually deployed your container.  Which makes
+sense since all we've done is use the CLI to deploy the exact same image and
+defined the exact same route as before.  We've simply automated the process.
+
+Try out the same commands you ran earlier with our newly defined `hello2`
+function.
+
+![](images/userinput.png)
+>```
+> echo -n "Jane" | fn call demoapp /hello2
+>```
+
+![](images/userinput.png)
+>```
+> curl -d "Jane" http://localhost:8080/r/demoapp/hello2
+>```
+
 # Conclusion
+
+One of the most powerful features of Fn is the ability to use custom defined
+Docker container images as functions. This feature makes it possible to deploy
+pretty much anything that you can put in a contaner as a function. This includes
+existing code or utilities as well as functions written in your favourite
+programming language, regardless of whether Fn has built-in support or not. It
+also let's you install any Linux libraries or utilities that your function might
+need. And thanks to the Fn CLI's support for Dockerfiles it's both easy and
+the same user experience as when developing any function.
 
 Having completed this tutorial you've successfully built a Docker image,
 defined a function as implemented by that image, and invoked the function

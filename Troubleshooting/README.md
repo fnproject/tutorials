@@ -236,8 +236,8 @@ ERROR: error calling function: status 500
 
 We need to get the log for the failed call to see what happened.  The first
 step is to get a list of calls for the `tutorials` application.  You can do
-this with the `fn calls` command.  The syntax is `fn calls [l|list]
-<app-name>`.  Let's get the calls for our `tutorials` app:
+this with the `fn calls` command.  The syntax is `fn calls [l|list] <app-name>`.  
+Let's get the calls for our `tutorials` app:
 
 ![user input](images/userinput.png)
 >```sh

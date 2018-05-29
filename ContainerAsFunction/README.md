@@ -19,7 +19,7 @@ perform an action.
 
 This tutorial requires you to have both Docker and Fn installed. If you need
 help with Fn installation you can find instructions in the
-[Introduction to Fn](../Introduction/README.md) tutorial.
+[Install and Start Fn Tutorial](../install/README.md).
 
 # Getting Started
 
@@ -47,15 +47,14 @@ new terminal for this.
 
 1. Define the FN_REGISTRY environment variable to point the Fn server to where
 it should pull function images from. If using the default Docker Hub registry 
-you just need to specify
-your docker user id:
+you just need to specify your docker user id:
 
    ![](images/userinput.png)
    >```
-   > export FN_REGISTRY=&lt;yourdockerid&gt;
+   > export FN_REGISTRY=<your-docker-id>
    >```
 
-2. Start the Fn server using the `fn` cli:
+2. If it isn't already running, start the Fn server using the `fn` cli:
 
    ![](images/userinput.png)
    >```
@@ -122,14 +121,14 @@ In your working directory, build and run the image as you would any Docker image
 
    ![](images/userinput.png)
    >```
-   > docker build . -t &lt;yourdockerid&gt;/node-hello:0.0.1
+   > docker build . -t <your-docker-id>/node-hello:0.0.1
    >```
 
 2. Test the image by running it with no input:
 
    ![](images/userinput.png)
    >```
-   > docker run --rm &lt;yourdockerid&gt;/node-hello:0.0.1
+   > docker run --rm <your-docker-id>/node-hello:0.0.1
    >```
 
    The output should be:
@@ -141,7 +140,7 @@ In your working directory, build and run the image as you would any Docker image
 
    ![](images/userinput.png)
    >```
-   > echo -n "Jane" | docker run -i --rm &lt;yourdockerid&gt;/node-hello:0.0.1
+   > echo -n "Jane" | docker run -i --rm <your-docker-id>/node-hello:0.0.1
    >```
 
    The output should be the same as be except "Jane" in place of "World":
@@ -158,12 +157,12 @@ When developing locally you don't need to deploy to Docker Hub--the
 local Fn server can find your function image on the local machine. But
 eventually you are going to want to run your function on a remote
 Fn server which requires you to publish your function image in
-a repository like Docker Hub.  You can do this with a standard `docker push` 
+a repository like Docker Hub. You can do this with a standard `docker push` 
 but again this step is optional when we're working locally.
 
 ![](images/userinput.png)
 >```
-> docker push &lt;yourdockerid&gt;/node-hello:0.0.1
+> docker push <your-docker-id>/node-hello:0.0.1
 >```
 
 ## Creating the Fn App and Defining the Route
@@ -190,7 +189,7 @@ that application:
 
    ![](images/userinput.png)
    >```
-   > fn routes create demoapp /hello -i &lt;yourdockerid&gt;/node-hello:0.0.1
+   > fn routes create demoapp /hello -i <your-docker-id>/node-hello:0.0.1
    >```
 
    ```xml
@@ -209,7 +208,7 @@ defined for an application:
 
    ```xml
    path    image                            endpoint
-   /hello  <yourdockerid>/node-hello:0.0.1  localhost:8080/r/demoapp/hello
+   /hello  <your-docker-id>/node-hello:0.0.1  localhost:8080/r/demoapp/hello
    ```
 
 At this point all the Fn server has is configuration metadata.
@@ -296,8 +295,8 @@ With the `func.yaml` defined you can now easily build the function:
    >```
 
    ```xml
-   Building image <yourdockerid>/node-hello:0.0.1
-   Function <yourdockerid>/node-hello:0.0.1 built successfully.
+   Building image <your-docker-id>/node-hello:0.0.1
+   Function <your-docker-id>/node-hello:0.0.1 built successfully.
    ```
 
 You can run the function with `fn run`:
@@ -308,7 +307,7 @@ You can run the function with `fn run`:
    >```
 
    ```xml
-   Building image <yourdockerid>/node-hello:0.0.1
+   Building image <your-docker-id>/node-hello:0.0.1
    Hello World from Node!
    ```
 
@@ -321,7 +320,7 @@ And you can pipe input into the function just like you did when using
    >```
 
    ```xml
-   Building image <yourdockerid>/node-hello:0.0.1
+   Building image <your-docker-id>/node-hello:0.0.1
    Hello Jane from Node!
    ```
 
@@ -337,8 +336,8 @@ command:
    ```
   Deploying node-hello to app: demoapp at path: /hello2
   Bumped to version 0.0.2
-  Building image <yourdockerid>/node-hello:0.0.2
-  Updating route /hello2 using image <yourdockerid>/node-hello:0.0.2...
+  Building image <your-docker-id>/node-hello:0.0.2
+  Updating route /hello2 using image <your-docker-id>/node-hello:0.0.2...
    ```
 
 `fn deploy` orchestrates the push and route definition and it also "bumps",

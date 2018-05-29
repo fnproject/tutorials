@@ -61,7 +61,7 @@ Ok, we're ready to begin!
 ## Verbose Mode
 
 When you run commands like `fn run` or `fn build` you typically see "progress
-dots" (e.g., `...`) that let's you know some action is taking place.  Let's
+dots" (i.e., `...`) that let's you know some action is taking place.  Let's
 build our function and observe the output.
 
 ![user input](images/userinput.png)
@@ -99,7 +99,7 @@ public class HelloFunction {
 
 If you build the function you'll see progress dots and then an error message
 with the useful suggestion to try running the command again with the
-`--verbose` option (which you need to put immediately after `fn`) to get more
+`--verbose` option (which you need to put *immediately* after `fn`) to get more
 details on the failure.
 
 Let's build and checkout the error message.
@@ -207,7 +207,7 @@ But things are different when you deploy your function to a (likely) remote Fn
 server.  When you do that we have to use the logs to see runtime errors. 
 
 Deploy the function to an Fn server.  If you haven't got a server running
-locally you can follow the [Introduction](../Introduction/README.md) tutorial
+locally you can follow the [Fn Install](../install/README.md) tutorial
 to get setup.
 
 ![user input](images/userinput.png)
@@ -236,7 +236,7 @@ ERROR: error calling function: status 500
 
 We need to get the log for the failed call to see what happened.  The first
 step is to get a list of calls for the `tutorials` application.  You can do
-this with the `fn calls` command.  The syntax is `fn calls [l|list] 
+this with the `fn calls` command.  The syntax is `fn calls [l|list]
 &lt;app name&gt;`.  Let's get the calls for our `tutorials` app:
 
 ![user input](images/userinput.png)
@@ -264,9 +264,9 @@ Completed At: 2018-02-12T14:28:29.147Z
 Status: success
 ```
 
-The next step is to get the log for a specific call.  Typically when developing
-that call is the last call.  Copy the call id for the very first call record
-and use `fn logs get`:
+The next step is to get the log for a specific call.  Typically when you're in
+the middle of developing and testing a function, that call is the last call.
+Copy the call id for the very first call record and use `fn logs get`, e.g.:
 
 ![user input](images/userinput.png)
 >```sh
@@ -287,7 +287,8 @@ Caused by: java.lang.RuntimeException: Something went horribly wrong!
 
 Great!  But this two step procedure is a little tedious when you're developing
 and you just want the log of the last call.  Fortunately there's a shortcut for
-just this case!  You can use `last` instead of a call id to get the latest log.
+just this case! You can use `last` instead of a call id to get the log of the
+most recent function call.
 
 ![user input](images/userinput.png)
 >```sh
@@ -298,8 +299,7 @@ But be careful! The 'last log' feature is ideal when you're working locally
 __by yourself__ but when deploying to a shared Fn development server others may
 be calling different functions of the same app.  You need to make sure you're
 getting the log for the function you called and not the log of an entirely
-different function of the same application.
-
+different function in the same application.
 
 ## Coming Soon
 

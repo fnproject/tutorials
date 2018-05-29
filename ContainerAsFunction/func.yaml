@@ -1,0 +1,4 @@
+name: node-hello
+version: 0.0.1
+runtime: docker
+path: /hello2

@@ -72,7 +72,7 @@ a name.
 The func.js file is nothing special and simply reads from standard input
 and writes to standard output.  This is the standard Fn supported mechanism
 for functions to receive input and return output.  
-['Hot Functions'](https://github.com/fnproject/fn/blob/master/docs/hot-functions.md)
+['Hot Functions'](https://github.com/fnproject/fn/blob/master/docs/developers/hot-functions.md)
 (not discussed in this tutorial) are slightly different.  
 
 ![](images/userinput.png) Copy/paste the following into a file named `func.js`:

@@ -236,12 +236,12 @@ ERROR: error calling function: status 500
 
 We need to get the log for the failed call to see what happened.  The first
 step is to get a list of calls for the `tutorials` application.  You can do
-this with the `fn calls` command.  The syntax is `fn calls [l|list] app-name`.  
+this with the `l` or `list` command. The syntax is `fn [l|list] calls app-name`.  
 Let's get the calls for our `tutorials` app:
 
 ![user input](images/userinput.png)
 >```sh
-> fn calls list tutorials
+> fn list calls tutorials
 >```
 
 This returns a series of call records with the most recent first.
@@ -266,11 +266,11 @@ Status: success
 
 The next step is to get the log for a specific call.  Typically when you're in
 the middle of developing and testing a function, that call is the last call.
-Copy the call id for the very first call record and use `fn logs get`, e.g.:
+Copy the call id for the very first call record and use `fn get logs`, e.g.:
 
 ![user input](images/userinput.png)
 >```sh
-> fn logs get tutorials 01C656NGYX47WG200000000000
+> fn get logs tutorials 01C656NGYX47WG200000000000
 >```
 
 This returns the captured standard error output:
@@ -292,7 +292,7 @@ most recent function call.
 
 ![user input](images/userinput.png)
 >```sh
-> fn logs get tutorials last
+> fn get logs tutorials last
 >```
 
 But be careful! The 'last log' feature is ideal when you're working locally

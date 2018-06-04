@@ -149,7 +149,7 @@ Configure the app with the location of the completer:
 
 >![user input](../images/userinput.png)
 >```shell
->fn apps config set flow102 COMPLETER_BASE_URL "http://$FLOWSERVER_IP:8081"
+>fn config apps flow102 COMPLETER_BASE_URL "http://$FLOWSERVER_IP:8081"
 >```
 
 Deploy the function:

@@ -69,7 +69,7 @@ Using the CLI, try running the following, replacing `CALL_ID` with the `call_id`
 
 ![user input](../images/userinput.png)
 >```sh
->fn get calls myapp CALL_ID
+>fn get call myapp CALL_ID
 >```
 
 You'll get something like the following:

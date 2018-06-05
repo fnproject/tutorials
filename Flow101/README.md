@@ -177,7 +177,7 @@ Then configure the function to talk to the Flow Server.
 
 >![user input](../images/userinput.png)
 >```shell
->fn config apps flow101 COMPLETER_BASE_URL "http://$FLOWSERVER_IP:8081"
+>fn config app flow101 COMPLETER_BASE_URL "http://$FLOWSERVER_IP:8081"
 >```
 
 You can now invoke the function using `fn call`:

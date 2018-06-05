@@ -178,7 +178,7 @@ that application:
 
    ![](images/userinput.png)
    >```
-   > fn create apps demoapp
+   > fn create app demoapp
    >```
 
    ```
@@ -189,7 +189,7 @@ that application:
 
    ![](images/userinput.png)
    >```
-   > fn create routes demoapp /hello <your-docker-id>/node-hello:0.0.1
+   > fn create route demoapp /hello <your-docker-id>/node-hello:0.0.1
    >```
 
    ```xml

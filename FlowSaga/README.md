@@ -49,7 +49,7 @@ List routes for the travel app:
 
 >![user input](../images/userinput.png)
 >```shell
->fn routes list travel
+>fn list routes travel
 >```
 
 We also need to configure these functions:

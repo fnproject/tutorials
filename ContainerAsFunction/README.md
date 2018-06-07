@@ -178,7 +178,7 @@ that application:
 
    ![](images/userinput.png)
    >```
-   > fn apps create demoapp
+   > fn create app demoapp
    >```
 
    ```
@@ -189,7 +189,7 @@ that application:
 
    ![](images/userinput.png)
    >```
-   > fn routes create demoapp /hello -i <your-docker-id>/node-hello:0.0.1
+   > fn create route demoapp /hello <your-docker-id>/node-hello:0.0.1
    >```
 
    ```xml
@@ -201,7 +201,7 @@ defined for an application:
 
    ![](images/userinput.png)
    >```
-   > fn routes list demoapp
+   > fn list routes demoapp
    >```
 
    You should see something like:
@@ -236,7 +236,7 @@ as intended!
    ```
 
 2. Call the function with curl using its http endpoint. You can find out the
-endpoints for each of your routes using the `fn routes list` command we used
+endpoints for each of your routes using the `fn list routes` command we used
 above.
 
    ![](images/userinput.png)

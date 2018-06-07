@@ -61,18 +61,17 @@ Now we can deploy the entire application with one command:
 > `fn deploy --all --local`
 
 Once the command is done we can examine the structure of the `myapp2`
-application.  First we can get a list of deployed applications.  The
-`fn apps` command accepts either `l` or `list` to display the list of
+application.  First we can get a list of deployed applications. The `l` or `list` command, followed by `a`, `app` or `apps` displays the list of
 applications:
 
 ![user input](../images/userinput.png)
-> `fn apps list`
+> `fn list apps`
 
 You should see `myapp2` in the list of deployed applications.  We can
-then list application's routes using the `fn routes` command:
+then list application's by using the `l` or `list` command, followed by `r`, `route` or `routes`:
 
 ![user input](../images/userinput.png)
-> `fn routes l myapp2`
+> `fn list routes myapp2`
 
 If you have previously set the `FN_REGISTRY` registry environment variable
 your Docker image names will be prefixed by it. Otherwise your output will look
@@ -83,8 +82,7 @@ like:
 /hello  hello:0.0.2       localhost:8080/r/myapp2/hello
 ```
 
-Once again `l` is a valid abbreviation for `list` followed by the name
-of the application who's routes should be displayed.  We can see there
+Once again `l` is a valid abbreviation for `list` followed by the object you wish to display, either apps or routes. We can see there
 are two routes `/` and `/hello` with two different Docker images
 assocated with them.
 

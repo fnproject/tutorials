@@ -96,7 +96,7 @@ Using the CLI, try running the following, replacing `CALL_ID` with the `call_id`
 ![user input](../images/userinput.png)
 
 ```sh
-fn calls get myapp CALL_ID
+fn get calls myapp CALL_ID
 ```
 
 You'll get something like the following:
@@ -119,7 +119,7 @@ access it via the CLI with:
 ![user input](../images/userinput.png)
 
 ```sh
-fn logs get myapp CALL_ID
+fn get logs myapp CALL_ID
 ```
 
 For this function, the logs will contain:

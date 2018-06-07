@@ -322,11 +322,11 @@ generated Docker container and used as the name of the route that
 container was bound to.
 
 The fn CLI provides a couple of commands to let us see what we've deployed.
-`fn apps list` returns a list of all of the defined applications.
+`fn list apps` returns a list of all of the defined applications.
 
 ![user input](images/userinput.png)
 >```sh
-> fn apps list
+> fn list apps
 >```
 
 Which, in our case, returns the name of the application we created when we
@@ -337,12 +337,12 @@ goapp
 ```
 
 We can also see the functions that are defined by an application.  Since
-functions are exposed via routes, the `fn routes list <appname>` command
+functions are exposed via routes, the `fn list routes <appname>` command
 is used.  To list the functions included in "goapp" we can type:
 
 ![user input](images/userinput.png)
 >```sh
-> fn routes list goapp
+> fn list routes goapp
 >```
 
 ```sh

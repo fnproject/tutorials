@@ -57,15 +57,15 @@ Currently FnProject is available to download, to experiment with, and to run on 
 
 Install the **`fn`** CLI tool:
 
->![user input](../images/userinput.png)
->```shell
+![user input](../images/userinput.png)
+>```sh
 >curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
 >```
 
 Then start the **Fn server**:
 
->![user input](../images/userinput.png)
->```shell
+![user input](../images/userinput.png)
+>```sh
 >fn start
 >```
 
@@ -84,11 +84,11 @@ time="2017-10-11T13:12:44Z" level=info msg="Serving Functions API on address `:8
 
 The **Flow Server** needs to know how to call the Fn server, so ask Docker which IP address to use.
 
+![user input](../images/userinput.png)
 <!-- The HTML is required to escape Jekyll Liquid template expressions.
 Otherwise, double brackets and their contents are stripped from output.
  -->
 <blockquote>
-<img src="../images/userinput.png">
 <pre><code>
 FNSERVER_IP=$(docker inspect --type container -f '&#123;&#123;.NetworkSettings.IPAddress&#125;&#125;' fnserver)
 </code></pre>
@@ -96,7 +96,7 @@ FNSERVER_IP=$(docker inspect --type container -f '&#123;&#123;.NetworkSettings.I
 
 Start the **Flow Server**:
 
->![user input](../images/userinput.png)
+![user input](../images/userinput.png)
 >```sh
 >docker run --rm -d \
 >      -p 8081:8081 \
@@ -108,22 +108,26 @@ Start the **Flow Server**:
 
 Then start the Flow **UI**:
 
+![user input](../images/userinput.png)
 <!-- The HTML is required to escape Jekyll Liquid template expressions.
 Otherwise, double brackets and their contents are stripped from output.
  -->
 <blockquote>
-<img src="../images/userinput.png">
 <pre><code>
 FLOWSERVER_IP=$(docker inspect --type container -f '&#123;&#123;.NetworkSettings.IPAddress&#125;&#125;' flowserver)
-
-docker run --rm -d \
-       -p 3002:3000 \
-       --name flowui \
-       -e API_URL=http://$FNSERVER_IP:8080 \
-       -e COMPLETER_BASE_URL=http://$FLOWSERVER_IP:8081 \
-       fnproject/flow:ui
 </code></pre>
 </blockquote>
+
+
+![user input](../images/userinput.png)
+>```sh
+>docker run --rm -d \
+>       -p 3002:3000 \
+>       --name flowui \
+>       -e API_URL=http://$FNSERVER_IP:8080 \
+>       -e COMPLETER_BASE_URL=http://$FLOWSERVER_IP:8081 \
+>       fnproject/flow:ui
+>```
 
 
 Now, everything's set so lets crack on!
@@ -133,30 +137,29 @@ Now, everything's set so lets crack on!
 
 Create a new function:
 
->![user input](../images/userinput.png)
->```shell
+![user input](../images/userinput.png)
+>```sh
 >fn init --runtime=java simple-flow
 >```
 
 Change directory:
 
->![user input](../images/userinput.png)
->```shell
+![user input](../images/userinput.png)
+>```sh
 >cd simple-flow
 >```
 
 Flow has a comprehensive test framework, but lets concentrate on playing with the code for the time being:
 
->![user input](../images/userinput.png)
->```shell
+![user input](../images/userinput.png)
+>```sh
 > rm -rf src/test   ## yolo
 >```
 
 Make peace with yourself after that, then let's get the code in shape.
 
-Change `HelloFunction.java` to look like this:
+![user input](../images/userinput.png) Change `HelloFunction.java` to look like this:
 
->![user input](../images/userinput.png)
 ```java
 package com.example.fn;
 
@@ -179,22 +182,22 @@ public class HelloFunction {
 
 Then deploy this to an app which we call `flow101` on the local Fn server.
 
->![user input](../images/userinput.png)
->```shell
+![user input](../images/userinput.png)
+>```sh
 >fn deploy --app flow101 --local
 >```
 
 Then configure the function to talk to the Flow Server.
 
->![user input](../images/userinput.png)
->```shell
+![user input](../images/userinput.png)
+>```sh
 >fn config app flow101 COMPLETER_BASE_URL "http://$FLOWSERVER_IP:8081"
 >```
 
 You can now invoke the function using `fn call`:
 
->![user input](../images/userinput.png)
->```shell
+![user input](../images/userinput.png)
+>```sh
 >echo 2 | fn call flow101 /simple-flow
 >```
 
@@ -206,8 +209,8 @@ Your number is 4
 
 Alternatively, you can now invoke the function using `curl`:
 
->![user input](../images/userinput.png)
->```shell
+![user input](../images/userinput.png)
+>```sh
 >curl -d "2" http://localhost:8080/r/flow101/simple-flow
 >```
 

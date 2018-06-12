@@ -57,15 +57,15 @@ Currently FnProject is available to download, to experiment with, and to run on 
 
 Install the **`fn`** CLI tool:
 
->![user input](../images/userinput.png)
->```shell
+![user input](../images/userinput.png)
+>```sh
 >curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
 >```
 
 Then start the **Fn server**:
 
->![user input](../images/userinput.png)
->```shell
+![user input](../images/userinput.png)
+>```sh
 >fn start
 >```
 
@@ -84,15 +84,20 @@ time="2017-10-11T13:12:44Z" level=info msg="Serving Functions API on address `:8
 
 The **Flow Server** needs to know how to call the Fn server, so ask Docker which IP address to use.
 
->![user input](../images/userinput.png)
->```shell
->FNSERVER_IP=$(docker inspect --type container -f '{{.NetworkSettings.IPAddress}}' fnserver)
->```
+![user input](../images/userinput.png)
+<!-- The HTML is required to escape Jekyll Liquid template expressions.
+Otherwise, double brackets and their contents are stripped from output.
+ -->
+<blockquote>
+<pre><code>
+FNSERVER_IP=$(docker inspect --type container -f '&#123;&#123;.NetworkSettings.IPAddress&#125;&#125;' fnserver)
+</code></pre>
+</blockquote>
 
 Start the **Flow Server**:
 
->![user input](../images/userinput.png)
->```shell
+![user input](../images/userinput.png)
+>```sh
 >docker run --rm -d \
 >      -p 8081:8081 \
 >      -e API_URL="http://$FNSERVER_IP:8080/r" \
@@ -103,10 +108,19 @@ Start the **Flow Server**:
 
 Then start the Flow **UI**:
 
->![user input](../images/userinput.png)
->```shell
->FLOWSERVER_IP=$(docker inspect --type container -f '{{.NetworkSettings.IPAddress}}' flowserver)
->
+![user input](../images/userinput.png)
+<!-- The HTML is required to escape Jekyll Liquid template expressions.
+Otherwise, double brackets and their contents are stripped from output.
+ -->
+<blockquote>
+<pre><code>
+FLOWSERVER_IP=$(docker inspect --type container -f '&#123;&#123;.NetworkSettings.IPAddress&#125;&#125;' flowserver)
+</code></pre>
+</blockquote>
+
+
+![user input](../images/userinput.png)
+>```sh
 >docker run --rm -d \
 >       -p 3002:3000 \
 >       --name flowui \
@@ -115,6 +129,7 @@ Then start the Flow **UI**:
 >       fnproject/flow:ui
 >```
 
+
 Now, everything's set so lets crack on!
 
 
@@ -122,30 +137,29 @@ Now, everything's set so lets crack on!
 
 Create a new function:
 
->![user input](../images/userinput.png)
->```shell
+![user input](../images/userinput.png)
+>```sh
 >fn init --runtime=java simple-flow
 >```
 
 Change directory:
 
->![user input](../images/userinput.png)
->```shell
+![user input](../images/userinput.png)
+>```sh
 >cd simple-flow
 >```
 
 Flow has a comprehensive test framework, but lets concentrate on playing with the code for the time being:
 
->![user input](../images/userinput.png)
->```shell
+![user input](../images/userinput.png)
+>```sh
 > rm -rf src/test   ## yolo
 >```
 
 Make peace with yourself after that, then let's get the code in shape.
 
-Change `HelloFunction.java` to look like this:
+![user input](../images/userinput.png) Change `HelloFunction.java` to look like this:
 
->![user input](../images/userinput.png)
 ```java
 package com.example.fn;
 
@@ -161,29 +175,29 @@ public class HelloFunction {
 	return fl.completedValue(x)
                  .thenApply( i -> i*2 )
 	         .thenApply( i -> "Your number is " + i )
-	         .get();	
+	         .get();
     }
 }
 ```
 
 Then deploy this to an app which we call `flow101` on the local Fn server.
 
->![user input](../images/userinput.png)
->```shell
+![user input](../images/userinput.png)
+>```sh
 >fn deploy --app flow101 --local
 >```
 
 Then configure the function to talk to the Flow Server.
 
->![user input](../images/userinput.png)
->```shell
+![user input](../images/userinput.png)
+>```sh
 >fn config app flow101 COMPLETER_BASE_URL "http://$FLOWSERVER_IP:8081"
 >```
 
 You can now invoke the function using `fn call`:
 
->![user input](../images/userinput.png)
->```shell
+![user input](../images/userinput.png)
+>```sh
 >echo 2 | fn call flow101 /simple-flow
 >```
 
@@ -195,8 +209,8 @@ Your number is 4
 
 Alternatively, you can now invoke the function using `curl`:
 
->![user input](../images/userinput.png)
->```shell
+![user input](../images/userinput.png)
+>```sh
 >curl -d "2" http://localhost:8080/r/flow101/simple-flow
 >```
 
@@ -217,7 +231,7 @@ Which is showing us 3 function invocations:
   * The main flow function, in blue
   * `.thenApply` for the code `i -> i*2`
   * `.thenApply` for the code `i -> "Your number is " + i`
-  
+
 Click on any of these and see the detail for each one expanded at the bottom of the screen.
 
 The blue function is shown as running for the whole time that the `thenApply` stages are. Why? Because we are calling `.get()` at the end, so this is synchronously waiting for the final result of the chain. Exercise: Try removing the `.get()` from the code (you'll need to return a different String, and don't forget to re-deploy). Now it will look like:
@@ -235,7 +249,7 @@ We think Flow hits a very sweet spot of allowing sophisticated stateful apps def
 
 ## Summary
 
-So, congratulations - we've covered a lot! You've got a Flow function running, seen how to use the API to compose simple transformations and run things in parallel. 
+So, congratulations - we've covered a lot! You've got a Flow function running, seen how to use the API to compose simple transformations and run things in parallel.
 
 
 ## Learn more

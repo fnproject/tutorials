@@ -84,15 +84,20 @@ time="2017-10-11T13:12:44Z" level=info msg="Serving Functions API on address `:8
 
 The **Flow Server** needs to know how to call the Fn server, so ask Docker which IP address to use.
 
->![user input](../images/userinput.png)
->```shell
->FNSERVER_IP=$(docker inspect --type container -f '{{.NetworkSettings.IPAddress}}' fnserver)
->```
+<!-- The HTML is required to escape Jekyll Liquid template expressions.
+Otherwise, double brackets and their contents are stripped from output.
+ -->
+<blockquote>
+<img src="../images/userinput.png">
+<pre><code>
+FNSERVER_IP=$(docker inspect --type container -f '&#123;&#123;.NetworkSettings.IPAddress&#125;&#125;' fnserver)
+</code></pre>
+</blockquote>
 
 Start the **Flow Server**:
 
 >![user input](../images/userinput.png)
->```shell
+>```sh
 >docker run --rm -d \
 >      -p 8081:8081 \
 >      -e API_URL="http://$FNSERVER_IP:8080/r" \
@@ -103,17 +108,23 @@ Start the **Flow Server**:
 
 Then start the Flow **UI**:
 
->![user input](../images/userinput.png)
->```shell
->FLOWSERVER_IP=$(docker inspect --type container -f '{{.NetworkSettings.IPAddress}}' flowserver)
->
->docker run --rm -d \
->       -p 3002:3000 \
->       --name flowui \
->       -e API_URL=http://$FNSERVER_IP:8080 \
->       -e COMPLETER_BASE_URL=http://$FLOWSERVER_IP:8081 \
->       fnproject/flow:ui
->```
+<!-- The HTML is required to escape Jekyll Liquid template expressions.
+Otherwise, double brackets and their contents are stripped from output.
+ -->
+<blockquote>
+<img src="../images/userinput.png">
+<pre><code>
+FLOWSERVER_IP=$(docker inspect --type container -f '&#123;&#123;.NetworkSettings.IPAddress&#125;&#125;' flowserver)
+
+docker run --rm -d \
+       -p 3002:3000 \
+       --name flowui \
+       -e API_URL=http://$FNSERVER_IP:8080 \
+       -e COMPLETER_BASE_URL=http://$FLOWSERVER_IP:8081 \
+       fnproject/flow:ui
+</code></pre>
+</blockquote>
+
 
 Now, everything's set so lets crack on!
 
@@ -161,7 +172,7 @@ public class HelloFunction {
 	return fl.completedValue(x)
                  .thenApply( i -> i*2 )
 	         .thenApply( i -> "Your number is " + i )
-	         .get();	
+	         .get();
     }
 }
 ```
@@ -217,7 +228,7 @@ Which is showing us 3 function invocations:
   * The main flow function, in blue
   * `.thenApply` for the code `i -> i*2`
   * `.thenApply` for the code `i -> "Your number is " + i`
-  
+
 Click on any of these and see the detail for each one expanded at the bottom of the screen.
 
 The blue function is shown as running for the whole time that the `thenApply` stages are. Why? Because we are calling `.get()` at the end, so this is synchronously waiting for the final result of the chain. Exercise: Try removing the `.get()` from the code (you'll need to return a different String, and don't forget to re-deploy). Now it will look like:
@@ -235,7 +246,7 @@ We think Flow hits a very sweet spot of allowing sophisticated stateful apps def
 
 ## Summary
 
-So, congratulations - we've covered a lot! You've got a Flow function running, seen how to use the API to compose simple transformations and run things in parallel. 
+So, congratulations - we've covered a lot! You've got a Flow function running, seen how to use the API to compose simple transformations and run things in parallel.
 
 
 ## Learn more

@@ -143,14 +143,7 @@ You will need to follow these steps if the user doesn't have write access to /us
 Download the CLI for your operating system. For this example, files are saved to the `~/Downloads` directory.
 
 ![user input](images/userinput.png)
-1. Open the Fn project release directory in your browser: <https://github.com/fnproject/cli/releases/>
-    * You should see a list of executables for supported operating systems
-2. Click on the Fn executable for your operating system
-3. Save the file locally
-4. Give it execute permissions
-5. Add it to the $PATH environment variable
-
-Sample executables:
+1. Open the Fn project release directory in your browser: <https://github.com/fnproject/cli/releases/>. You should see a list of executables for supported operating systems:
 
 | Operating System | Executable |
 | ------------- |:-------------:|
@@ -159,8 +152,9 @@ Sample executables:
 | Alpine Linux | fn_alpine |
 | Windows | fn.exe |
 
+2. Click on the Fn executable for your operating system and save the file locally
 
-#### Steps for Mac / Linux Systems
+#### For Mac / Linux Systems
 * Open a Terminal Window
 * Change into your home directory
 
@@ -178,16 +172,12 @@ Sample executables:
 
 * Copy the downloaded executable file into this `lbin` directory
 
-  **On Mac:**
-
-![user input](images/userinput.png)
+![user input](images/userinput.png) On Mac:
 >```sh
 > mv ~/Downloads/fn_mac.dms lbin/fn
 >```
 
-  **On Linux:**
-
-![user input](images/userinput.png)
+![user input](images/userinput.png) On Linux:
 >```sh
 > mv ~/Downloads/fn_linux lbin/fn
 >```
@@ -211,7 +201,7 @@ You can confirm using the `which fn` command, the output should look like `/User
 (Alternatively, you can use `~/lbin/fn` if you don't want to add to your `PATH` environment variable.)
 
 
-#### Steps for Windows Systems
+#### For Windows Systems
 For Windows the current recommendation is to run Fn in Linux virtual machine on Windows. You can do with with [VirtualBox](https://www.virtualbox.org/) or other commercial VM software.
 
 

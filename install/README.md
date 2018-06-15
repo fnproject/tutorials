@@ -176,16 +176,16 @@ Sample executables:
 > mkdir lbin
 >```
 
-* Copy the file to executable directory into your `lbin` directory
+* Copy the downloaded executable file into this `lbin` directory
 
-##### On Mac
+  **On Mac:**
 
 ![user input](images/userinput.png)
 >```sh
 > mv ~/Downloads/fn_mac.dms lbin/fn
 >```
 
-##### On Linux
+  **On Linux:**
 
 ![user input](images/userinput.png)
 >```sh

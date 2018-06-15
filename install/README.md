@@ -16,7 +16,7 @@ Before we can install Fn you'll need:
 1. A computer running Linux or MacOS.  If you have a Windows machine the
 easiest thing to do is install [VirtualBox](https://www.virtualbox.org/)
 and run a free Linux virtual machine.
-2. [Docker](https://www.docker.com/) 17.05 (or higher) needs to be
+2. [Docker](https://www.docker.com/) 17.10 (or higher) needs to be
 installed and running.
 
 > As you make your way through this tutorial, look out for this icon.
@@ -29,7 +29,7 @@ From a terminal type the following:
 
 ![](images/userinput.png)
 >```sh
->curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
+> curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
 >```
 
 Once installed you'll see the `fn` CLI version printed out.  You should see
@@ -47,7 +47,7 @@ fn version 0.4.87
 
 ```
 
-**Note:** If the above script does not work or you prefer to install the `fn` CLI manually. [Jump down to the manual installation instructions](#fn-manual-install).
+**Note:** The above `fn` CLI install script requires write access to restricted folders like /usr/local/bin. If the user doesn't have write access to /usr/local/bin, or if you prefer to install `fn` CLI in a different location, please see the [Fn Manual Install](#fn-manual-install) section.
 
 ## Start the Fn Server
 
@@ -60,7 +60,7 @@ Note that this process runs in the foreground so that it's easy to stop with Ctr
 
 ![user input](images/userinput.png)
 >```sh
->fn start
+> fn start
 >```
 
 If the Fn Server starts up successfully, you should see output similar to:
@@ -80,7 +80,7 @@ time="2018-05-10T11:32:49Z" level=info msg="sync and async cpu reservations" cpu
 time="2018-05-10T11:32:49Z" level=info msg="Fn serving on `:8080`" type=full
 ```
 
-**Note:** The Fn server creates a temporary `data` directory it uses to store metadata. If you want to retain this data after a restart, make sure you start Fn server in the same directory.
+**Note:** The Fn server stores its metadata in the `~/.fn/data` directory. If you run in to errors after updating the Fn server, you may want to delete the contents of this `data` directory and restart Fn server.
 
 If you have some other process running on port 8080, `fn start` will
 fail with the following error:
@@ -98,15 +98,16 @@ Fn Server starts on port 8080 by default. To use a different port use the `--por
 
 ![user input](images/userinput.png)
 >```sh
->fn start -p 8081
+> fn start -p 8081
 >```
 
 When using a non-default port, you must point the `fn` CLI to the new port using
 the `FN_API_URL` environment variable:
 
-```sh
-export FN_API_URL=http://127.0.0.1:8081
-```
+![user input](images/userinput.png)
+>```sh
+> export FN_API_URL=http://127.0.0.1:8081
+>```
 
 Alternatively, you can also set the `api_url` using Fn [contexts](https://github.com/fnproject/cli/blob/master/CONTEXT.md).
 
@@ -117,7 +118,7 @@ Let's verify everthing is up and running correctly.
 
 ![user input](images/userinput.png)
 >```sh
->fn version
+> fn version
 >```
 
 You should see the version of the fn CLI (client) and server displayed (your
@@ -136,13 +137,18 @@ started the server on a different port but forgot to set the `FN_API_URL`.
 ## Fn Manual Install
 The steps to install Fn manually are described in this section. The system requirements are the same as those outlined for the script installation.
 
+You will need to follow these steps if the user doesn't have write access to /usr/local/bin, or if you prefer to install `fn` CLI in a different location.
+
 ### Download Fn CLI
 Download the CLI for your operating system. For this example, files are saved to the `~/Downloads` directory.
 
+![user input](images/userinput.png)
 1. Open the Fn project release directory in your browser: <https://github.com/fnproject/cli/releases/>
-    * You should see a list of executables for supported operating systems.
-2. Click on the Fn executable for your operating system.
-3. Save the file locally.
+    * You should see a list of executables for supported operating systems
+2. Click on the Fn executable for your operating system
+3. Save the file locally
+4. Give it execute permissions
+5. Add it to the $PATH environment variable
 
 Sample executables:
 
@@ -154,71 +160,56 @@ Sample executables:
 | Windows | fn.exe |
 
 
-### Copy/Install with No Root Access
-Now make the `fn` file executable and available on your machine. These instructions assume you do not have root access on a Unix machine.
+#### Steps for Mac / Linux Systems
+* Open a Terminal Window
+* Change into your home directory
 
-#### Steps
-* Open a Terminal Window.
-* Change into your home directory.
-
+![user input](images/userinput.png)
 >```sh
-> cd
+> cd ~
 >```
 
-* Create a directory for your executable.
+* Create a directory for your executable
 
+![user input](images/userinput.png)
 >```sh
 > mkdir lbin
 >```
 
-* Copy the file to executable directory into your `lbin` directory.
+* Copy the file to executable directory into your `lbin` directory
 
+##### On Mac
+
+![user input](images/userinput.png)
+>```sh
+> mv ~/Downloads/fn_mac.dms lbin/fn
+>```
+
+##### On Linux
+
+![user input](images/userinput.png)
 >```sh
 > mv ~/Downloads/fn_linux lbin/fn
 >```
 
 * Make the file executable.
 
+![user input](images/userinput.png)
 >```sh
 > chmod +x lbin/fn
 >```
 
-* To execute an `fn` command enter `~/lib/fn` or add the `lbin` directory to your `PATH` environment variable.
+* Add the `~/lbin` directory to your `PATH` environment variable as shown below
 
-
-### Copy/Install with Root Access
-Now make the Fn file executable and available on your machine. These instructions assume you have root access on your m achine.
-
-
-#### Steps or MacOS Systems
-* Open a Terminal Window.
-* Copy the file to executable directory with the correct name.
-
->**Note:** If you use homebrew, the following commands should work fine. If you do not, you may need to precede the commands with `sudo`.
-
+![user input](images/userinput.png)
 >```sh
-> mv ~/Downloads/fn_mac /usr/local/bin/fn
+> export PATH=~/lbin:$PATH
 >```
 
-* Make the file executable:
+You can confirm using the `which fn` command, the output should look like `/Users/<your-user>/lbin/fn`. Beyond this point you can use `fn` directly.
 
->```sh
-> chmod +x /usr/local/bin/fn
->```
+(Alternatively, you can use `~/lbin/fn` if you don't want to add to your `PATH` environment variable.)
 
-#### Steps for Linux Systems
-* Open a Terminal Window.
-* Copy the file to executable directory with the correct name:
-
->```sh
-> sudo mv ~/Downloads/fn_linux /usr/local/bin/fn
->```
-
-* Make the file executable:
-
->```sh
-> sudo chmod +x /usr/local/bin/fn
->```
 
 #### Steps for Windows Systems
 For Windows the current recommendation is to run Fn in Linux virtual machine on Windows. You can do with with [VirtualBox](https://www.virtualbox.org/) or other commercial VM software.

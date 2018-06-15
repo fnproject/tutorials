@@ -153,11 +153,44 @@ Sample executables:
 | Alpine Linux | fn_alpine |
 | Windows | fn.exe |
 
-### Copy/Install the Executable
-Now make the Fn file executable and available on your machine.
+
+### Copy/Install with No Root Access
+Now make the `fn` file executable and available on your machine. These instructions assume you do not have root access on a Unix machine.
+
+#### Steps
+* Open a Terminal Window.
+* Change into your home directory.
+
+>```sh
+> cd
+>```
+
+* Create a directory for your executable.
+
+>```sh
+> mkdir lbin
+>```
+
+* Copy the file to executable directory into your `lbin` directory.
+
+>```sh
+> mv ~/Downloads/fn_linux lbin/fn
+>```
+
+* Make the file executable.
+
+>```sh
+> chmod +x lbin/fn
+>```
+
+* To execute an `fn` command enter `~/lib/fn` or add the `lbin` directory to your `PATH` environment variable.
 
 
-#### For MacOS Systems
+### Copy/Install with Root Access
+Now make the Fn file executable and available on your machine. These instructions assume you have root access on your m achine.
+
+
+#### Steps or MacOS Systems
 * Open a Terminal Window.
 * Copy the file to executable directory with the correct name.
 
@@ -173,7 +206,7 @@ Now make the Fn file executable and available on your machine.
 > chmod +x /usr/local/bin/fn
 >```
 
-#### For Linux Systems
+#### Steps for Linux Systems
 * Open a Terminal Window.
 * Copy the file to executable directory with the correct name:
 
@@ -187,7 +220,7 @@ Now make the Fn file executable and available on your machine.
 > sudo chmod +x /usr/local/bin/fn
 >```
 
-#### For Windows Systems
+#### Steps for Windows Systems
 For Windows the current recommendation is to run Fn in Linux virtual machine on Windows. You can do with with [VirtualBox](https://www.virtualbox.org/) or other commercial VM software.
 
 

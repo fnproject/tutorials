@@ -12,7 +12,7 @@ Now that the Fn Server is up and running, you can deploy your first function. Se
 * [Node.js](node/intro/README.md)
 * [Ruby](ruby/intro/README.md)
 * [Python](python/intro/README.md)
-* Docker (Coming Soon!)
+* [Docker](docker/intro/README.md)
 
 ## Explore Fn
 * [Create Apps with Fn](Apps/README.md) - Learn how to group your functions into an application/API and deploy them together.

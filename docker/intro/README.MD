@@ -183,7 +183,7 @@ container image you just generated.
 You may have a number of Docker images so use the following command
 to see only those created by fndemouser:
 
-![user input](images/userinput.png)
+![user input](../../images/userinput.png)
 >```sh
 > docker images | grep fndemouser
 >```
@@ -240,7 +240,7 @@ container was bound to.
 The fn CLI provides a couple of commands to let us see what we've deployed.
 `fn list apps` returns a list of all of the defined applications.
 
-![user input](images/userinput.png)
+![user input](../../images/userinput.png)
 >```sh
 > fn list apps
 >```
@@ -256,7 +256,7 @@ We can also see the functions that are defined by an application.  Since
 functions are exposed via routes, the `fn list routes <appname>` command
 is used.  To list the functions included in "docker-hello" we can type:
 
-![user input](images/userinput.png)
+![user input](../../images/userinput.png)
 >```sh
 > fn list routes docker-hello
 >```
@@ -277,7 +277,7 @@ There are two ways to call your deployed function.  The first is using
 the `fn` CLI which makes invoking your function relatively easy.  Type
 the following:
 
-![user input](images/userinput.png)
+![user input](../../images/userinput.png)
 >```sh
 > fn call docker-hello /intro
 >```

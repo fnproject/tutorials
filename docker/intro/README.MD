@@ -350,8 +350,8 @@ For more examples and ideas, visit:
 
 ## Wrapping Up
 
-Congratulations!  In this tutorial you have taken an existing Docker image,
-used it as your first function, run it locally, deployed it to your local 
+Congratulations! In this tutorial you have created your first function using 
+an existing Docker image, run it locally, deployed it to your local 
 Fn server and invoked it over HTTP.
 
 **Go:** [Back to Contents](../README.md)

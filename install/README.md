@@ -202,7 +202,7 @@ You can confirm using the `which fn` command, the output should look like `/User
 
 
 #### For Windows Systems
-For Windows the current recommendation is to run Fn in Linux virtual machine on Windows. You can do with with [VirtualBox](https://www.virtualbox.org/) or other commercial VM software.
+The best way for Windows users is to run Fn inside a Linux virtual machine either in the cloud or using [VirtualBox](https://www.virtualbox.org/) on local.
 
 
 ## Learn More

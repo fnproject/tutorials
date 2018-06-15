@@ -16,7 +16,7 @@ Before we can install Fn you'll need:
 1. A computer running Linux or MacOS.  If you have a Windows machine the
 easiest thing to do is install [VirtualBox](https://www.virtualbox.org/)
 and run a free Linux virtual machine.
-2. [Docker](https://www.docker.com/) 17.05 (or higher) needs to be
+2. [Docker](https://www.docker.com/) 17.10 (or higher) needs to be
 installed and running.
 
 > As you make your way through this tutorial, look out for this icon.
@@ -29,7 +29,7 @@ From a terminal type the following:
 
 ![](images/userinput.png)
 >```sh
->curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
+> curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
 >```
 
 Once installed you'll see the `fn` CLI version printed out.  You should see
@@ -44,21 +44,23 @@ fn version 0.4.87
       / /_  / __ \
      / __/ / / / /
     /_/   /_/ /_/`
-    
+
 ```
+
+**Note:** The above `fn` CLI install script requires write access to restricted folders like /usr/local/bin. If the user doesn't have write access to /usr/local/bin, or if you prefer to install `fn` CLI in a different location, please see the [Fn Manual Install](#fn-manual-install) section.
 
 ## Start the Fn Server
 
 The final install step is to start the Fn server.  Since Fn runs on
 Docker it'll need to be up and running too.
 
-To start the Fn server you use the `fn` CLI. Run the `fn start` command. This will 
-download the Fn server docker image and start the Fn Server on port 8080 by default. 
+To start the Fn server you use the `fn` CLI. Run the `fn start` command. This will
+download the Fn server docker image and start the Fn Server on port 8080 by default.
 Note that this process runs in the foreground so that it's easy to stop with Ctrl-C:
 
 ![user input](images/userinput.png)
 >```sh
->fn start
+> fn start
 >```
 
 If the Fn Server starts up successfully, you should see output similar to:
@@ -78,9 +80,9 @@ time="2018-05-10T11:32:49Z" level=info msg="sync and async cpu reservations" cpu
 time="2018-05-10T11:32:49Z" level=info msg="Fn serving on `:8080`" type=full
 ```
 
-**Note:** The Fn server creates a temporary `data` directory it uses to store metadata. If you want to retain this data after a restart, make sure you start Fn server in the same directory.
+**Note:** The Fn server stores its metadata in the `~/.fn/data` directory. If you run in to errors after updating the Fn server, you may want to delete the contents of this `data` directory and restart Fn server.
 
-If you have some other process running on port 8080, `fn start` will 
+If you have some other process running on port 8080, `fn start` will
 fail with the following error:
 
 ```sh
@@ -88,7 +90,7 @@ docker: Error response from daemon: driver failed programming external connectiv
 2018/05/10 16:49:25 error: processed finished with error exit status 125
 ```
 
-In this case you can stop the other process and run `fn start` again. Alternatively, 
+In this case you can stop the other process and run `fn start` again. Alternatively,
 you can start Fn server on a different port.
 
 #### Start the Fn Server on a Different Port
@@ -96,15 +98,16 @@ Fn Server starts on port 8080 by default. To use a different port use the `--por
 
 ![user input](images/userinput.png)
 >```sh
->fn start -p 8081
+> fn start -p 8081
 >```
 
-When using a non-default port, you must point the `fn` CLI to the new port using 
+When using a non-default port, you must point the `fn` CLI to the new port using
 the `FN_API_URL` environment variable:
 
-```sh
-export FN_API_URL=http://127.0.0.1:8081
-```
+![user input](images/userinput.png)
+>```sh
+> export FN_API_URL=http://127.0.0.1:8081
+>```
 
 Alternatively, you can also set the `api_url` using Fn [contexts](https://github.com/fnproject/cli/blob/master/CONTEXT.md).
 
@@ -115,7 +118,7 @@ Let's verify everthing is up and running correctly.
 
 ![user input](images/userinput.png)
 >```sh
->fn version
+> fn version
 >```
 
 You should see the version of the fn CLI (client) and server displayed (your
@@ -127,8 +130,80 @@ Server version:  0.3.439
 ```
 
 **Note:** If the server version is "?" then the `fn` CLI cannot reach the Fn server.  
-If this happens it's likely you have something else running on port 8080 or you 
-started the server on a different port but forgot to set the `FN_API_URL`. 
+If this happens it's likely you have something else running on port 8080 or you
+started the server on a different port but forgot to set the `FN_API_URL`.
+
+
+## Fn Manual Install
+The steps to install Fn manually are described in this section. The system requirements are the same as those outlined for the script installation.
+
+You will need to follow these steps if the user doesn't have write access to /usr/local/bin, or if you prefer to install `fn` CLI in a different location.
+
+### Download Fn CLI
+Download the CLI for your operating system. For this example, files are saved to the `~/Downloads` directory.
+
+![user input](images/userinput.png)
+1. Open the Fn project release directory in your browser: <https://github.com/fnproject/cli/releases/>. You should see a list of executables for supported operating systems:
+
+| Operating System | Executable |
+| ------------- |:-------------:|
+| MacOS | fn_mac |
+| Linux | fn_linux |
+| Alpine Linux | fn_alpine |
+| Windows | fn.exe |
+
+2. Click on the Fn executable for your operating system and save the file locally
+
+#### For Mac / Linux Systems
+* Open a Terminal Window
+* Change into your home directory
+
+![user input](images/userinput.png)
+>```sh
+> cd ~
+>```
+
+* Create a directory for your executable
+
+![user input](images/userinput.png)
+>```sh
+> mkdir lbin
+>```
+
+* Copy the downloaded executable file into this `lbin` directory
+
+![user input](images/userinput.png) On Mac:
+>```sh
+> mv ~/Downloads/fn_mac.dms lbin/fn
+>```
+
+![user input](images/userinput.png) On Linux:
+>```sh
+> mv ~/Downloads/fn_linux lbin/fn
+>```
+
+* Make the file executable.
+
+![user input](images/userinput.png)
+>```sh
+> chmod +x lbin/fn
+>```
+
+* Add the `~/lbin` directory to your `PATH` environment variable as shown below
+
+![user input](images/userinput.png)
+>```sh
+> export PATH=~/lbin:$PATH
+>```
+
+You can confirm using the `which fn` command, the output should look like `/Users/<your-user>/lbin/fn`. Beyond this point you can use `fn` directly.
+
+(Alternatively, you can use `~/lbin/fn` if you don't want to add to your `PATH` environment variable.)
+
+
+#### For Windows Systems
+The best way for Windows users is to run Fn inside a Linux virtual machine either in the cloud or using [VirtualBox](https://www.virtualbox.org/) on local.
+
 
 ## Learn More
 

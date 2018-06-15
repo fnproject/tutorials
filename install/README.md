@@ -143,7 +143,7 @@ You will need to follow these steps if the user doesn't have write access to /us
 Download the CLI for your operating system. For this example, files are saved to the `~/Downloads` directory.
 
 ![user input](images/userinput.png)
-1. Open the Fn project release directory in your browser: <https://github.com/fnproject/cli/releases/>. You should see a list of executables for supported operating systems:
+Open the Fn project release directory in your browser: <https://github.com/fnproject/cli/releases/>. You should see a list of executables for supported operating systems. Click on the Fn executable for your operating system and save the file locally.
 
 | Operating System | Executable |
 | ------------- |:-------------:|
@@ -151,8 +151,6 @@ Download the CLI for your operating system. For this example, files are saved to
 | Linux | fn_linux |
 | Alpine Linux | fn_alpine |
 | Windows | fn.exe |
-
-2. Click on the Fn executable for your operating system and save the file locally
 
 #### For Mac / Linux Systems
 * Open a Terminal Window

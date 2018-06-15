@@ -63,7 +63,7 @@ A number of other runtimes are also supported.
 The `fn init` command generated a `func.yaml` function configuration file. 
 Let's look at the contents:
 
-![user input](images/userinput.png)
+![user input](../../images/userinput.png)
 >```sh
 > cat func.yaml
 >```
@@ -93,11 +93,7 @@ everything you need to run the function.  So let's run it and observe the output
 Note that the first time you run a function of a particular language it takes longer
 as Fn downloads the necessary Docker images.
 
-`fn run` builds a docker image using the Dockerfile, runs a container using this image, 
-returns the output and then removes the container. In this case you will see the default
-"Hello from Docker! ... " message that's inside the Docker hello-world image.
-
-![user input](images/userinput.png)
+![user input](../../images/userinput.png)
 >```sh
 > fn run
 >```
@@ -132,7 +128,7 @@ If you ever want more details on what a given fn command is doing behind the
 scenes you can add the `--verbose` switch. You can rerun with verbose output
 enabled.
 
-![user input](images/userinput.png)
+![user input](../../images/userinput.png)
 >```sh
 > fn --verbose run
 >```
@@ -168,7 +164,194 @@ For more examples and ideas, visit:
  https://docs.docker.com/engine/userguide/
 ```
 
+### Understanding fn run
+If you have used Docker before the output of `fn --verbose run` should look
+familiar. It looks like the output you see when running `docker build`
+with a Dockerfile. Of course this is exactly what's happening! 
 
-fn deploy --app docker-hello --local
+`fn run` built a docker image using the Dockerfile, ran a container using this image, 
+returned the output and then removed the container. And you saw the default
+"Hello from Docker! ... " message that's inside the Docker hello-world image. 
 
+`fn run` is a local operation. The container image resides on your local machine. 
+`fn run` doesn't deploy anything to the Fn server. In fact you don't need the Fn 
+server to be running when you execute `fn run`.
 
+As Fn is built on Docker you can use the `docker` command to see the local
+container image you just generated.
+
+You may have a number of Docker images so use the following command
+to see only those created by fndemouser:
+
+![user input](images/userinput.png)
+>```sh
+> docker images | grep fndemouser
+>```
+
+You should see something like:
+
+```sh
+fndemouser/intro    0.0.1               e38bc07ac18e        2 months ago        1.85kB
+```
+
+## Deploying Your First Function
+
+Now let's deploy your function to the Fn server we started previously.
+This server could be running in the cloud, in your datacenter, or on
+your local machine like we're doing here.
+
+Deploying your function is how you publish your function and make it
+accessible to other users and systems.
+
+In your terminal type the following:
+
+![user input](../../images/userinput.png)
+>```sh
+> fn deploy --app docker-hello --local
+>```
+
+You should see output similar to:
+
+```sh
+Deploying intro to app: docker-hello at path: /intro
+Bumped to version 0.0.2
+Building image fndemouser/intro:0.0.2 
+Updating route /intro using image fndemouser/intro:0.0.2...
+```
+
+Functions are grouped into applications so by specifying `--app docker-hello`
+we're implicitly creating the application "docker-hello" and associating our
+function with it.
+
+Specifying `--local` does the deployment to the local server but does
+not push the function image to a Docker registry--which would be necessary if
+we were deploying to a remote Fn server.
+
+The output message
+`Updating route /intro using image fndemouser/intro:0.0.2...`
+lets us know that the function packaged in the image
+"fndemouser/intro:0.0.2" has been bound by the Fn server to the route
+"/intro".  We'll see how to use the route below.
+
+Note that the containing folder name 'intro' was used as the name of the
+generated Docker container and used as the name of the route that
+container was bound to.
+
+The fn CLI provides a couple of commands to let us see what we've deployed.
+`fn list apps` returns a list of all of the defined applications.
+
+![user input](images/userinput.png)
+>```sh
+> fn list apps
+>```
+
+Which, in our case, returns the name of the application we created when we
+deployed our gofn function:
+
+```sh
+docker-hello
+```
+
+We can also see the functions that are defined by an application.  Since
+functions are exposed via routes, the `fn list routes <appname>` command
+is used.  To list the functions included in "docker-hello" we can type:
+
+![user input](images/userinput.png)
+>```sh
+> fn list routes docker-hello
+>```
+
+```sh
+path    image			        endpoint
+/intro fndemouser/intro:0.0.2 localhost:8080/r/docker-hello/intro
+```
+
+The output confirms that `docker-hello` app contains an `intro` function that is 
+implemented by the Docker container `fndemouser/intro:0.0.2` which may be invoked 
+via the specified URL. Now that we've confirmed deployment was successful, let's
+call our function.
+
+## Calling Your Deployed Function
+
+There are two ways to call your deployed function.  The first is using
+the `fn` CLI which makes invoking your function relatively easy.  Type
+the following:
+
+![user input](images/userinput.png)
+>```sh
+> fn call docker-hello /intro
+>```
+
+which results in our familiar output message.
+
+```sh
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/engine/userguide/
+```
+
+Of course the output looks the same as when you ran the function with `fn run`.
+However when you called "docker-hello /intro" the fn server looked up the
+"docker-hello" application and then looked for the Docker container image
+bound to the "/intro" route.
+
+The other way to call your function is via HTTP. The Fn server exposes our deployed 
+function at /r/<app-name>/<fn-name> which in our case maps to 
+"http://localhost:8080/r/docker-hello/intro".
+
+Use curl to invoke the function:
+
+![user input](../../images/userinput.png)
+>```sh
+> curl http://localhost:8080/r/docker-hello/intro
+>```
+
+The result is once again the same.
+
+```sh
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/engine/userguide/
+```
+
+## Wrapping Up
+
+Congratulations!  In this tutorial you have taken an existing Docker image,
+used it as your first function, run it locally, deployed it to your local 
+Fn server and invoked it over HTTP.
+
+**Go:** [Back to Contents](../README.md)

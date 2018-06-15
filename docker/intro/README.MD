@@ -270,8 +270,8 @@ is used. To list the functions included in `dockerapp` we can type:
 >```
 
 ```sh
-path		      image				                   endpoint
-/dockerfn	  fndemouser/dockerfn:0.0.2	  localhost:8080/r/dockerapp/dockerfn
+path		image				endpoint
+/dockerfn	fndemouser/dockerfn:0.0.2	localhost:8080/r/dockerapp/dockerfn
 ```
 
 The output confirms that `dockerapp` app contains a `dockerfn` function that

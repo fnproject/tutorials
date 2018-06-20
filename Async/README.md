@@ -43,7 +43,7 @@ Now let's deploy it:
 
 ![user input](../images/userinput.png)
 >```sh
->fn deploy --local --app myapp
+>fn deploy --local --app asyncapp
 >```
 
 Now we've deployed it as an async function so when we call it, it will be queued up to run later.
@@ -52,7 +52,7 @@ And call the asyncfn function:
 
 ![user input](../images/userinput.png)
 >```sh
->fn call myapp /asyncfn
+>fn call asyncapp /asyncfn
 >```
 
 Now you'll get a response like:
@@ -69,14 +69,14 @@ Using the CLI, try running the following, replacing `CALL_ID` with the `call_id`
 
 ![user input](../images/userinput.png)
 >```sh
->fn get call myapp CALL_ID
+>fn get call asyncapp CALL_ID
 >```
 
 You'll get something like the following:
 
 ```
 ID: 01BVJ5T7CA07WGE00000000000
-App: myapp
+App: asyncapp
 Route: /asyncfn
 Created At: 2017-10-03T22:31:01.258Z
 Started At: 2017-10-03T22:31:01.908Z
@@ -86,19 +86,25 @@ Status: success
 
 We can see that the Status is `success` which means the call finished properly. And you can see the time it started and completed.
 
-But how do we check the logs to debug and ensure things ran properly? There's a `log` endpoint to allow you to check this and you can 
+But how do we check the logs to debug and ensure things ran properly? There's a `log` endpoint to allow you to check this and you can
 access it via the CLI with:
 
 ![user input](../images/userinput.png)
 >```sh
->fn get logs myapp CALL_ID
+>fn get logs asyncapp CALL_ID
 >```
 
 For this function, the logs will contain:
 
 ```json
-{"message":"Hello World"}
+{"body":"{\"message\":\"Hello World\"}\n","content_type":"","protocol":{"status_code":200}}
 ```
+
+A JSON response is returned with three fields.
+
+* **body:** The output from the function. In this case an escaped version of the JSON response message: `{"message":"Hello World"}`
+* **content_type:** The content type of the response message. Empty in this case which defaults to `application/json`.
+* **protocol:** Returns the response code for the protocol specified by the input format, in this case HTTP.
 
 ## Wrapping Up
 

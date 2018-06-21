@@ -100,10 +100,9 @@ For this function, the logs will contain:
 {"body":"{\"message\":\"Hello World\"}\n","content_type":"","protocol":{"status_code":200}}
 ```
 
-A JSON response is returned with three fields.
+A JSON response is returned with several fields.
 
 * **body:** The output from the function. In this case an escaped version of the JSON response message: `{"message":"Hello World"}`
-* **content_type:** The content type of the response message. Empty in this case which defaults to `application/json`.
 * **protocol:** Returns the response code for the protocol specified by the input format, in this case HTTP.
 
 ## Wrapping Up

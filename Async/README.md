@@ -1,4 +1,4 @@
-# Aynchronous Functions
+# Asynchronous Functions
 
 Asynchronous functions are queued up and run at some point in the future. Great for expensive
 or bulk operations.
@@ -84,26 +84,7 @@ Completed At: 2017-10-03T22:31:02.615Z
 Status: success
 ```
 
-We can see that the Status is `success` which means the call finished properly. And you can see the time it started and completed.
-
-But how do we check the logs to debug and ensure things ran properly? There's a `log` endpoint to allow you to check this and you can
-access it via the CLI with:
-
-![user input](../images/userinput.png)
->```sh
->fn get logs asyncapp CALL_ID
->```
-
-For this function, the logs will contain:
-
-```json
-{"body":"{\"message\":\"Hello World\"}\n","content_type":"","protocol":{"status_code":200}}
-```
-
-A JSON response is returned with several fields.
-
-* **body:** The output from the function. In this case an escaped version of the JSON response message: `{"message":"Hello World"}`
-* **protocol:** Returns the response code for the protocol specified by the input format, in this case HTTP.
+We can see that the Status is `success` which means the call finished properly. And, you can see the time it started and completed.
 
 ## Wrapping Up
 

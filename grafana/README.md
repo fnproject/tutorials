@@ -8,11 +8,11 @@ The Fn server exposes metrics i.e. information about it's performance and resour
 
 ## Before you begin
 
-* Make sure you have cloned the GitHub repo `fnproject/tutorials`
-* Make sure you are in the folder `<checked-out-dir>/tutorials/grafana` while executing the commands below
-* Make sure you have Docker 17.05 or later installed and running
-* Make sure you have `fn` CLI tool installed. If you don't have `fn` installed, follow the instructions to **download and install Fn** from the tutorial [Introduction](../Introduction#downloading-and-installing-fn)
-* Make sure you have `Fn server` up and running. If it's not running, follow the instructions to **start the Fn server** from the tutorial [Introduction](../Introduction#starting-fn-server)
+* Make sure you have cloned the GitHub repo `fnproject/tutorials`.
+* Make sure you are in the folder `<checked-out-dir>/tutorials/grafana` while executing the commands below.
+* Make sure you have Docker 17.10 or later installed and running.
+* Make sure you have `fn` CLI tool installed. If you don't have `fn` installed, follow the instructions to [**download and install Fn**](../install/README.md).
+* Make sure you have `Fn server` up and running. If it's not running, follow the instructions to [**start the Fn server**](../install/README.md).
 
 > As you make your way through this tutorial, look out for this icon ![](../images/userinput.png). Whenever you see it, it's time for you to perform an action.
 

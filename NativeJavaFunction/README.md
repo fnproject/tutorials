@@ -137,24 +137,6 @@ CMD [ "com.example.fn.HelloFunction::handleRequest" ]
 As usual, the init command has created a `func.yaml` file for your
 function and Java runtime values set.
 
-![](../images/userinput.png) In a terminal type the following:
-
->```sh
->cat func.yaml
->```
-
-The output will be:
-
-```yaml
-name: nativejavafn
-version: 0.0.1
-runtime: java8
-cmd: com.example.fn.HelloFunction::handleRequest
-build_image: fnproject/fn-java-fdk-build:1.0.62
-run_image: fnproject/fn-java-fdk:1.0.62
-format: http
-```
-
 Although, we need to change the `func.yaml` file to use `Dockerfile`
 instead of standard Java runtime and also add `Maven` build commands.
 In our case, we need to compile, test and package Java function plus
@@ -188,6 +170,17 @@ The output looks like:
 ```
 Building image nativejavafn:0.0.1 ....................
 ```
+
+![](../images/userinput.png) After the build is finished, in a terminal type the following:
+>`docker images -a | grep nativejavafn`
+
+The output looks like:
+
+```
+nativejavafn      0.0.1     0ed3ac2ebd99      2 minutes ago      13.5MB
+```
+
+The resulting image size is very small compared to default Java ones as it only contains the generated static executable on top of a scratch Docker image.
 
 ## Running the Function
 

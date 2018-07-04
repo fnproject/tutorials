@@ -7,8 +7,8 @@ or bulk operations.
 
 When writing functions, the only differences between an async function and a sync function are:
 
-1. There is no immediate response, output goes to the logs instead.
-1. The response when calling a function returns a JSON object containing the `call_id`.
+1. There is no immediate response.
+2. The response when calling a function returns a JSON object containing the `call_id`.
 
 Response:
 
@@ -61,7 +61,7 @@ Now you'll get a response like:
 {"call_id":"01BVJ5T7CA07WGE00000000000"}
 ```
 
-## Check Status and Get Logs
+## Check Status
 
 We can retrieve the function call status by checking the status endpoint in the API.
 

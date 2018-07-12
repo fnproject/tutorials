@@ -34,7 +34,7 @@ A simple Flow function looks like this:
 
 ```
 
-If you've used a promises-style API before then this will be familiar. The closest analogue in core Java is the [CompletionStage API](http://download.java.net/java/jdk9/docs/api/java/util/concurrent/CompletionStage.html) which was even called [`Promise`](http://cs.oswego.edu/pipermail/concurrency-interest/2012-December/010423.html) in a pre-release draft.
+If you've used a promises-style API before then this will be familiar. The closest analogue in core Java is the [CompletionStage API](https://docs.oracle.com/apps/search/search.jsp?category=java&product=e92405-01&q=completionstage) which was even called [`Promise`](http://cs.oswego.edu/pipermail/concurrency-interest/2012-December/010423.html) in a pre-release draft.
 
 Anyway it's easy to tell the stages of what's going to happen:
 
@@ -49,7 +49,7 @@ This example could easily be written without Flow but it's good to start simple.
 
 ## Before you begin
 
-Currently FnProject is available to download, to experiment with, and to run on your private cloud. A managed service by Oracle is in the works. To play with Flow at the moment you will need to run everything locally, but it's not hard. We need **`fn`**, the **Fn server**, the **Flow Server** and not necessary but nice-to-have is the Flow Server **UI**. These run on ports 8080, 8081 and 3002 respectively so you might need to configure firewalls to allow access.
+Currently FnProject is available to download, to experiment with, and to run on your private cloud. A managed service by Oracle is in the works. To play with Flow at the moment you will need to run everything locally, but it's not hard. We need **`fn`**, the **Fn Server**, the **Flow Server** and not necessary but nice-to-have is the Flow Server **UI**. These run on ports 8080, 8081 and 3002 respectively so you might need to configure firewalls to allow access.
 
 > As you make your way through this tutorial, look out for this icon ![](../images/userinput.png). Whenever you see it, it's time for you to perform an action.
 
@@ -62,7 +62,7 @@ Install the **`fn`** CLI tool:
 >curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
 >```
 
-Then start the **Fn server**:
+Then start the **Fn Server**:
 
 ![user input](../images/userinput.png)
 >```sh
@@ -82,7 +82,7 @@ time="2017-10-11T13:12:44Z" level=info msg="Serving Functions API on address `:8
         v0.3.119
 ```
 
-The **Flow Server** needs to know how to call the Fn server, so ask Docker which IP address to use.
+The **Flow Server** needs to know how to call the Fn Server, so ask Docker which IP address to use.
 
 ![user input](../images/userinput.png)
 <!-- The HTML is required to escape Jekyll Liquid template expressions.
@@ -180,7 +180,7 @@ public class HelloFunction {
 }
 ```
 
-Then deploy this to an app which we call `flow101` on the local Fn server.
+Then deploy this to an app which we call `flow101` on the local Fn Server.
 
 ![user input](../images/userinput.png)
 >```sh

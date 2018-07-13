@@ -1,4 +1,4 @@
-# Aynchronous Functions
+# Asynchronous Functions
 
 Asynchronous functions are queued up and run at some point in the future. Great for expensive
 or bulk operations.
@@ -7,8 +7,8 @@ or bulk operations.
 
 When writing functions, the only differences between an async function and a sync function are:
 
-1. There is no immediate response, output goes to the logs instead.
-1. The response when calling a function returns a JSON object containing the `call_id`.
+1. There is no immediate response.
+2. The response when calling a function returns a JSON object containing the `call_id`.
 
 Response:
 
@@ -43,7 +43,7 @@ Now let's deploy it:
 
 ![user input](../images/userinput.png)
 >```sh
->fn deploy --local --app myapp
+>fn deploy --local --app asyncapp
 >```
 
 Now we've deployed it as an async function so when we call it, it will be queued up to run later.
@@ -52,7 +52,7 @@ And call the asyncfn function:
 
 ![user input](../images/userinput.png)
 >```sh
->fn call myapp /asyncfn
+>fn call asyncapp /asyncfn
 >```
 
 Now you'll get a response like:
@@ -61,7 +61,7 @@ Now you'll get a response like:
 {"call_id":"01BVJ5T7CA07WGE00000000000"}
 ```
 
-## Check Status and Get Logs
+## Check Status
 
 We can retrieve the function call status by checking the status endpoint in the API.
 
@@ -69,14 +69,14 @@ Using the CLI, try running the following, replacing `CALL_ID` with the `call_id`
 
 ![user input](../images/userinput.png)
 >```sh
->fn get call myapp CALL_ID
+>fn get call asyncapp CALL_ID
 >```
 
 You'll get something like the following:
 
 ```
 ID: 01BVJ5T7CA07WGE00000000000
-App: myapp
+App: asyncapp
 Route: /asyncfn
 Created At: 2017-10-03T22:31:01.258Z
 Started At: 2017-10-03T22:31:01.908Z
@@ -84,21 +84,7 @@ Completed At: 2017-10-03T22:31:02.615Z
 Status: success
 ```
 
-We can see that the Status is `success` which means the call finished properly. And you can see the time it started and completed.
-
-But how do we check the logs to debug and ensure things ran properly? There's a `log` endpoint to allow you to check this and you can 
-access it via the CLI with:
-
-![user input](../images/userinput.png)
->```sh
->fn get logs myapp CALL_ID
->```
-
-For this function, the logs will contain:
-
-```json
-{"message":"Hello World"}
-```
+We can see that the Status is `success` which means the call finished properly. And, you can see the time it started and completed.
 
 ## Wrapping Up
 

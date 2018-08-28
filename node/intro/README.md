@@ -4,7 +4,7 @@ your laptop, server, or cloud.  In this introductory tutorial we'll walk through
 developing a function using the JavaScript programming language and Node.js
 (without installing any Node.js tools!) and deploying that function to a local
 Fn server.  We'll also learn about the core Fn concepts like applications and
-routes.
+triggers.
 
 ### Before you Begin
 * Set aside about 15 minutes to complete this tutorial.
@@ -56,7 +56,7 @@ The `fn init` command creates a simple function with a bit of boilerplate to get
 you started. The `--runtime` option is used to indicate that the function we're
 going to develop will be written in Node. A number of other runtimes are also
 supported.  The `--trigger` option creates an HTTP trigger for the function
-allowing you call call the function from a URL. Fn creates the simple function
+allowing you to invoke the function from a URL. Fn creates the simple function
 along with several supporting files in the `/nodefn` directory.
 
 ### Reviewing your Function File
@@ -351,13 +351,12 @@ not push the function image to a Docker registry--which would be necessary if
 we were deploying to a remote Fn server.
 
 The output message
-`Updating route /nodefn using image fndemouser/nodefn:0.0.2...`
-lets us know that the function packaged in the image
-"fndemouser/nodefn:0.0.2" has been bound by the Fn server to the route
-"/nodefn".  We'll see how to use the route below.
+`Updating function nodefn using image fndemouser/nodefn:0.0.2...`
+let's us know that the function is packaged in the image
+"fndemouser/nodefn:0.0.2".
 
 Note that the containing folder name 'nodefn' was used as the name of the
-generated Docker container and used as the name of the route that
+generated Docker container and used as the name of the function that
 container was bound to. By convention it is also used to create the trigger name
 `nodefn-trigger`.
 
@@ -378,7 +377,7 @@ nodeapp
 ```
 
 We can also see the functions that are defined by an application.  Since
-functions are exposed via routes, the `fn list routes <appname>` command
+functions are exposed via triggers, the `fn list triggers <appname>` command
 is used.  To list the functions included in "nodeapp" we can type:
 
 ![user input](images/userinput.png)
@@ -414,13 +413,13 @@ which results in our familiar output message.
 ```
 
 Of course this is unchanged from when you ran the function locally.
-However when you called "nodeapp /nodefn" the fn server looked up the
+However when you invoked "nodeapp nodefn" the fn server looked up the
 "nodeapp" application and then looked for the Docker container image
-bound to the "/nodefn" route.
+bound to the "nodefn" function.
 
-The other way to call your function is via HTTP.  The Fn server
-exposes our deployed function at "http://localhost:8080/r/nodeapp/nodefn", a URL
-that incorporates our application and function route as path elements.
+The other way to invoke your function is via HTTP.  The Fn server exposes our
+deployed function at "http://localhost:8080/t/nodeapp/nodefn-trigger", a URL
+that incorporates our application and function trigger as path elements.
 
 Use curl to invoke the function:
 

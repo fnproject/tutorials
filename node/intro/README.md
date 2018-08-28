@@ -271,7 +271,7 @@ You can also pass data to the run command. Note that you set the content type fo
 >```
 
 ```sh
-Building image fndemouser/gofn:0.0.1 .....
+Building image fndemouser/nodefn:0.0.1 .....
 {"message":"Hello Bob"}
 ```
 

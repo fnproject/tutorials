@@ -424,7 +424,7 @@ The result is once again the same.
 {"message":"Hello World"}
 ```
 
-We can again pass JSON data to out function get the value of name passed to the
+We can again pass JSON data to our function and get the value of name passed to the
 function back.
 
 ![User Input Icon](images/userinput.png)

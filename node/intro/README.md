@@ -15,23 +15,75 @@ triggers.
 perform an action.
 
 ## Your First Function
-Now that Fn server is up and running, let's start with a very simple "hello world" function written in [Node.js
-JavaScript](https://nodejs.org/). Don't worry, you don't need to know Node!  In
-fact you don't even need to have Node installed on your development machine as
-Fn provides the necessary Node tools as a Docker container.  Let's
-walk through your first function to become familiar with the process and how Fn
-supports development.
+Now that Fn server is up and running, let's start with a very simple "hello
+world" function written in [Node.js JavaScript](https://nodejs.org/). Don't
+worry, you don't need to know Node!  In fact you don't even need to have Node
+installed on your development machine as Fn provides the necessary Node tools as
+a Docker container.  Let's walk through your first function to become familiar
+with the process and how Fn supports development.
 
-Before we start developing we need to set the `FN_REGISTRY`
-environment variable.  Normally, it's set to your Docker Hub username.
-However in this tutorial we'll work in local development mode so we can set
-the `FN_REGISTRY` variable to an arbitrary value. Let's use `fndemouser`.
+### Configure your Context
+Before we start developing we need to configure Fn to use a Docker registry.
+Normally, it's set to your Docker Hub username. However in this tutorial we'll
+work in a local development mode, so we will use an arbitrary value
+`fndemouser`. We store the registry value in an Fn context. An Fn context
+represents our current deployment environment and we can have more than one if
+we are deploying to multiple servers.
+
+First, get list of available contexts.
+
+![user input](images/userinput.png)
+>```sh
+> fn list contexts
+>```
+
+The result should be similar to this:
+
+```txt
+CURRENT     NAME    PROVIDER    API URL                    REGISTRY
+            default default     http://localhost:8080/v1   
+```
+
+Notice we have a default context which deploys to a local Fn server. The default context is created the first time run the Fn CLI. However, we need to select default as our current context and set a registry value to `fndemouser`.
+
+To do that we issue two commands. First select a context:
+
+![user input](images/userinput.png)
+>```sh
+> fn use context default
+>```
+
+```txt
+Now using context: default
+```
+
+Next, set the Docker registry value:
 
 ![user input](images/userinput.png)
 >```
-> export FN_REGISTRY=fndemouser
+> fn update context registry fndemouser
 >```
 
+```txt
+Current context updated registry with fndemouser
+```
+
+Now, recheck your context configuration:
+
+![user input](images/userinput.png)
+>```
+> fn list contexts
+>```
+
+```txt
+CURRENT     NAME    PROVIDER    API URL                    REGISTRY
+*           default default     http://localhost:8080/v1   fndemouser
+```
+
+The default context is now our current context and has a registry value of `fndemouser`. You are ready to create your first function.
+
+
+### Create your Function
 With that out of the way, let's create a new function. In the terminal type the
 following.
 
@@ -56,7 +108,7 @@ supported.  The `--trigger` option creates an HTTP trigger for the function
 allowing you to invoke the function from a URL. Fn creates the simple function
 along with several supporting files in the `/nodefn` directory.
 
-### Reviewing your Function File
+### Review your Function File
 
 With your function created change into the `/nodefn` directory.
 
@@ -102,7 +154,7 @@ JSON example is passed to the function, the function returns `{"message":"Hello
 Bob"}`. If no JSON data is found, the function returns `{"message":"Hello
 World"}`.  
 
-### Understanding func.yaml
+### Understand func.yaml
 The `fn init` command generated a `func.yaml` function
 configuration file. Let's look at the contents:
 
@@ -155,7 +207,7 @@ Fn handles Node.js dependencies in the following way:
 * If a `package.json` is present without a `node_modules` directory, an Fn build runs an `npm install` within the build process and installs your dependencies.
 * If the `node_modules` is present, Fn assumes you have provided the dependencies yourself and no installation is performed.
 
-## Deploying Your First Function
+## Deploy Your First Function
 
 With the `nodefn` directory containing `func.js` and `func.yaml` you've got
 everything you need to deploy the function to Fn server. This server could be
@@ -279,11 +331,11 @@ container was bound to. By convention it is also used to create the trigger name
 Normally you deploy an application without the `--verbose` option. If you rerun the command a new image and version is created and loaded.
 
 
-## Invoking your Deployed Function
+## Invoke your Deployed Function
 
 There are two ways to call your deployed function.  
 
-### Invoking from the CLI
+### Invoke with the CLI
 
 The first is using the `fn` CLI which makes invoking your function relatively
 easy.  Type the following:
@@ -317,7 +369,7 @@ You can also pass data to the run command. Note that you set the content type fo
 The JSON data was parsed and since `name` was set to "Bob", that value is passed
 in the output.
 
-### Understanding fn deploy
+### Understand fn deploy
 If you have used Docker before the output of `fn --verbose deploy` should look
 familiar--it looks like the output you see when running `docker build`
 with a Dockerfile.  Of course this is exactly what's happening!  When
@@ -351,7 +403,7 @@ You should see something like:
 fndemouser/nodefn    0.0.2               b9330bddec26        2 minutes ago      66.4MB
 ```
 
-### Exploring your Application
+### Explore your Application
 
 The fn CLI provides a couple of commands to let us see what we've deployed.
 `fn list apps` returns a list of all of the defined applications.
@@ -387,7 +439,7 @@ The output confirms that nodeapp contains a `nodefn` function that is
 implemented by the Docker container `fndemouser/nodefn:0.0.2` which may be
 invoked via the specified trigger URL.
 
-### Invoking with Curl
+### Invoke with Curl
 
 The other way to invoke your function is via HTTP.  The Fn server exposes our
 deployed function at `http://localhost:8080/t/nodeapp/nodefn-trigger`, a URL
@@ -420,7 +472,7 @@ The result is once again the same.
 {"message":"Hello Bob"}
 ```
 
-## Wrapping Up
+## Wrap Up
 
 Congratulations!  In this tutorial you've accomplished a lot.  You've created
 your first function and deployed it to your local Fn server and invoked it over

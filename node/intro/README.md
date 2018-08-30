@@ -44,7 +44,7 @@ CURRENT     NAME    PROVIDER    API URL                    REGISTRY
             default default     http://localhost:8080/v1   
 ```
 
-Notice we have a default context which deploys to a local Fn server. The default context is created the first time run the Fn CLI. However, we need to select default as our current context and set a registry value to `fndemouser`.
+Notice we have a default context which deploys to a local Fn server. The default context is created the first time you run the Fn CLI. However, we need to select default as our current context and set a registry value to `fndemouser`.
 
 To do that we issue two commands. First select a context:
 

@@ -21,16 +21,68 @@ machine as Fn provides the necessary Go compiler and tools as a Docker
 container.  Let's walk through your first function to become familiar with the
 process and how Fn supports development.
 
-Before we start developing we need to set the `FN_REGISTRY`
-environment variable.  Normally, it's set to your Docker Hub username.
-However in this tutorial we'll work in local development mode so we can set
-the `FN_REGISTRY` variable to an arbitrary value. Let's use `fndemouser`.
+### Configure your Context
+Before we start developing we need to configure Fn to use a Docker registry.
+Normally, it's set to your Docker Hub username. However in this tutorial we'll
+work in a local development mode, so we will use an arbitrary value
+`fndemouser`. We store the registry value in an Fn context. An Fn context
+represents our current deployment environment and we can have more than one if
+we are deploying to multiple servers.
 
-![User Input Icon](images/userinput.png)
+First, get list of available contexts.
+
+![user input](images/userinput.png)
 >```sh
-> export FN_REGISTRY=fndemouser
+> fn list contexts
 >```
 
+The result should be similar to this:
+
+```txt
+CURRENT     NAME    PROVIDER    API URL                    REGISTRY
+            default default     http://localhost:8080/v1   
+```
+
+Notice we have a default context which deploys to a local Fn server. The default context is created the first time you run the Fn CLI. However, we need to select default as our current context and set a registry value to `fndemouser`.
+
+To do that we issue two commands. First select a context:
+
+![user input](images/userinput.png)
+>```sh
+> fn use context default
+>```
+
+```txt
+Now using context: default
+```
+
+Next, set the Docker registry value:
+
+![user input](images/userinput.png)
+>```
+> fn update context registry fndemouser
+>```
+
+```txt
+Current context updated registry with fndemouser
+```
+
+Now, recheck your context configuration:
+
+![user input](images/userinput.png)
+>```
+> fn list contexts
+>```
+
+```txt
+CURRENT     NAME    PROVIDER    API URL                    REGISTRY
+*           default default     http://localhost:8080/v1   fndemouser
+```
+
+The default context is now our current context and has a registry value of `fndemouser`. You are ready to create your first function.
+
+
+### Create your Function
 With that out of the way, let's create a new function. In the terminal type the
 following.
 
@@ -53,8 +105,7 @@ get you started. The `--runtime` option is used to indicate that the function
 we're going to develop will be written in Go. A number of other runtimes are
 also supported.  Fn creates the simple function along with several supporting files in the `/gofn` directory.
 
-### Reviewing your Function File
-
+### Review your Function File
 With your function created change into the `/gofn` directory.
 
 ![User Input Icon](images/userinput.png)
@@ -170,22 +221,34 @@ specifies all the dependencies for your function.
 input and the output of the function, helps to identify if the function works
 correctly or not. Function testing is not covered in this tutorial.
 
+## Deploy Your First Function
 
-## Running Your First Function
+With the `gofn` directory containing `func.go` and `func.yaml` you've got
+everything you need to deploy the function to Fn server. This server could be
+running in the cloud, in your datacenter, or on your local machine like we're
+doing here.
 
-With the `gofn` directory containing `func.go` and `func.yaml` you've
-got everything you need to run the function.  So let's run it and
-observe the output.  To see the details of what is happening during a function run, use the `--verbose` switch. The first time you build a function of a particular language it takes longer as Fn downloads the necessary Docker images. The `--verbose` option allows you to see this process.
+Deploying your function is how you publish your function and make it accessible
+to other users and systems. To see the details of what is happening during a
+function deploy,  use the `--verbose` switch.  The first time you build a
+function of a particular language it takes longer as Fn downloads the necessary
+Docker images. The `--verbose` option allows you to see this process.
+
+In your terminal type the following:
 
 ![User Input Icon](images/userinput.png)
->```
-> fn --verbose run
+>```sh
+> fn --verbose deploy --app goapp --local
 >```
 
+You should see output similar to:
+
 ```yaml
-Building image fndemouser/gofn:0.0.1
+Deploying gofn to app: goapp
+Bumped to version 0.0.2
+Building image fndemouser/gofn:0.0.2
 FN_REGISTRY:  fndemouser
-Current Context:  No context currently in use.
+Current Context:  default
 Sending build context to Docker daemon  6.144kB
 Step 1/10 : FROM fnproject/go:dev as build-stage
 dev: Pulling from fnproject/go
@@ -199,23 +262,23 @@ Digest: sha256:6ebffaea00a2f53373c68dd52e0df209d7e464d691db0d52b31060d06df8e839
 Status: Downloaded newer image for fnproject/go:dev
  ---> fac877f7d14d
 Step 2/10 : WORKDIR /function
- ---> Running in b1b65327d278
-Removing intermediate container b1b65327d278
- ---> 95b07c89837f
+ ---> Running in 58c83d2e1041
+Removing intermediate container 58c83d2e1041
+ ---> 4377ad7bb7b7
 Step 3/10 : RUN go get -u github.com/golang/dep/cmd/dep
- ---> Running in f34144b5de66
-Removing intermediate container f34144b5de66
- ---> ff1478fb4f19
+ ---> Running in 1dfb09461b40
+Removing intermediate container 1dfb09461b40
+ ---> d4b2aeab9923
 Step 4/10 : ADD . /go/src/func/
- ---> 38b2fab29c16
+ ---> b69d9ed7d904
 Step 5/10 : RUN cd /go/src/func/ && dep ensure
- ---> Running in 402a0040f77c
-Removing intermediate container 402a0040f77c
- ---> 6de1582a430c
+ ---> Running in a2f28e772805
+Removing intermediate container a2f28e772805
+ ---> cbd77a519a1a
 Step 6/10 : RUN cd /go/src/func/ && go build -o func
- ---> Running in 21cc04bf3d6d
-Removing intermediate container 21cc04bf3d6d
- ---> 031d30155996
+ ---> Running in dd6d1f0f4cfd
+Removing intermediate container dd6d1f0f4cfd
+ ---> 52090818324a
 Step 7/10 : FROM fnproject/go
 latest: Pulling from fnproject/go
 1eae7a7426b0: Pull complete
@@ -224,116 +287,25 @@ Digest: sha256:8e03716b576e955c7606e4d8b8748c0f959a916ce16ba305ab262f042562340f
 Status: Downloaded newer image for fnproject/go:latest
  ---> 76aed4489768
 Step 8/10 : WORKDIR /function
- ---> Running in 619a412d5ab1
-Removing intermediate container 619a412d5ab1
- ---> 1487668015c4
+ ---> Running in 69ec68217d80
+Removing intermediate container 69ec68217d80
+ ---> 7dd3f73989ee
 Step 9/10 : COPY --from=build-stage /go/src/func/func /function/
- ---> cba454c3ad2c
+ ---> 17f42164b51f
 Step 10/10 : ENTRYPOINT ["./func"]
- ---> Running in 19e4eb479fc9
-Removing intermediate container 19e4eb479fc9
- ---> fc917eb83553
-Successfully built fc917eb83553
-Successfully tagged fndemouser/gofn:0.0.1
+ ---> Running in e2cee72aec64
+Removing intermediate container e2cee72aec64
+ ---> cde014cefdad
+Successfully built cde014cefdad
+Successfully tagged fndemouser/gofn:0.0.2
 
-{"message":"Hello World"}
-```
-
-The last line of output `{"message":"Hello World"}` was produced
-by the Go statement `Msg: fmt.Sprintf("Hello %s", p.Name),`.
-
-Normally fn is run without the --verbose option. Let's rerun without the verbose output enabled.
-
-![User Input Icon](images/userinput.png)
->```sh
-> fn --verbose run
->```
-
-```sh
-Building image fndemouser/gofn:0.0.1 ...
-{"message":"Hello World"}
-```
-
-Notice the duration of the run is much shorter.
-
-You can also pass data to the run command. For example:
-
-![User Input Icon](images/userinput.png)
->```sh
-> echo -n '{"name":"Bob"}' | fn run
->```
-
-```sh
-Building image fndemouser/gofn:0.0.1 .....
-{"message":"Hello Bob"}
-```
-
-The JSON data was parsed and since `name` was set to "Bob", that value is passed
-in the output.
-
-### Understanding fn run
-If you have used Docker before the output of `fn --verbose run` should look
-familiar--it looks like the output you see when running `docker build`
-with a Dockerfile.  Of course this is exactly what's happening!  When
-you run a function like this Fn is dynamically generating a Dockerfile
-for your function, building a container, and then running it.
-
-> __NOTE__: Fn is actually using two images.  The first contains
-the language compiler and is used to generate a binary.  The second
-image packages only the generated binary and any necessary language
-runtime components. Using this strategy, the final function image size
-can be kept as small as possible.  Smaller Docker images are naturally
-faster to push and pull from a repository which improves overall
-performance.  For more details on this technique see [Multi-Stage Docker
-Builds for Creating Tiny Go Images](https://medium.com/travis-on-docker/multi-stage-docker-builds-for-creating-tiny-go-images-e0e1867efe5a).
-
-`fn run` is a local operation.  It builds and packages your function
-into a container image which resides on your local machine.  As Fn is
-built on Docker you can use the `docker` command to see the local
-container image you just generated.
-
-You may have a number of Docker images so use the following command
-to see only those created by fndemouser:
-
-![User Input Icon](images/userinput.png)
->```sh
-> docker images | grep fndemouser
->```
-
-You should see something like:
-
-```sh
-fndemouser/gofn      0.0.1               7b586506a195        5 minutes ago        15MB
-```
-
-## Deploying Your First Function
-
-When we used `fn run` your function was run in your local environment.
-Now let's deploy your function to the Fn server we started previously.
-This server could be running in the cloud, in your datacenter, or on
-your local machine like we're doing here.
-
-Deploying your function is how you publish your function and make it
-accessible to other users and systems.
-
-In your terminal type the following:
-
-![User Input Icon](images/userinput.png)
->```sh
-> fn deploy --app goapp --local
->```
-
-You should see output similar to:
-
-```yaml
-Deploying gofn to app: goapp
-Bumped to version 0.0.2
-Building image fndemouser/gofn:0.0.2 .....
 Updating function gofn using image fndemouser/gofn:0.0.2...
 Successfully created app:  goapp
 Successfully created function: gofn with fndemouser/gofn:0.0.2
 Successfully created trigger: gofn-trigger
 ```
+
+All the steps to load the current language Docker image are displayed.
 
 Functions are grouped into applications so by specifying `--app goapp`
 we're implicitly creating the application "goapp" and associating our
@@ -351,6 +323,83 @@ Note that the containing folder name `gofn` was used as the name of the
 generated Docker container and used as the name of the function that container
 was bound to. By convention it is also used to create the trigger name
 `gofn-trigger`.
+
+Normally you deploy an application without the `--verbose` option. If you rerun the command a new image and version is created and loaded.
+
+
+## Invoke your Deployed Function
+
+There are two ways to call your deployed function.  
+
+### Invoke with the CLI
+
+The first is using the `fn` CLI which makes invoking your function relatively
+easy.  Type the following:
+
+![user input](images/userinput.png)
+>```sh
+> fn invoke goapp gofn
+>```
+
+which results in:
+
+```js
+{"message":"Hello World"}
+```
+
+When you invoked "goapp gofn" the fn server looked up the
+"goapp" application and then looked for the Docker container image
+bound to the "gofn" function and executed the code.
+
+You can also pass data to the run command. Note that you set the content type for the data passed. For example:
+
+![user input](images/userinput.png)
+>```sh
+> echo -n '{"name":"Bob"}' | fn invoke goapp gofn --content-type application/json
+>```
+
+```js
+{"message":"Hello Bob"}
+```
+
+The JSON data was parsed and since `name` was set to "Bob", that value is passed
+in the output.
+
+### Understand fn deploy
+If you have used Docker before the output of `fn --verbose deploy` should look
+familiar--it looks like the output you see when running `docker build`
+with a Dockerfile.  Of course this is exactly what's happening!  When
+you deploy a function like this Fn is dynamically generating a Dockerfile
+for your function, building a container, and then loading it for execution.
+
+> __NOTE__: Fn is actually using two images.  The first contains
+the language compiler and is used to generate a binary.  The second
+image packages only the generated binary and any necessary language
+runtime components. Using this strategy, the final function image size
+can be kept as small as possible.  Smaller Docker images are naturally
+faster to push and pull from a repository which improves overall
+performance.  For more details on this technique see [Multi-Stage Docker
+Builds for Creating Tiny Go Images](https://medium.com/travis-on-docker/multi-stage-docker-builds-for-creating-tiny-go-images-e0e1867efe5a).
+
+When using `fn deploy --local`, fn server builds and packages your function
+into a container image which resides on your local machine.  
+
+As Fn is built on Docker you can use the `docker` command to see the local
+container image you just generated. You may have a number of Docker images so
+use the following command to see only those created by fndemouser:
+
+![user input](images/userinput.png)
+>```sh
+> docker images | grep fndemouser
+>```
+
+You should see something like:
+
+```sh
+fndemouser/gofn      0.0.2               cde014cefdad        7 minutes ago       15.1MB
+```
+
+### Explore your Application
 
 The fn CLI provides a couple of commands to let us see what we've deployed.
 `fn list apps` returns a list of all of the defined applications.
@@ -385,60 +434,40 @@ by the Docker container `fndemouser/gofn:0.0.2` which may be invoked via the
 specified URL.  Now that we've confirmed deployment was successsful, let's
 call our function.
 
-## Calling Your Deployed Function
+### Invoke with Curl
 
-There are two ways to invoke your deployed function.  The first is using
-the `fn` CLI which makes invoking your function relatively easy.  Type
-the following:
-
-![User Input Icon](images/userinput.png)
->```sh
-> fn invoke goapp gofn
->```
-
-which results in our familiar output message.
-
-```sh
-{"message":"Hello World"}
-```
-
-Of course this is unchanged from when you ran the function locally.
-However when you called "goapp gofn" the fn server looked up the
-"goapp" application and then looked for the Docker container image
-bound to the "gofn" function.
-
-The other way to call your function is via HTTP.  The Fn server exposes our
-deployed function at "http://localhost:8080/t/goapp/gofn-trigger", a URL that
-incorporates our application and function trigger as path elements.
+The other way to invoke your function is via HTTP.  The Fn server exposes our
+deployed function at `http://localhost:8080/t/goapp/gofn-trigger`, a URL
+that incorporates our application and function trigger as path elements.
 
 Use curl to invoke the function:
 
-![User Input Icon](images/userinput.png)
+![user input](images/userinput.png)
 >```sh
 > curl -H "Content-Type: application/json" http://localhost:8080/t/goapp/gofn-trigger
 >```
 
 The result is once again the same.
 
-```sh
+```js
 {"message":"Hello World"}
 ```
 
-We can again pass JSON data to our function and get the value of name passed to the
+We can again pass JSON data to our function get the value of name passed to the
 function back.
 
-![User Input Icon](images/userinput.png)
->```sh
+![user input](images/userinput.png)
+>```
 > curl -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/t/goapp/gofn-trigger
 >```
 
 The result is once again the same.
 
-```sh
+```js
 {"message":"Hello Bob"}
 ```
 
-## Wrapping Up
+## Wrap Up
 
 Congratulations! In this tutorial you've accomplished a lot. You've created your
 first function, run it locally, deployed it your local Fn server and invoked it

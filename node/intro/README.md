@@ -15,26 +15,75 @@ triggers.
 perform an action.
 
 ## Your First Function
-Now that Fn server is up and running, let's start with a very simple "hello world" function written in [Node.js
-JavaScript](https://nodejs.org/). Don't worry, you don't need to know Node!  In
-fact you don't even need to have Node installed on your development machine as
-Fn provides the necessary Node tools as a Docker container.  Let's
-walk through your first function to become familiar with the process and how Fn
-supports development.
+Now that Fn server is up and running, let's start with a very simple "hello
+world" function written in [Node.js JavaScript](https://nodejs.org/). Don't
+worry, you don't need to know Node!  In fact you don't even need to have Node
+installed on your development machine as Fn provides the necessary Node tools as
+a Docker container.  Let's walk through your first function to become familiar
+with the process and how Fn supports development.
 
-Before we start developing we need to set the `FN_REGISTRY`
-environment variable.  Normally, it's set to your Docker Hub username.
-However in this tutorial we'll work in local development mode so we can set
-the `FN_REGISTRY` variable to an arbitrary value. Let's use `fndemouser`.
+### Configure your Context
+Before we start developing we need to configure Fn to use a Docker registry.
+Normally, it's set to your Docker Hub username. However in this tutorial we'll
+work in a local development mode, so we will use an arbitrary value
+`fndemouser`. We store the registry value in an Fn context. An Fn context
+represents our current deployment environment and we can have more than one if
+we are deploying to multiple servers.
+
+First, get list of available contexts.
+
+![user input](images/userinput.png)
+>```sh
+> fn list contexts
+>```
+
+The result should be similar to this:
+
+```txt
+CURRENT     NAME    PROVIDER    API URL                    REGISTRY
+            default default     http://localhost:8080/v1   
+```
+
+Notice we have a default context which deploys to a local Fn server. The default context is created the first time you run the Fn CLI. However, we need to select default as our current context and set a registry value to `fndemouser`.
+
+To do that we issue two commands. First select a context:
+
+![user input](images/userinput.png)
+>```sh
+> fn use context default
+>```
+
+```txt
+Now using context: default
+```
+
+Next, set the Docker registry value:
 
 ![user input](images/userinput.png)
 >```
-> export FN_REGISTRY=fndemouser
+> fn update context registry fndemouser
 >```
 
+```txt
+Current context updated registry with fndemouser
+```
+
+Now, recheck your context configuration:
+
+![user input](images/userinput.png)
+>```
+> fn list contexts
+>```
+
+```txt
+CURRENT     NAME    PROVIDER    API URL                    REGISTRY
+*           default default     http://localhost:8080/v1   fndemouser
+```
+
+The default context is now our current context and has a registry value of `fndemouser`. You are ready to create your first function.
 
 
-
+### Create your Function
 With that out of the way, let's create a new function. In the terminal type the
 following.
 
@@ -59,7 +108,7 @@ supported.  The `--trigger` option creates an HTTP trigger for the function
 allowing you to invoke the function from a URL. Fn creates the simple function
 along with several supporting files in the `/nodefn` directory.
 
-### Reviewing your Function File
+### Review your Function File
 
 With your function created change into the `/nodefn` directory.
 
@@ -101,10 +150,11 @@ fdk.handle(function(input){
 ```
 
 This function looks for JSON input in the form of `{"name": "Bob"}`. If this
-JSON example is passed to the function, the function returns `{"message":"Hello Bob"}`. If no
-JSON data is found, the function returns `{"message":"Hello World"}`.  
+JSON example is passed to the function, the function returns `{"message":"Hello
+Bob"}`. If no JSON data is found, the function returns `{"message":"Hello
+World"}`.  
 
-### Understanding func.yaml
+### Understand func.yaml
 The `fn init` command generated a `func.yaml` function
 configuration file. Let's look at the contents:
 
@@ -157,22 +207,32 @@ Fn handles Node.js dependencies in the following way:
 * If a `package.json` is present without a `node_modules` directory, an Fn build runs an `npm install` within the build process and installs your dependencies.
 * If the `node_modules` is present, Fn assumes you have provided the dependencies yourself and no installation is performed.
 
+## Deploy Your First Function
 
-## Running Your First Function
 With the `nodefn` directory containing `func.js` and `func.yaml` you've got
-everything you need to run the function.  So let's run it and observe the
-output.   To see the details of what is happening during a function run,  use
-the `--verbose` switch.  The first time you build a function of a particular
-language it takes longer as Fn downloads the necessary Docker images. The
-`--verbose` option allows you to see this process.
+everything you need to deploy the function to Fn server. This server could be
+running in the cloud, in your datacenter, or on your local machine like we're
+doing here.
+
+Deploying your function is how you publish your function and make it accessible
+to other users and systems. To see the details of what is happening during a
+function deploy,  use the `--verbose` switch.  The first time you build a
+function of a particular language it takes longer as Fn downloads the necessary
+Docker images. The `--verbose` option allows you to see this process.
+
+In your terminal type the following:
 
 ![user input](images/userinput.png)
 >```sh
-> fn --vebose run
+> fn --verbose deploy --app nodeapp --local
 >```
 
+You should see output similar to:
+
 ```yaml
-Building image fndemouser/nodefn:0.0.1
+Deploying nodefn to app: nodeapp
+Bumped to version 0.0.2
+Building image fndemouser/nodefn:0.0.2
 FN_REGISTRY:  fndemouser
 Current Context:  No context currently in use.
 Sending build context to Docker daemon  6.144kB
@@ -185,21 +245,21 @@ Digest: sha256:613685c22f65d01f2264bdd49b8a336488e14faf29f3ff9b6bf76a4da23c4700
 Status: Downloaded newer image for fnproject/node:dev
  ---> 016382f39a51
 Step 2/9 : WORKDIR /function
- ---> Running in de9b64f01b7a
-Removing intermediate container de9b64f01b7a
- ---> 5e86f8c16c79
+ ---> Running in bffb34c6f995
+Removing intermediate container bffb34c6f995
+ ---> 444c5f89b99f
 Step 3/9 : ADD package.json /function/
- ---> eecbd4c4a3e0
+ ---> bebc0d6b31dd
 Step 4/9 : RUN npm install
- ---> Running in 8b0916cf81af
+ ---> Running in e926d9b39fba
 npm info it worked if it ends with ok
 npm info using npm@5.3.0
 npm info using node@v8.4.0
 npm info lifecycle hellofn@1.0.0~preinstall: hellofn@1.0.0
-npm http fetch GET 200 https://registry.npmjs.org/@fnproject%2ffdk 605ms
-npm http fetch GET 200 https://registry.npmjs.org/jsonparse 40ms
-http fetch GET 200 https://registry.npmjs.org/@fnproject/fdk/-/fdk-0.0.7.tgz 278ms
-http fetch GET 200 https://registry.npmjs.org/jsonparse/-/jsonparse-1.3.1.tgz 448ms
+npm http fetch GET 200 https://registry.npmjs.org/@fnproject%2ffdk 504ms
+npm http fetch GET 200 https://registry.npmjs.org/jsonparse 42ms
+http fetch GET 200 https://registry.npmjs.org/jsonparse/-/jsonparse-1.3.1.tgz 187ms
+http fetch GET 200 https://registry.npmjs.org/@fnproject/fdk/-/fdk-0.0.7.tgz 658ms
 npm info lifecycle jsonparse@1.3.1~preinstall: jsonparse@1.3.1
 npm info lifecycle @fnproject/fdk@0.0.7~preinstall: @fnproject/fdk@0.0.7
 npm info linkStuff jsonparse@1.3.1
@@ -219,10 +279,10 @@ npm notice created a lockfile as package-lock.json. You should commit this file.
 npm info lifecycle undefined~postshrinkwrap: undefined
 npm WARN hellofn@1.0.0 No repository field.
 
-added 2 packages in 1.981s
+added 2 packages in 2.083s
 npm info ok
-Removing intermediate container 8b0916cf81af
- ---> 23e8668fb4a8
+Removing intermediate container e926d9b39fba
+ ---> 5a665c0ced83
 Step 5/9 : FROM fnproject/node
 latest: Pulling from fnproject/node
 Digest: sha256:613685c22f65d01f2264bdd49b8a336488e14faf29f3ff9b6bf76a4da23c4700
@@ -230,117 +290,25 @@ Status: Downloaded newer image for fnproject/node:latest
  ---> 016382f39a51
 Step 6/9 : WORKDIR /function
  ---> Using cache
- ---> 5e86f8c16c79
+ ---> 444c5f89b99f
 Step 7/9 : ADD . /function/
- ---> bb4d51a3398f
+ ---> 4e95930ff8af
 Step 8/9 : COPY --from=build-stage /function/node_modules/ /function/node_modules/
- ---> 7decdef78ddb
+ ---> e3a99a883b6e
 Step 9/9 : ENTRYPOINT ["node", "func.js"]
- ---> Running in 0475f722ea3e
-Removing intermediate container 0475f722ea3e
- ---> 9a169409fe54
-Successfully built 9a169409fe54
-Successfully tagged fndemouser/nodefn:0.0.1
+ ---> Running in 54c60f2669a5
+Removing intermediate container 54c60f2669a5
+ ---> b9330bddec26
+Successfully built b9330bddec26
+Successfully tagged fndemouser/nodefn:0.0.2
 
-{"message":"Hello World"}
-```
-
-All the steps to get the current language Docker image are displayed. The
-function is loaded and executed. The last line of output is `{"message":"Hello
-World"}` since no input was passed to the function.
-
-Normally `fn` is run without the `--verbose` option.  Let's rerun without the verbose output enabled.
-
-![user input](images/userinput.png)
->```sh
-> fn run
->```
-
-```sh
-Building image fndemouser/nodefn:0.0.1 ...
-{"message":"Hello World"}
-```
-
-Notice the duration of the run is much shorter.
-
-You can also pass data to the run command. Note that you set the content type for the data passed. For example:
-
-![user input](images/userinput.png)
->```sh
-> echo -n '{"name":"Bob"}' | fn run --content-type application/json
->```
-
-```sh
-Building image fndemouser/nodefn:0.0.1 .....
-{"message":"Hello Bob"}
-```
-
-The JSON data was parsed and since `name` was set to "Bob", that value is passed
-in the output.
-
-### Understanding fn run
-If you have used Docker before the output of `fn --verbose run` should look
-familiar--it looks like the output you see when running `docker build`
-with a Dockerfile.  Of course this is exactly what's happening!  When
-you run a function like this Fn is dynamically generating a Dockerfile
-for your function, building a container, and then running it.
-
-> __NOTE__: Fn is actually using two images.  The first contains
-the language compiler and is used to generate a binary.  The second
-image packages only the generated binary and any necessary language
-runtime components. Using this strategy, the final function image size
-can be kept as small as possible.  Smaller Docker images are naturally
-faster to push and pull from a repository which improves overall
-performance.  For more details on this technique see [Multi-Stage Docker
-Builds for Creating Tiny Go Images](https://medium.com/travis-on-docker/multi-stage-docker-builds-for-creating-tiny-go-images-e0e1867efe5a).
-
-`fn run` is a local operation.  It builds and packages your function
-into a container image which resides on your local machine.  As Fn is
-built on Docker you can use the `docker` command to see the local
-container image you just generated.
-
-You may have a number of Docker images so use the following command
-to see only those created by fndemouser:
-
-![user input](images/userinput.png)
->```sh
-> docker images | grep fndemouser
->```
-
-You should see something like:
-
-```sh
-fndemouser/nodefn    0.0.1               ab8be0a2ddc8        58 seconds ago      66.4MB
-```
-
-## Deploying Your First Function
-
-When we used `fn run` your function was run in your local environment.
-Now let's deploy your function to the Fn server we started previously.
-This server could be running in the cloud, in your datacenter, or on
-your local machine like we're doing here.
-
-Deploying your function is how you publish your function and make it
-accessible to other users and systems.
-
-In your terminal type the following:
-
-![user input](images/userinput.png)
->```sh
-> fn deploy --app nodeapp --local
->```
-
-You should see output similar to:
-
-```sh
-Deploying nodefn to app: nodeapp
-Bumped to version 0.0.2
-Building image fndemouser/nodefn:0.0.2 .
 Updating function nodefn using image fndemouser/nodefn:0.0.2...
 Successfully created app:  nodeapp
 Successfully created function: nodefn with fndemouser/nodefn:0.0.2
 Successfully created trigger: nodefn-trigger
 ```
+
+All the steps to load the current language Docker image are displayed.
 
 Functions are grouped into applications so by specifying `--app nodeapp`
 we're implicitly creating the application "nodeapp" and associating our
@@ -359,6 +327,83 @@ Note that the containing folder name 'nodefn' was used as the name of the
 generated Docker container and used as the name of the function that
 container was bound to. By convention it is also used to create the trigger name
 `nodefn-trigger`.
+
+Normally you deploy an application without the `--verbose` option. If you rerun the command a new image and version is created and loaded.
+
+
+## Invoke your Deployed Function
+
+There are two ways to call your deployed function.  
+
+### Invoke with the CLI
+
+The first is using the `fn` CLI which makes invoking your function relatively
+easy.  Type the following:
+
+![user input](images/userinput.png)
+>```sh
+> fn invoke nodeapp nodefn
+>```
+
+which results in:
+
+```js
+{"message":"Hello World"}
+```
+
+When you invoked "nodeapp nodefn" the fn server looked up the
+"nodeapp" application and then looked for the Docker container image
+bound to the "nodefn" function and executed the code.
+
+You can also pass data to the run command. Note that you set the content type for the data passed. For example:
+
+![user input](images/userinput.png)
+>```sh
+> echo -n '{"name":"Bob"}' | fn invoke nodeapp nodefn --content-type application/json
+>```
+
+```js
+{"message":"Hello Bob"}
+```
+
+The JSON data was parsed and since `name` was set to "Bob", that value is passed
+in the output.
+
+### Understand fn deploy
+If you have used Docker before the output of `fn --verbose deploy` should look
+familiar--it looks like the output you see when running `docker build`
+with a Dockerfile.  Of course this is exactly what's happening!  When
+you deploy a function like this Fn is dynamically generating a Dockerfile
+for your function, building a container, and then loading it for execution.
+
+> __NOTE__: Fn is actually using two images.  The first contains
+the language compiler and is used to generate a binary.  The second
+image packages only the generated binary and any necessary language
+runtime components. Using this strategy, the final function image size
+can be kept as small as possible.  Smaller Docker images are naturally
+faster to push and pull from a repository which improves overall
+performance.  For more details on this technique see [Multi-Stage Docker
+Builds for Creating Tiny Go Images](https://medium.com/travis-on-docker/multi-stage-docker-builds-for-creating-tiny-go-images-e0e1867efe5a).
+
+When using `fn deploy --local`, fn server builds and packages your function
+into a container image which resides on your local machine.  
+
+As Fn is built on Docker you can use the `docker` command to see the local
+container image you just generated. You may have a number of Docker images so
+use the following command to see only those created by fndemouser:
+
+![user input](images/userinput.png)
+>```sh
+> docker images | grep fndemouser
+>```
+
+You should see something like:
+
+```sh
+fndemouser/nodefn    0.0.2               b9330bddec26        2 minutes ago      66.4MB
+```
+
+### Explore your Application
 
 The fn CLI provides a couple of commands to let us see what we've deployed.
 `fn list apps` returns a list of all of the defined applications.
@@ -392,33 +437,12 @@ nodefn      nodefn-trigger   http    /nodefn-trigger http://localhost:8080/t/nod
 
 The output confirms that nodeapp contains a `nodefn` function that is
 implemented by the Docker container `fndemouser/nodefn:0.0.2` which may be
-invoked via the specified trigger URL.  Now that we've confirmed deployment was
-successful, let's call our function.
+invoked via the specified trigger URL.
 
-## Calling Your Deployed Function
-
-There are two ways to call your deployed function.  The first is using
-the `fn` CLI which makes invoking your function relatively easy.  Type
-the following:
-
-![user input](images/userinput.png)
->```sh
-> fn invoke nodeapp nodefn
->```
-
-which results in our familiar output message.
-
-```sh
-{"message":"Hello World"}
-```
-
-Of course this is unchanged from when you ran the function locally.
-However when you invoked "nodeapp nodefn" the fn server looked up the
-"nodeapp" application and then looked for the Docker container image
-bound to the "nodefn" function.
+### Invoke with Curl
 
 The other way to invoke your function is via HTTP.  The Fn server exposes our
-deployed function at "http://localhost:8080/t/nodeapp/nodefn-trigger", a URL
+deployed function at `http://localhost:8080/t/nodeapp/nodefn-trigger`, a URL
 that incorporates our application and function trigger as path elements.
 
 Use curl to invoke the function:
@@ -430,7 +454,7 @@ Use curl to invoke the function:
 
 The result is once again the same.
 
-```sh
+```js
 {"message":"Hello World"}
 ```
 
@@ -444,14 +468,14 @@ function back.
 
 The result is once again the same.
 
-```sh
+```js
 {"message":"Hello Bob"}
 ```
 
-## Wrapping Up
+## Wrap Up
 
-Congratulations!  In this tutorial you've accomplished a lot.  You've
-created your first function, run it locally, deployed it to your local
-Fn server and invoked it over HTTP.
+Congratulations!  In this tutorial you've accomplished a lot.  You've created
+your first function and deployed it to your local Fn server and invoked it over
+HTTP.
 
 **Go:** [Back to Contents](../README.md)

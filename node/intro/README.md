@@ -8,7 +8,8 @@ triggers.
 
 ### Before you Begin
 * Set aside about 15 minutes to complete this tutorial.
-* Make sure Fn server is up and running by completing the [Install and Start Fn Tutorial](../../install/README.md).
+* Make sure Fn server is up and running by completing the [Install and Start Fn Tutorial](../install/README.md).
+    * Make sure you have set your Fn context registry value for local development. (for example, "fndemouser". See [here](../install/README.md).)
 
 > As you make your way through this tutorial, look out for this icon.
 ![](images/userinput.png) Whenever you see it, it's time for you to
@@ -22,70 +23,9 @@ installed on your development machine as Fn provides the necessary Node tools as
 a Docker container.  Let's walk through your first function to become familiar
 with the process and how Fn supports development.
 
-### Configure your Context
-Before we start developing we need to configure Fn to use a Docker registry.
-Normally, it's set to your Docker Hub username. However in this tutorial we'll
-work in a local development mode, so we will use an arbitrary value
-`fndemouser`. We store the registry value in an Fn context. An Fn context
-represents our current deployment environment and we can have more than one if
-we are deploying to multiple servers.
-
-First, get list of available contexts.
-
-![user input](images/userinput.png)
->```sh
-> fn list contexts
->```
-
-The result should be similar to this:
-
-```txt
-CURRENT     NAME    PROVIDER    API URL                    REGISTRY
-            default default     http://localhost:8080/v1   
-```
-
-Notice we have a default context which deploys to a local Fn server. The default context is created the first time you run the Fn CLI. However, we need to select default as our current context and set a registry value to `fndemouser`.
-
-To do that we issue two commands. First select a context:
-
-![user input](images/userinput.png)
->```sh
-> fn use context default
->```
-
-```txt
-Now using context: default
-```
-
-Next, set the Docker registry value:
-
-![user input](images/userinput.png)
->```
-> fn update context registry fndemouser
->```
-
-```txt
-Current context updated registry with fndemouser
-```
-
-Now, recheck your context configuration:
-
-![user input](images/userinput.png)
->```
-> fn list contexts
->```
-
-```txt
-CURRENT     NAME    PROVIDER    API URL                    REGISTRY
-*           default default     http://localhost:8080/v1   fndemouser
-```
-
-The default context is now our current context and has a registry value of `fndemouser`. You are ready to create your first function.
-
 
 ### Create your Function
-With that out of the way, let's create a new function. In the terminal type the
-following.
+In the terminal type the following.
 
 ![user input](images/userinput.png)
 >```
@@ -475,7 +415,7 @@ The result is once again the same.
 ## Wrap Up
 
 Congratulations!  In this tutorial you've accomplished a lot.  You've created
-your first function and deployed it to your local Fn server and invoked it over
+your first function, deployed it to your local Fn server and invoked it over
 HTTP.
 
 **Go:** [Back to Contents](../README.md)

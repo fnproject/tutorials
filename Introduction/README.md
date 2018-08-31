@@ -22,14 +22,18 @@ container.  Let's walk through your first function to become familiar with the
 process and how Fn supports development.
 
 ### Configure your Context
-Before we start developing we need to configure Fn to use a Docker registry.
-Normally, it's set to your Docker Hub username. However in this tutorial we'll
-work in a local development mode, so we will use an arbitrary value
-`fndemouser`. We store the registry value in an Fn context. An Fn context
-represents our current deployment environment and we can have more than one if
-we are deploying to multiple servers.
 
-First, get list of available contexts.
+Before we start developing we need to configure Fn to point to an appropriate
+Docker registry so it knows where to push your function images to. Normally
+configure Fn to point to your Docker Hub account by specifying your Docker Hub
+username. However, for pure local development we can simply configure Fn with an
+arbitrary value such as 'fndemouser'.
+
+We store the registry value in an Fn context. An Fn context represents our
+current deployment environment and we can have more than one if we are deploying
+to multiple servers.
+
+First, get a list of available contexts.
 
 ![user input](images/userinput.png)
 >```sh
@@ -333,7 +337,7 @@ There are two ways to call your deployed function.
 
 ### Invoke with the CLI
 
-The first is using the `fn` CLI which makes invoking your function relatively
+The first is using the Fn CLI which makes invoking your function relatively
 easy.  Type the following:
 
 ![user input](images/userinput.png)
@@ -347,11 +351,14 @@ which results in:
 {"message":"Hello World"}
 ```
 
-When you invoked "goapp gofn" the fn server looked up the
-"goapp" application and then looked for the Docker container image
-bound to the "gofn" function and executed the code.
+When you invoked "goapp gofn" the fn server looked up the "goapp" application
+and then looked for the Docker container image bound to the "gofn" function and
+executed the code. Fn `invoke` invokes your function directly and independently
+of any associated triggers.  You can always invoke a function even without it
+having any triggers bound to it.
 
-You can also pass data to the run command. Note that you set the content type for the data passed. For example:
+You can also pass data to the invoke command. Note that you set the content type
+for the data passed. For example:
 
 ![user input](images/userinput.png)
 >```sh
@@ -440,7 +447,7 @@ The other way to invoke your function is via HTTP.  The Fn server exposes our
 deployed function at `http://localhost:8080/t/goapp/gofn-trigger`, a URL
 that incorporates our application and function trigger as path elements.
 
-Use curl to invoke the function:
+Use `curl` to invoke the function:
 
 ![user input](images/userinput.png)
 >```sh
@@ -453,8 +460,8 @@ The result is once again the same.
 {"message":"Hello World"}
 ```
 
-We can again pass JSON data to our function get the value of name passed to the
-function back.
+We can again pass JSON data to our function and get the value of name passed to
+the function back.
 
 ![user input](images/userinput.png)
 >```
@@ -470,7 +477,7 @@ The result is once again the same.
 ## Wrap Up
 
 Congratulations! In this tutorial you've accomplished a lot. You've created your
-first function, run it locally, deployed it your local Fn server and invoked it
+first function, deployed it to your local Fn server and invoked it
 over HTTP.
 
 **Go:** [Back to Contents](../README.md)

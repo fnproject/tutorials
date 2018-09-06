@@ -13,19 +13,18 @@ As you make your way through this tutorial, look out for this icon.
 ![](images/userinput.png) Whenever you see it, it's time for you to
 perform an action.
 
-## Prerequisites
+### Before you Begin
+* Set aside about 30 minutes to complete this tutorial.
+* Make sure Fn server is up and running by completing the [Install and Start Fn Tutorial](../install/README.md).
+    * Make sure you have set your Fn context registry value for local development. (for example, "fndemouser". See [here](../install/README.md).)
 
-This tutorial requires you to have both Docker and Fn installed and an
-Fn server running locally.  If you need help with Fn installation you
-can find instructions in the
-[Introduction to Fn](../Introduction/README.md) tutorial.
 
-## Getting Started
+## Your First Function
 
 Let's start by creating a new function.  In a terminal type the following:
 
 ![](images/userinput.png)
->`fn init --runtime java javafn`
+>`fn init --runtime java --trigger http javafn`
 
 The output will be:
 
@@ -86,80 +85,106 @@ Take a look at the contents of the generated func.yaml file.
 >```
 
 ```yaml
+schema_version: 20180708
+name: javafn
 version: 0.0.1
 runtime: java
+build_image: fnproject/fn-java-fdk-build:jdk9-1.0.64
+run_image: fnproject/fn-java-fdk:jdk9-1.0.64
 cmd: com.example.fn.HelloFunction::handleRequest
-build_image: fnproject/fn-java-fdk-build:jdk9-1.0.56
-run_image: fnproject/fn-java-fdk:jdk9-1.0.56
+format: http
+triggers:
+- name: javafn-trigger
+  type: http
+  source: /javafn-trigger
 format: http
 ```
 
-In the case of a Java function, the following properties are created:
+The generated `func.yaml` file contains metadata about your function and
+declares a number of properties including:
 
-* **version:** the version of the function.
-* **runtime:** the language used for this function.
-* **cmd:** the `cmd` property is set to the fully
-qualified name of the function class and the method that should be invoked when your `javafn` function is called.
-* **build_image:** the image used to build your function's image.
-* **run_image:** the image your function runs in.
-* **format:** the communication protocol format used by the function.
+* schema_version--identifies the version of the schema for this function file. * version--the version of the function.
+* runtime--the language used for this function.
+* cmd--the `cmd` property is set to the fully qualified name of the function
+class and the method that should be invoked when your `javafn` function is
+called.
+* build_image--the image used to build your function's image.
+* run_image--the image your function runs in.
+* format--the function uses JSON as its input/output method ([see: Open
+Function Format](https://github.com/fnproject/fn/blob/master/docs/developers/function-format.md)).
+* triggers--identifies the automatically generated trigger name and source. For
+example, this function would be executed from the URL
+<http://localhost:8080/t/appname/gofn-trigger>. Where appname is the name of
+the app chosen for your function when it is deployed.
 
 The Java function init also generates a Maven `pom.xml` file to build and test your function.  The pom includes the Fn Java FDK runtime and test libraries your function needs.
 
-## Running your Function
 
-Let's build and run the generated function.  We're working locally and
-won't be pushing our function images to a Docker registry like Docker
-Hub. So before we build let's set `FN_REGISTRY` to a local-only registry
-username like `fndemouser`.
+## Deploy your Java Function
 
-![](images/userinput.png)
->```sh
-> export FN_REGISTRY=fndemouser
->```
-
-Now we're ready to run.  Depending on whether this is your first time
-developing a Java function you may or may not see Docker images being
-pulled from Docker Hub.  Once the necessary base images are downloaded
-subsequent operations will be faster.
-
-As the function is built using Maven you may also see a number of Java
-packages being downloaded.  This is also expected the first time you
-run a function and trigger a build.
+As we're running the server on the local machine we can save time by not pushing
+the generated image out to a remote Docker repository by using the `--local`
+option.
 
 ![](images/userinput.png)
->`fn run`
-
-Here's what the output looks like:
+>`fn deploy --app myapp --local`
 
 ```sh
-Building image fndemouser/javafn:0.0.1 ....................
-Hello, world!
+Deploying javafn to app: myapp at path: /javafn
+Bumped to version 0.0.2
+Building image fndemouser/javafn:0.0.2
+Updating route /javafn using image fndemouser/javafn:0.0.2...
 ```
 
-In the background, Maven compiles the code and runs any
-tests, the function is packaged into a container, and then the function is run locally to produce the output "Hello, world!".
+Review the last line of the deploy output.  When deployed, a function's
+Docker image is associated with a route which is the function's name and
+the function's name is taken from the containing directory.  In this
+case the route is `/javafn`.
 
-Let's try one more thing and pipe some input into the function.  In your
-terminal type:
 
-![](images/userinput.png)
+## Invoke your Deployed Function
+
+Use the the `fn invoke` command to call your function from the command line.
+
+### Invoke with the CLI
+
+The first is using the Fn CLI which makes invoking your function relatively
+easy.  Type the following:
+
+![user input](images/userinput.png)
 >```sh
-> echo -n "Bob" | fn run
+> fn invoke myapp javafn
 >```
 
-returns:
+which results in:
 
-```sh
+```txt
+Hello, World!
+```
+
+In the background, Maven compiles the code and runs any tests, the function is
+packaged into a container, and then the function is run  to produce the output
+"Hello, world!".
+
+You can also pass data to the invoke command. For example:
+
+![user input](images/userinput.png)
+>```sh
+> echo -n 'Bob' | fn invoke myapp javafn
+>```
+
+```txt
 Hello, Bob!
 ```
 
-Instead of "Hello, world!" the function has read the input string "Bob" from standard input and returned "Hello, Bob!".
+"Bob" was passed to the function where it is processed and returned in the output.
+
 
 ## Exploring the Code
 
-We've generated, compiled, and run the Java function so let's take a
-look at the code.  You may want to open the code in your favorite IDE or editor.
+We've generated, compiled, deployed, and invoked the Java function so let's take
+a look at the code.  You may want to open the code in your favorite IDE or
+editor.
 
 Below is the generated `com.example.fn.HelloFunction` class.  As you can
 see the function is just a method on a POJO that takes a string value
@@ -191,9 +216,9 @@ the function code.
 
 ## Testing with JUnit
 
-The `fn init` command also generated a JUnit test for the function which uses the
-Java FDK's function test framework.  With this framework you can setup
-test fixtures with various function input values and verify the results.
+The `fn init` command also generated a JUnit test for the function which uses
+the Java FDK's function test framework.  With this framework you can setup test
+fixtures with various function input values and verify the results.
 
 The generated test confirms that when no input is provided the function returns "Hello, world!".
 
@@ -388,46 +413,50 @@ If you re-run the test via `fn -verbose build` we can see that it now passes:
 >`fn --verbose build`
 
 
-## Deploying your Java Function
+## Invoke with Curl
 
-Now that we have our Java function updated and passing our JUnit tests
-we can move onto deploying it to the Fn server.  As we're running the
-server on the local machine we can save time by not pushing the
-generated image out to a remote Docker repository by using the `--local`
-option.
+The other way to invoke your function is via HTTP. With the changes to the code,
+we can pass JSON and return JSON from the the function.  The Fn server exposes
+our deployed function at `http://localhost:8080/t/myapp/javafn-trigger`, a URL
+that incorporates our application and function trigger as path elements.
 
-![](images/userinput.png)
->`fn deploy --local --app myapp`
+Redeploy your updated Java function
 
-```sh
-Deploying javafn to app: myapp at path: /javafn
-Bumped to version 0.0.2
-Building image fndemouser/javafn:0.0.2
-Updating route /javafn using image fndemouser/javafn:0.0.2...
-```
-
-Review the last line of the deploy output.  When deployed, a function's
-Docker image is associated with a route which is the function's name and
-the function's name is taken from the containing directory.  In this
-case the route is `/javafn`.
-
-We can use the route to invoke the function via curl and passing the
-JSON input as the body of the call.
-
-![](images/userinput.png)
+![user input](images/userinput.png)
 >```sh
-> curl --data '{"name": "Bob"}' http://localhost:8080/r/myapp/javafn
+> fn deploy --app myapp --local
 >```
 
-returns:
+Use `curl` to invoke the function:
+
+![user input](images/userinput.png)
+>```sh
+> curl -H "Content-Type: application/json" http://localhost:8080/t/myapp/javafn-trigger
+>```
+
+The result is now in a JSON format.
+
+```js
+{"salutation":"Hello World"}
+```
+
+We can pass JSON data to our function and get the value of name passed to
+the function back.
+
+![user input](images/userinput.png)
+>```
+> curl -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/t/myapp/javafn-trigger
+>```
+
+The result is now in JSON format with the passed value returned.
 
 ```js
 {"salutation":"Hello Bob"}
 ```
 
-Success!
 
-## Wrapping Up
+
+## Wrap Up
 
 Congratulations! You've just completed an introduction to the Fn Java
 FDK.  There's so much more in the FDK than we can cover in a brief

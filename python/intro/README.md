@@ -336,8 +336,8 @@ you deploy a function like this Fn is dynamically generating a Dockerfile
 for your function, building a container, and then loading it for execution.
 
 > __NOTE__: Fn is actually using two images.  The first contains
-the language compiler and is used to generate a binary.  The second
-image packages only the generated binary and any necessary language
+the language interpreter and all the necessary build tools.  The second
+image packages all dependencies and any necessary language
 runtime components. Using this strategy, the final function image size
 can be kept as small as possible.  Smaller Docker images are naturally
 faster to push and pull from a repository which improves overall

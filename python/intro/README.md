@@ -128,7 +128,7 @@ declares a number of properties including:
 * runtime--the name of the runtime/language which was set based on the value set
 in `--runtime`.
 * entrypoint--the name of the executable to invoke when your function is called,
-in this case `python3 func.rb`.
+in this case `python3 func.py`.
 * format--the function uses JSON as its input/output method ([see: Open Function Format](https://github.com/fnproject/fn/blob/master/docs/developers/function-format.md)).
 * triggers--identifies the automatically generated trigger name and source. For
 example, this function would be executed from the URL

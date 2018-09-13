@@ -16,7 +16,7 @@ perform an action.
 ### Before you Begin
 * Set aside about 30 minutes to complete this tutorial.
 * Make sure Fn server is up and running by completing the [Install and Start Fn Tutorial](../install/README.md).
-    * Make sure you have set your Fn context registry value for local development. (for example, "fndemouser". See [here](../install/README.md).)
+    * Make sure you have set your Fn context registry value for local development. (for example, "fndemouser". [See here](https://github.com/fnproject/tutorials/blob/master/install/README.md#configure-your-context).)
 
 
 ## Your First Function

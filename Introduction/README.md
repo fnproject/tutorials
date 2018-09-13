@@ -8,7 +8,7 @@ about the core Fn concepts like applications and triggers.
 ### Before you Begin
 * Set aside about 15 minutes to complete this tutorial.
 * Make sure Fn server is up and running by completing the [Install and Start Fn Tutorial](../install/README.md).
-    * Make sure you have set your Fn context registry value for local development. (for example, "fndemouser". See [here](../install/README.md).)
+    * Make sure you have set your Fn context registry value for local development. (for example, "fndemouser". [See here](https://github.com/fnproject/tutorials/blob/master/install/README.md#configure-your-context).)
 
 As you make your way through this tutorial, look out for this icon. ![User Input
 Icon](images/userinput.png) Whenever you see it, it's time for you to perform an

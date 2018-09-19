@@ -39,22 +39,23 @@ Docker repository (default is Docker Hub).
 NOTE: Depending on how you've installed Docker you may need to prefix `docker`
 commands with `sudo`.
 
+## Set your Docker Registry
+
+Set your docker registry in your current fn context.  If you're using Docker
+Hub then the value is just your Docker user id.  
+
+   ![](images/userinput.png)
+   >```
+   > fn update context registry your-docker-id
+   >```
+
 ## Start Fn Server
 
 Next, if it isn't already running, you'll need to start the Fn server.  We'll
 run it in the foreground to let us see the server log messages so let's open a
 new terminal for this.
 
-1. Define the FN_REGISTRY environment variable to point the Fn server to where
-it should pull function images from. If using the default Docker Hub registry 
-you just need to specify your docker user id:
-
-   ![](images/userinput.png)
-   >```
-   > export FN_REGISTRY=<your-docker-id>
-   >```
-
-2. If it isn't already running, start the Fn server using the `fn` cli:
+Start the Fn server using the `fn` cli:
 
    ![](images/userinput.png)
    >```
@@ -70,10 +71,8 @@ a name.
 ### func.js
 
 The func.js file is nothing special and simply reads from standard input
-and writes to standard output.  This is the standard Fn supported mechanism
-for functions to receive input and return output.  
-['Hot Functions'](https://github.com/fnproject/fn/blob/master/docs/developers/hot-functions.md)
-(not discussed in this tutorial) are slightly different.  
+and writes to standard output.  This is the default Fn supported mechanism
+for functions to receive input and return output.
 
 ![](images/userinput.png) Copy/paste the following into a file named `func.js`:
 
@@ -121,14 +120,14 @@ In your working directory, build and run the image as you would any Docker image
 
    ![](images/userinput.png)
    >```
-   > docker build . -t <your-docker-id>/node-hello:0.0.1
+   > docker build . -t your-docker-id/hello:0.0.1
    >```
 
 2. Test the image by running it with no input:
 
    ![](images/userinput.png)
    >```
-   > docker run --rm <your-docker-id>/node-hello:0.0.1
+   > docker run --rm your-docker-id/hello:0.0.1
    >```
 
    The output should be:
@@ -136,11 +135,12 @@ In your working directory, build and run the image as you would any Docker image
    Hello World from Node!
    ```
 
-3. Test the image by running it with a name parameter:
+3. Test the image by running it with a name parameter (note the addition of
+`-i`):
 
    ![](images/userinput.png)
    >```
-   > echo -n "Jane" | docker run -i --rm <your-docker-id>/node-hello:0.0.1
+   > echo -n "Jane" | docker run -i --rm your-docker-id/hello:0.0.1
    >```
 
    The output should be the same as be except "Jane" in place of "World":
@@ -162,13 +162,12 @@ but again this step is optional when we're working locally.
 
 ![](images/userinput.png)
 >```
-> docker push <your-docker-id>/node-hello:0.0.1
+> docker push your-docker-id/hello:0.0.1
 >```
 
 ## Creating the Fn App and Defining the Route
 
-Once we have a function container image we can associate that image with a
-['route'](https://github.com/fnproject/fn/blob/master/docs/developers/model.md#routes).  
+Once we have a container image we can create a function with that image.
 
 1. First we need an 
 ['application'](https://github.com/fnproject/fn/blob/master/docs/developers/model.md#applications)
@@ -185,48 +184,51 @@ that application:
    Successfully created app:  demoapp
    ```
 
-2. We then create a route that uses our manually built container image:
+2. We then create a function that uses our manually built container image:
 
    ![](images/userinput.png)
    >```
-   > fn create route demoapp /hello <your-docker-id>/node-hello:0.0.1
+   > fn create function demoapp hello your-docker-id/hello:0.0.1
    >```
 
-   ```xml
-   /hello created with <yourdockerid>/node-hello:0.0.1
+   ```
+   Successfully created function: hello with your-docker-id/hello:0.0.1
    ```
 
-3. We can confirm the route is correctly defined by getting a list of the routes
-defined for an application:
+3. We can confirm the function is correctly defined by getting a list of the 
+functions in an application:
 
    ![](images/userinput.png)
    >```
-   > fn list routes demoapp
+   > fn list functions demoapp
    >```
+
+   **Pro tip**: The fn cli let's you abbreviate most of the keywords so you can
+also say `fn ls f demoapp`!
 
    You should see something like:
 
    ```xml
-   path    image                            endpoint
-   /hello  <your-docker-id>/node-hello:0.0.1  localhost:8080/r/demoapp/hello
+   NAME    IMAGE
+   hello   your-docker-id/hello:0.0.1
    ```
 
 At this point all the Fn server has is configuration metadata.
-It has the name of an application and a function route that is part
+It has the name of an application and a function that is part
 of that application that points to a named and tagged Docker image.  It's
-not until that route is invoked that this metadata is used.
+not until that function is invoked that this metadata is used to instantiate
+a function container from the specified image.
 
-## Calling the Function
+## Invoking the Function
 
-Calling a function that was created through a manually defined route is no
-different from calling a function defined using `fn deploy`, which is exactly
-as intended!
+Invoking a function that was manually defined is no different from calling a
+function defined using `fn deploy`, which is exactly as intended!
 
-1. Call the function using `fn call`:
+1. Call the function using `fn invoke`:
 
    ![](images/userinput.png)
    >```
-   > echo -n "Jane" | fn call demoapp /hello
+   > echo -n "Jane" | fn invoke demoapp hello
    >```
 
    This will produce the expected output:
@@ -234,25 +236,13 @@ as intended!
    ```sh
    Hello Jane from Node!
    ```
+  If you want to call the function over HTTP you will need to define a
+  [trigger](https://github.com/fnproject/docs/blob/master/fn/develop/triggers.md),
+  which we'll skip for now.
 
-2. Call the function with curl using its http endpoint. You can find out the
-endpoints for each of your routes using the `fn list routes` command we used
-above.
 
-   ![](images/userinput.png)
-   >```
-   > curl -d "Jane" http://localhost:8080/r/demoapp/hello
-   >```
-
-   This will produce exactly the same output as when using `fn call`, as 
-   expected.
-
-   ```sh
-   Hello Jane from Node!
-   ```
-
-When the function is invoked, regardless of the mechanism, the Fn server
-looks up the function image name and tag associated with the route and creates
+When the function is invoked the Fn server
+looks up the function image name and tag associated with the function and creates
 a container with that image. If the required image is not already available
 locally then Docker will attempt to pull the image from the Docker registry.
 
@@ -272,20 +262,17 @@ function.
 `func.yaml`:
 
 ```yaml
-name: node-hello
+schema_version: 20180708
+name: hello2
 version: 0.0.1
 runtime: docker
-path: /hello2
+format: default
 ```
 
-This file defines a function with the same name and initial version as the
-image we created earlier, identifies the function runtime as `docker`
-rather than one of the Fn supported programming languages, and specifies the
-path (i.e., route) to the function when it is eventually deployed. The path is
-set to `hello2` to distinguish it from the manually deployed function.
-
-Note: If `path:` is not specified the path will default to the containing folder
-name.
+This file defines a function with the name `hello2`, to distinguish it from the
+manually deployed function, the same initial version as the
+image we created earlier, and identifies the function runtime as `docker`
+rather than one of the Fn supported programming languages.
 
 With the `func.yaml` defined you can now easily build the function:
 
@@ -295,70 +282,54 @@ With the `func.yaml` defined you can now easily build the function:
    >```
 
    ```xml
-   Building image <your-docker-id>/node-hello:0.0.1
-   Function <your-docker-id>/node-hello:0.0.1 built successfully.
-   ```
-
-You can run the function with `fn run`:
-
-   ![](images/userinput.png)
-   >```
-   > fn run
-   >```
-
-   ```xml
-   Building image <your-docker-id>/node-hello:0.0.1
-   Hello World from Node!
-   ```
-
-And you can pipe input into the function just like you did when using
-`docker run`:
-
-   ![](images/userinput.png)
-   >```
-   > echo -n "Jane" | fn run
-   >```
-
-   ```xml
-   Building image <your-docker-id>/node-hello:0.0.1
-   Hello Jane from Node!
+   Building image your-docker-id/hello:0.0.1
+   Function your-docker-id/hello:0.0.1 built successfully.
    ```
 
 Deploying a function using `fn deploy` is much simpler than a manual deployment
-as it'll both push your container image and define the function route with one
+as it'll both push your container image and define the function with one
 command:
 
   ![](images/userinput.png)
    >```
-   > fn deploy --app demoapp
+   > fn deploy --app demoapp --no-bump
    >```
 
    ```
-  Deploying node-hello to app: demoapp at path: /hello2
-  Bumped to version 0.0.2
-  Building image <your-docker-id>/node-hello:0.0.2
-  Updating route /hello2 using image <your-docker-id>/node-hello:0.0.2...
+   Deploying hello to app: demoapp
+   Building image your-docker-id/hello:0.0.1
+   Parts:  [your-docker-id hello:0.0.1]
+   Pushing your-docker-id/hello:0.0.1 to docker registry...The push refers to repository [docker.io/your-docker-id/hello]
+   ...
+   Updating function hello using image your-docker-id/hello:0.0.1...
    ```
 
-`fn deploy` orchestrates the push and route definition and it also "bumps",
-or increments, the version number each time a function is deployed.
+`fn deploy` orchestrates both the push and the function definition.  Now you
+should have two functions, `hello` and `hello2` in your demoapp application.
+You can see all functions defined in an application by typing (using fn cli
+supported abbreviations):
 
-Once deployed you can use `fn call` to invoke the function or use `curl`
-just like you did when you manually deployed your container.  Which makes
+  ![](images/userinput.png)
+   >```
+   > fn ls f demoapp
+   >```
+
+   ```
+   NAME    IMAGE
+   hello   shaunsmith/hello:0.0.1
+   hello2  shaunsmith/hello2:0.0.1   
+   ```
+
+Once deployed you can use `fn invoke` to call the `hello2` function. Which makes
 sense since all we've done is use the CLI to deploy the exact same image and
 defined the exact same route as before.  We've simply automated the process.
 
-Try out the same commands you ran earlier with our newly defined `hello2`
+Try out the same command you ran earlier with our newly defined `hello2`
 function.
 
 ![](images/userinput.png)
 >```
-> echo -n "Jane" | fn call demoapp /hello2
->```
-
-![](images/userinput.png)
->```
-> curl -d "Jane" http://localhost:8080/r/demoapp/hello2
+> echo -n "Jane" | fn invoke demoapp hello2
 >```
 
 # Conclusion

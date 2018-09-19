@@ -3,7 +3,7 @@
 Each of the tutorials below provides a step by step examination and walkthrough of a specific Fn feature or component.  Check back soon as new tutorials are being added regularly.
 
 ## Introduction to Fn
-Before deploying your first function, you need to [install the Fn cli and start an Fn Server](install/README.md). 
+Before deploying your first function, you need to [install the Fn cli and start an Fn Server](install/README.md).
 
 Now that the Fn Server is up and running, you can deploy your first function. Select your preferred language:
 
@@ -12,16 +12,13 @@ Now that the Fn Server is up and running, you can deploy your first function. Se
 * [Node.js](node/intro/README.md)
 * [Ruby](ruby/intro/README.md)
 * [Python](python/intro/README.md)
-* Docker (Coming Soon!)
 
 ## Explore Fn
 * [Create Apps with Fn](Apps/README.md) - Learn how to group your functions into an application/API and deploy them together.
-* [Create an Asynchronous Function](Async/README.md) - Learn how to write asynchronous functions for expensive, long running or batch processing.
 * [Create a Function with a Docker Container](ContainerAsFunction/README.md) - This tutorial provides a simple example of how to define an Fn function using a custom built Docker container.
 
 ## Test and Monitor Functions
 
-* [Write function tests](Testing/README.md) - Fn provides an easy way to write tests for any language, that can ensure you don't break your function contract.
 * [Monitor Fn metrics with Grafana and Prometheus](grafana/README.md) - Learn how to view Fn server metrics with Prometheus and Grafana.
 * [Troubleshoot functions](Troubleshooting/README.md) - Resolve issues at both development and deployment time.
 

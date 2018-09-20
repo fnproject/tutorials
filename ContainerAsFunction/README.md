@@ -4,7 +4,7 @@ This tutorial walks through how to use a custom Docker image to define an
 Fn function.  Although Fn functions are packaged as Docker images, when
 developing functions using the Fn CLI developers are not directly exposed
 to the underlying Docker platform.  Docker isn't hidden (you can see
-Docker build output and image names and tags in routes), but you aren't
+Docker build output and image names and tags), but you aren't
 required to be very Docker-savvy to develop functions with Fn.
 However, sometimes you need to handle advanced use cases and must take
 complete control of the creation of the function image. Fortunately
@@ -165,7 +165,7 @@ but again this step is optional when we're working locally.
 > docker push your-docker-id/hello:0.0.1
 >```
 
-## Creating the Fn App and Defining the Route
+## Creating the Fn App and Defining a Function
 
 Once we have a container image we can create a function with that image.
 
@@ -322,7 +322,7 @@ supported abbreviations):
 
 Once deployed you can use `fn invoke` to call the `hello2` function. Which makes
 sense since all we've done is use the CLI to deploy the exact same image and
-defined the exact same route as before.  We've simply automated the process.
+defined the exact same function as before.  We've simply automated the process.
 
 Try out the same command you ran earlier with our newly defined `hello2`
 function.

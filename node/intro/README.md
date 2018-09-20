@@ -8,7 +8,7 @@ triggers.
 
 ### Before you Begin
 * Set aside about 15 minutes to complete this tutorial.
-* Make sure Fn server is up and running by completing the [Install and Start Fn Tutorial](../install/README.md).
+* Make sure Fn server is up and running by completing the [Install and Start Fn Tutorial](https://github.com/fnproject/tutorials/blob/master/install/README.md).
     * Make sure you have set your Fn context registry value for local development. (for example, "fndemouser". [See here](https://github.com/fnproject/tutorials/blob/master/install/README.md#configure-your-context).)
 
 > As you make your way through this tutorial, look out for this icon.
@@ -316,14 +316,14 @@ with a Dockerfile.  Of course this is exactly what's happening!  When
 you deploy a function like this Fn is dynamically generating a Dockerfile
 for your function, building a container, and then loading it for execution.
 
-> __NOTE__: Fn is actually using two images.  The first contains
-the language compiler and is used to generate a binary.  The second
-image packages only the generated binary and any necessary language
-runtime components. Using this strategy, the final function image size
-can be kept as small as possible.  Smaller Docker images are naturally
-faster to push and pull from a repository which improves overall
-performance.  For more details on this technique see [Multi-Stage Docker
-Builds for Creating Tiny Go Images](https://medium.com/travis-on-docker/multi-stage-docker-builds-for-creating-tiny-go-images-e0e1867efe5a).
+> __NOTE__: Fn is actually using two images.  The first contains the language interpreter
+and all the necessary build tools. The second image packages all dependencies
+and any necessary language runtime components. Using this strategy, the final
+function image size can be kept as small as possible.  Smaller Docker images are
+naturally faster to push and pull from a repository which improves overall
+performance.  For more details on this technique see [Multi-Stage Docker Builds
+for Creating Tiny Go
+Images](https://medium.com/travis-on-docker/multi-stage-docker-builds-for-creating-tiny-go-images-e0e1867efe5a).
 
 When using `fn deploy --local`, fn server builds and packages your function
 into a container image which resides on your local machine.  

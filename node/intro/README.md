@@ -65,7 +65,7 @@ Now get a list of the directory contents.
 >```
 
 ```sh
-func.js func.yaml package.json test.json
+func.js func.yaml package.json
 ```
 
 The `func.js` file which contains your actual Node function is generated along
@@ -77,22 +77,21 @@ with several supporting files. To view your Node function type:
 >```
 
 ```js
-var fdk=require('@fnproject/fdk');
+const fdk=require('@fnproject/fdk');
 
 fdk.handle(function(input){
-  var name = 'World';
+  let name = 'World';
   if (input.name) {
     name = input.name;
   }
-  response = {'message': 'Hello ' + name}
-  return response
+  return {'message': 'Hello ' + name}
 })
 ```
 
 This function looks for JSON input in the form of `{"name": "Bob"}`. If this
 JSON example is passed to the function, the function returns `{"message":"Hello
 Bob"}`. If no JSON data is found, the function returns `{"message":"Hello
-World"}`.  
+World"}`.
 
 ### Understand func.yaml
 The `fn init` command generated a `func.yaml` function
@@ -109,7 +108,7 @@ name: nodefn
 version: 0.0.1
 runtime: node
 entrypoint: node func.js
-format: json
+format: http-stream
 triggers:
 - name: nodefn-trigger
   type: http
@@ -126,20 +125,17 @@ declares a number of properties including:
 in `--runtime`.
 * entrypoint--the name of the executable to invoke when your function is called,
 in this case `node func.js`.
-* format--the function uses JSON as its input/output method ([see: Open Function Format](https://github.com/fnproject/fn/blob/master/docs/developers/function-format.md)).
-* triggers--identifies the automatically generated trigger name and source. For example, this function would be executed from the URL `http://localhost:8080/t/appname/nodefn-trigger`. Where `appname` is the name of the app chosen for your function when it is deployed.
+* format--the function uses `http-stream` as its input/output transport ([see: Open Function Format](https://github.com/fnproject/docs/blob/master/fn/develop/function-format.md)).
+* triggers--identifies the automatically generated trigger name and source. For example, this function would be requested from the URL `http://localhost:8080/t/appname/nodefn-trigger`. Where `appname` is the name of the app chosen for your function when it is deployed.
 
 There are other user specifiable properties but these will suffice for
 this example.  Note that the name of your function is taken from the containing
 folder name.  We'll see this come into play later on.
 
 ### Other Function Files
-The `fn init` command generated two other files.
+The `fn init` command generated one other file.
 
-* `package.json` --  specifies all the dependencies for your Node function.
-* `test.json` -- a test file that is used to test your function. It defines an
-input and the output of the function and helps to identify if the function works
-correctly or not. Function testing is not covered in this tutorial.
+* `package.json` --  specifies all the Node.js dependencies for your Node function.
 
 ### Fn and Node.js Dependencies
 Fn handles Node.js dependencies in the following way:
@@ -153,6 +149,20 @@ With the `nodefn` directory containing `func.js` and `func.yaml` you've got
 everything you need to deploy the function to Fn server. This server could be
 running in the cloud, in your datacenter, or on your local machine like we're
 doing here.
+
+Make sure your context is set to default and you are using a demo user. Use the `fn list context` command to check.
+
+![user input](images/userinput.png)
+>```sh
+> fn list contexts
+>```
+
+```cs
+CURRENT	NAME	PROVIDER	API URL			        REGISTRY
+*       default	default		http://localhost:8080	fndemouser
+```
+
+If your context is not configured, please see [the context installation instructions](https://github.com/fnproject/tutorials/blob/master/install/README.md#configure-your-context) before proceeding. Your context determines where your function is deployed.
 
 Deploying your function is how you publish your function and make it accessible
 to other users and systems. To see the details of what is happening during a
@@ -174,40 +184,34 @@ Deploying nodefn to app: nodeapp
 Bumped to version 0.0.2
 Building image fndemouser/nodefn:0.0.2
 FN_REGISTRY:  fndemouser
-Current Context:  No context currently in use.
-Sending build context to Docker daemon  6.144kB
+Current Context:  default
+Sending build context to Docker daemon   5.12kB
 Step 1/9 : FROM fnproject/node:dev as build-stage
 dev: Pulling from fnproject/node
-88286f41530e: Pull complete
-f2f101846395: Pull complete
-ff57497de382: Pull complete
+88286f41530e: Pull complete 
+f2f101846395: Pull complete 
+ff57497de382: Pull complete 
 Digest: sha256:613685c22f65d01f2264bdd49b8a336488e14faf29f3ff9b6bf76a4da23c4700
 Status: Downloaded newer image for fnproject/node:dev
  ---> 016382f39a51
 Step 2/9 : WORKDIR /function
- ---> Running in bffb34c6f995
-Removing intermediate container bffb34c6f995
- ---> 444c5f89b99f
+ ---> Running in 17d09f41ee90
+Removing intermediate container 17d09f41ee90
+ ---> db4b1e998348
 Step 3/9 : ADD package.json /function/
- ---> bebc0d6b31dd
+ ---> 5acbd4f3710d
 Step 4/9 : RUN npm install
- ---> Running in e926d9b39fba
+ ---> Running in 9c0da981c192
 npm info it worked if it ends with ok
 npm info using npm@5.3.0
 npm info using node@v8.4.0
 npm info lifecycle hellofn@1.0.0~preinstall: hellofn@1.0.0
-npm http fetch GET 200 https://registry.npmjs.org/@fnproject%2ffdk 504ms
-npm http fetch GET 200 https://registry.npmjs.org/jsonparse 42ms
-http fetch GET 200 https://registry.npmjs.org/jsonparse/-/jsonparse-1.3.1.tgz 187ms
-http fetch GET 200 https://registry.npmjs.org/@fnproject/fdk/-/fdk-0.0.7.tgz 658ms
-npm info lifecycle jsonparse@1.3.1~preinstall: jsonparse@1.3.1
-npm info lifecycle @fnproject/fdk@0.0.7~preinstall: @fnproject/fdk@0.0.7
-npm info linkStuff jsonparse@1.3.1
-npm info linkStuff @fnproject/fdk@0.0.7
-npm info lifecycle jsonparse@1.3.1~install: jsonparse@1.3.1
-npm info lifecycle @fnproject/fdk@0.0.7~install: @fnproject/fdk@0.0.7
-npm info lifecycle jsonparse@1.3.1~postinstall: jsonparse@1.3.1
-npm info lifecycle @fnproject/fdk@0.0.7~postinstall: @fnproject/fdk@0.0.7
+npm http fetch GET 200 https://registry.npmjs.org/@fnproject%2ffdk 456ms
+http fetch GET 200 https://registry.npmjs.org/@fnproject/fdk/-/fdk-0.0.11.tgz 206ms
+npm info lifecycle @fnproject/fdk@0.0.11~preinstall: @fnproject/fdk@0.0.11
+npm info linkStuff @fnproject/fdk@0.0.11
+npm info lifecycle @fnproject/fdk@0.0.11~install: @fnproject/fdk@0.0.11
+npm info lifecycle @fnproject/fdk@0.0.11~postinstall: @fnproject/fdk@0.0.11
 npm info linkStuff hellofn@1.0.0
 npm info lifecycle hellofn@1.0.0~install: hellofn@1.0.0
 npm info lifecycle hellofn@1.0.0~postinstall: hellofn@1.0.0
@@ -219,10 +223,10 @@ npm notice created a lockfile as package-lock.json. You should commit this file.
 npm info lifecycle undefined~postshrinkwrap: undefined
 npm WARN hellofn@1.0.0 No repository field.
 
-added 2 packages in 2.083s
-npm info ok
-Removing intermediate container e926d9b39fba
- ---> 5a665c0ced83
+added 1 package in 1.486s
+npm info ok 
+Removing intermediate container 9c0da981c192
+ ---> 5ea578bf9df9
 Step 5/9 : FROM fnproject/node
 latest: Pulling from fnproject/node
 Digest: sha256:613685c22f65d01f2264bdd49b8a336488e14faf29f3ff9b6bf76a4da23c4700
@@ -230,16 +234,16 @@ Status: Downloaded newer image for fnproject/node:latest
  ---> 016382f39a51
 Step 6/9 : WORKDIR /function
  ---> Using cache
- ---> 444c5f89b99f
+ ---> db4b1e998348
 Step 7/9 : ADD . /function/
- ---> 4e95930ff8af
+ ---> 6f9312321676
 Step 8/9 : COPY --from=build-stage /function/node_modules/ /function/node_modules/
- ---> e3a99a883b6e
+ ---> 31399d7f619d
 Step 9/9 : ENTRYPOINT ["node", "func.js"]
- ---> Running in 54c60f2669a5
-Removing intermediate container 54c60f2669a5
- ---> b9330bddec26
-Successfully built b9330bddec26
+ ---> Running in 9a5e505e8bb2
+Removing intermediate container 9a5e505e8bb2
+ ---> 2f7b61423621
+Successfully built 2f7b61423621
 Successfully tagged fndemouser/nodefn:0.0.2
 
 Updating function nodefn using image fndemouser/nodefn:0.0.2...
@@ -273,7 +277,7 @@ Normally you deploy an application without the `--verbose` option. If you rerun 
 
 ## Invoke your Deployed Function
 
-There are two ways to call your deployed function.  
+There are two ways to call your deployed function.
 
 ### Invoke with the CLI
 
@@ -326,7 +330,7 @@ for Creating Tiny Go
 Images](https://medium.com/travis-on-docker/multi-stage-docker-builds-for-creating-tiny-go-images-e0e1867efe5a).
 
 When using `fn deploy --local`, fn server builds and packages your function
-into a container image which resides on your local machine.  
+into a container image which resides on your local machine.
 
 As Fn is built on Docker you can use the `docker` command to see the local
 container image you just generated. You may have a number of Docker images so
@@ -354,9 +358,9 @@ The fn CLI provides a couple of commands to let us see what we've deployed.
 >```
 
 Which, in our case, returns the name of the application we created when we
-deployed our nodefn function:
+deployed our `nodefn` function:
 
-```sh
+```cs
 NAME
 nodeapp
 ```
@@ -375,9 +379,7 @@ FUNCTION    NAME             TYPE    SOURCE          ENDPOINT
 nodefn      nodefn-trigger   http    /nodefn-trigger http://localhost:8080/t/nodeapp/nodefn-trigger
 ```
 
-The output confirms that nodeapp contains a `nodefn` function that is
-implemented by the Docker container `fndemouser/nodefn:0.0.2` which may be
-invoked via the specified trigger URL.
+The output confirms that nodeapp contains a `nodefn` function that can be called via this URL.
 
 ### Invoke with Curl
 
@@ -402,7 +404,7 @@ We can again pass JSON data to our function get the value of name passed to the
 function back.
 
 ![user input](images/userinput.png)
->```
+>```sh
 > curl -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/t/nodeapp/nodefn-trigger
 >```
 

@@ -1,4 +1,4 @@
-# Introduction
+# Introduction to Fn with Java
 
 This tutorial introduces the
 [Fn Java FDK (Function Development Kit)](https://github.com/fnproject/fdk-java).
@@ -89,15 +89,14 @@ schema_version: 20180708
 name: javafn
 version: 0.0.1
 runtime: java
-build_image: fnproject/fn-java-fdk-build:jdk9-1.0.64
-run_image: fnproject/fn-java-fdk:jdk9-1.0.64
+build_image: fnproject/fn-java-fdk-build:jdk9-1.0.75
+run_image: fnproject/fn-java-fdk:jdk9-1.0.75
 cmd: com.example.fn.HelloFunction::handleRequest
-format: http
+format: http-stream
 triggers:
 - name: javafn-trigger
   type: http
   source: /javafn-trigger
-format: http
 ```
 
 The generated `func.yaml` file contains metadata about your function and
@@ -110,11 +109,11 @@ class and the method that should be invoked when your `javafn` function is
 called.
 * build_image--the image used to build your function's image.
 * run_image--the image your function runs in.
-* format--the function uses JSON as its input/output method ([see: Open
-Function Format](https://github.com/fnproject/fn/blob/master/docs/developers/function-format.md)).
+* format--the function uses `http-stream` as its input/output method ([see: Open
+Function Format](https://github.com/fnproject/docs/blob/master/fn/develop/function-format.md)).
 * triggers--identifies the automatically generated trigger name and source. For
 example, this function would be executed from the URL
-<http://localhost:8080/t/appname/gofn-trigger>. Where appname is the name of
+<http://localhost:8080/t/appname/javafn-trigger>. Where appname is the name of
 the app chosen for your function when it is deployed.
 
 The Java function init also generates a Maven `pom.xml` file to build and test your function.  The pom includes the Fn Java FDK runtime and test libraries your function needs.
@@ -122,24 +121,221 @@ The Java function init also generates a Maven `pom.xml` file to build and test y
 
 ## Deploy your Java Function
 
-As we're running the server on the local machine we can save time by not pushing
-the generated image out to a remote Docker repository by using the `--local`
-option.
+With the `javafn` directory containing `pom.xml` and `func.yaml` you've got
+everything you need to deploy the function to Fn server. This server could be
+running in the cloud, in your datacenter, or on your local machine like we're
+doing here.
 
-![](images/userinput.png)
->`fn deploy --app myapp --local`
+Make sure your context is set to default and you are using a demo user. Use the `fn list contexts` command to check.
 
-```sh
-Deploying javafn to app: myapp at path: /javafn
-Bumped to version 0.0.2
-Building image fndemouser/javafn:0.0.2
-Updating route /javafn using image fndemouser/javafn:0.0.2...
+![user input](images/userinput.png)
+>```sh
+> fn list contexts
+>```
+
+```cs
+CURRENT	NAME	PROVIDER	API URL			        REGISTRY
+*       default	default		http://localhost:8080	fndemouser
 ```
 
-Review the last line of the deploy output.  When deployed, a function's
-Docker image is associated with a route which is the function's name and
-the function's name is taken from the containing directory.  In this
-case the route is `/javafn`.
+If your context is not configured, please see [the context installation instructions](https://github.com/fnproject/tutorials/blob/master/install/README.md#configure-your-context) before proceeding. Your context determines where your function is deployed.
+
+Deploying your function is how you publish your function and make it accessible
+to other users and systems. To see the details of what is happening during a
+function deploy,  use the `--verbose` switch.  The first time you build a
+function of a particular language it takes longer as Fn downloads the necessary
+Docker images. The `--verbose` option allows you to see this process.
+
+![](images/userinput.png)
+>`fn --verbose deploy --app java-app --local`
+
+```yaml
+Deploying javafn to app: java-app
+Bumped to version 0.0.2
+Building image fndemouser/javafn:0.0.2 
+FN_REGISTRY:  fndemouser
+Current Context:  default
+Sending build context to Docker daemon  14.34kB
+Step 1/11 : FROM fnproject/fn-java-fdk-build:jdk9-1.0.75 as build-stage
+jdk9-1.0.75: Pulling from fnproject/fn-java-fdk-build
+c2ad77de49ce: Already exists 
+d6485a2cca95: Already exists 
+4f4ea4e6ab41: Already exists 
+649f9534d72b: Already exists 
+6e47a95e0938: Already exists 
+d46a954202a9: Pull complete 
+5a73fd16c382: Pull complete 
+6028b8203fcc: Pull complete 
+98a6eaf5f83b: Pull complete 
+7afb9733d3e4: Pull complete 
+107a8e7e5bd9: Pull complete 
+384cc00c5a4f: Pull complete 
+bb19e03dd551: Pull complete 
+b7f4aa3f1f42: Pull complete 
+Digest: sha256:5be1aff1f7107b8a1a50e4b906b91fc6487977a9e70639e6133cdaaa8b58d74d
+Status: Downloaded newer image for fnproject/fn-java-fdk-build:jdk9-1.0.75
+ ---> 10c10a1cd2ae
+Step 2/11 : WORKDIR /function
+ ---> Running in 68884bc0f125
+Removing intermediate container 68884bc0f125
+ ---> 44432a740323
+Step 3/11 : ENV MAVEN_OPTS -Dhttp.proxyHost= -Dhttp.proxyPort= -Dhttps.proxyHost= -Dhttps.proxyPort= -Dhttp.nonProxyHosts= -Dmaven.repo.local=/usr/share/maven/ref/repository
+ ---> Running in b6f5256bc328
+Removing intermediate container b6f5256bc328
+ ---> 401d12925a1f
+Step 4/11 : ADD pom.xml /function/pom.xml
+ ---> 92803f3eba9d
+Step 5/11 : RUN ["mvn", "package", "dependency:copy-dependencies", "-DincludeScope=runtime", "-DskipTests=true", "-Dmdep.prependGroupId=true", "-DoutputDirectory=target", "--fail-never"]
+ ---> Running in 13af70800045
+[INFO] Scanning for projects...
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-compiler-plugin/3.3/maven-compiler-plugin-3.3.pom
+...more maven downloads here, removed for brevity...
+
+[INFO] 
+[INFO] ------------------------< com.example.fn:hello >------------------------
+[INFO] Building hello 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+Downloading from fn-release-repo: https://dl.bintray.com/fnproject/fnproject/com/fnproject/fn/api/1.0.75/api-1.0.75.pom
+...more maven downloads here, removed for brevity...
+
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ hello ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /function/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.3:compile (default-compile) @ hello ---
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-toolchain/2.2.1/maven-toolchain-2.2.1.pom
+...more maven downloads here, removed for brevity...
+
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ hello ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /function/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.3:testCompile (default-testCompile) @ hello ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ hello ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ hello ---
+[WARNING] JAR will be empty - no content was marked for inclusion!
+[INFO] Building jar: /function/target/hello-1.0.0.jar
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.8:copy-dependencies (default-cli) @ hello ---
+[INFO] Copying api-1.0.75.jar to /function/target/com.fnproject.fn.api-1.0.75.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 5.628 s
+[INFO] Finished at: 2018-10-16T22:46:45Z
+[INFO] ------------------------------------------------------------------------
+Removing intermediate container 13af70800045
+ ---> 641e7944d2af
+Step 6/11 : ADD src /function/src
+ ---> ca6c3f1b91ef
+Step 7/11 : RUN ["mvn", "package"]
+ ---> Running in 1bb7f99d39f8
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------------< com.example.fn:hello >------------------------
+[INFO] Building hello 1.0.0
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ hello ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /function/src/main/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.3:compile (default-compile) @ hello ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 1 source file to /function/target/classes
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ hello ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory /function/src/test/resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.3:testCompile (default-testCompile) @ hello ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 1 source file to /function/target/test-classes
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ hello ---
+[INFO] Surefire report directory: /function/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.example.fn.HelloFunctionTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.394 sec
+
+Results :
+
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] 
+[INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ hello ---
+[INFO] Building jar: /function/target/hello-1.0.0.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 2.978 s
+[INFO] Finished at: 2018-10-16T22:46:51Z
+[INFO] ------------------------------------------------------------------------
+Removing intermediate container 1bb7f99d39f8
+ ---> f927528437d9
+Step 8/11 : FROM fnproject/fn-java-fdk:jdk9-1.0.75
+jdk9-1.0.75: Pulling from fnproject/fn-java-fdk
+c2ad77de49ce: Already exists 
+d6485a2cca95: Already exists 
+4f4ea4e6ab41: Already exists 
+649f9534d72b: Already exists 
+6e47a95e0938: Already exists 
+8068f9696b91: Pull complete 
+6c20847ce4f9: Pull complete 
+10e1d186dcc9: Pull complete 
+Digest: sha256:a317732d9dd12ae8f9078591e86bba2ed569c7ec823e4c763ff176c07c8add3f
+Status: Downloaded newer image for fnproject/fn-java-fdk:jdk9-1.0.75
+ ---> 5ca9da5945c4
+Step 9/11 : WORKDIR /function
+ ---> Running in 0f94631cd8f9
+Removing intermediate container 0f94631cd8f9
+ ---> a6da0230bf05
+Step 10/11 : COPY --from=build-stage /function/target/*.jar /function/app/
+ ---> 9fb385022aeb
+Step 11/11 : CMD ["com.example.fn.HelloFunction::handleRequest"]
+ ---> Running in 8b571cbd24af
+Removing intermediate container 8b571cbd24af
+ ---> 0cbe66bb9e2b
+Successfully built 0cbe66bb9e2b
+Successfully tagged fndemouser/javafn:0.0.2
+
+Updating function javafn using image fndemouser/javafn:0.0.2...
+Successfully created app:  java-app
+Successfully created function: javafn with fndemouser/javafn:0.0.2
+Successfully created trigger: javafn-trigger
+```
+
+All the steps to load the current language Docker image are displayed.
+
+Functions are grouped into applications so by specifying `--app java-app`
+we're implicitly creating the application `java-app` and associating our
+function with it.
+
+Specifying `--local` does the deployment to the local server but does
+not push the function image to a Docker registry--which would be necessary if
+we were deploying to a remote Fn server.
+
+The output message
+`Updating function javafn using image fndemouser/javafn:0.0.2...`
+let's us know that the function is packaged in the image
+"fndemouser/javafn:0.0.2".
+
+Note that the containing folder name `javafn` was used as the name of the
+generated Docker container and used as the name of the function that
+container was bound to. By convention it is also used to create the trigger name
+`javafn-trigger`.
+
+Normally you deploy an application without the `--verbose` option. If you rerun the command a new image and version is created and loaded.
 
 
 ## Invoke your Deployed Function
@@ -153,7 +349,7 @@ easy.  Type the following:
 
 ![user input](images/userinput.png)
 >```sh
-> fn invoke myapp javafn
+> fn invoke java-app javafn
 >```
 
 which results in:
@@ -163,14 +359,14 @@ Hello, World!
 ```
 
 In the background, Maven compiles the code and runs any tests, the function is
-packaged into a container, and then the function is run  to produce the output
+packaged into a container, and then the function is run to produce the output
 "Hello, world!".
 
 You can also pass data to the invoke command. For example:
 
 ![user input](images/userinput.png)
 >```sh
-> echo -n 'Bob' | fn invoke myapp javafn
+> echo -n 'Bob' | fn invoke java-app javafn
 >```
 
 ```txt
@@ -273,8 +469,8 @@ will cause Maven to compile and run the updated test class.  You can also invoke
 >`fn build`
 
 ```sh
-Building image fndemouser/javafn:0.0.1 .......
-Function fndemouser/javafn:0.0.1 built successfully.
+Building image fndemouser/javafn:0.0.2 .......
+Function fndemouser/javafn:0.0.2 built successfully.
 ```
 
 ## Accepting JSON Input
@@ -319,9 +515,12 @@ Let's build the updated function:
 returns:
 
 ```sh
-Building image fndemouser/javafn:0.0.1 .......
+Building image fndemouser/javafn:0.0.2 .....
 Error during build. Run with `--verbose` flag to see what went wrong. eg: `fn --verbose CMD`
-ERROR: error running docker build: exit status 1
+
+Fn: error running docker build: exit status 1
+
+See 'fn <command> --help' for more information. Client version: 0.5.16
 ```
 
 To find out what happened rerun build with the verbose switch:
@@ -424,14 +623,14 @@ Redeploy your updated Java function
 
 ![user input](images/userinput.png)
 >```sh
-> fn deploy --app myapp --local
+> fn deploy --app java-app --local
 >```
 
 Use `curl` to invoke the function:
 
 ![user input](images/userinput.png)
 >```sh
-> curl -H "Content-Type: application/json" http://localhost:8080/t/myapp/javafn-trigger
+> curl -H "Content-Type: application/json" http://localhost:8080/t/java-app/javafn-trigger
 >```
 
 The result is now in a JSON format.
@@ -445,7 +644,7 @@ the function back.
 
 ![user input](images/userinput.png)
 >```
-> curl -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/t/myapp/javafn-trigger
+> curl -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/t/java-app/javafn-trigger
 >```
 
 The result is now in JSON format with the passed value returned.

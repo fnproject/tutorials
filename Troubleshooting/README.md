@@ -166,7 +166,7 @@ Let's update our HelloFunction so that it throws an exception in the
 following:
 
 ![user input](images/userinput.png)
-```sh
+```java
 package com.example.fn;
 
 public class HelloFunction {

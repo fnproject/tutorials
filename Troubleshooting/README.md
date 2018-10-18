@@ -1,7 +1,7 @@
 # Troubleshooting Fn
 
 Even if you've got excellent unit tests (e.g., using the
-[Fn Java JUnit support](https://github.com/fnproject/fdk-java/blob/master/docs/TestingFunctions.md)
+[Fn Java JUnit support](https://github.com/fnproject/fdk-java/blob/master/docs/TestingFunctions.md))
 things can still go wrong.  Your function may throw an exception,
 or you may be getting back unexpected results? So what can you do to troubleshoot
 your functions?  In this tutorial we'll look at a number of techniques and Fn 

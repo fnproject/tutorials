@@ -3,7 +3,7 @@ Fn is a lightweight Docker-based serverless functions platform you can run on
 your laptop, server, or cloud.  In this introductory tutorial we'll walk through
 developing a function using the Ruby programming language (without installing
 any Ruby tools!) and deploying that function to a local Fn server.  We'll also
-learn about the core Fn concepts like applications and routes.
+learn about the core Fn concepts like applications and triggers.
 
 ### Before you Begin
 * Set aside about 15 minutes to complete this tutorial.
@@ -61,7 +61,7 @@ Now get a list of the directory contents.
 >```
 
 ```sh
- Gemfile func.rb func.yaml test.json
+ Gemfile func.rb func.yaml
 ```
 
 The `func.rb` file which contains your actual Ruby function is generated along
@@ -113,10 +113,10 @@ configuration file. Let's look at the contents:
 ```yaml
 schema_version: 20180708
 name: rubyfn
-version: 0.0.1
+version: 0.0.2
 runtime: ruby
 entrypoint: ruby func.rb
-format: json
+format: http-stream
 triggers:
 - name: rubyfn-trigger
   type: http
@@ -133,7 +133,7 @@ declares a number of properties including:
 in `--runtime`.
 * entrypoint--the name of the executable to invoke when your function is called,
 in this case `ruby func.rb`.
-* format--the function uses JSON as its input/output method ([see: Open Function Format](https://github.com/fnproject/fn/blob/master/docs/developers/function-format.md)).
+* format--the function uses `http-stream` as its input/output method ([see: Open Function Format](https://github.com/fnproject/fn/blob/master/docs/developers/function-format.md)).
 * triggers--identifies the automatically generated trigger name and source. For
 example, this function would be executed from the URL
 <http://localhost:8080/t/appname/rubyfn-trigger>. Where appname is the name of
@@ -144,12 +144,9 @@ this example.  Note that the name of your function is taken from the containing
 folder name.  We'll see this come into play later on.
 
 ### Other Function Files
-The `fn init` command generated two other files.
+The `fn init` command generated one other file.
 
 * `Gemfile` --  specifies all the dependencies for your Ruby function.
-* `test.json` -- a test file that is used to test your function. It defines an
-input and the output of the function and helps to identify if the function works
-correctly or not. Function testing is not covered in this tutorial.
 
 
 ## Deploy Your First Function
@@ -158,6 +155,20 @@ With the `rubyfn` directory containing `func.rb` and `func.yaml` you've got
 everything you need to deploy the function to Fn server. This server could be
 running in the cloud, in your datacenter, or on your local machine like we're
 doing here.
+
+Make sure your context is set to default and you are using a demo user. Use the `fn list context` command to check.
+
+![user input](images/userinput.png)
+>```sh
+> fn list contexts
+>```
+
+```cs
+CURRENT	NAME	PROVIDER	API URL			        REGISTRY
+*       default	default		http://localhost:8080	fndemouser
+```
+
+If your context is not configured, please see [the context installation instructions](https://github.com/fnproject/tutorials/blob/master/install/README.md#configure-your-context) before proceeding. Your context determines where your function is deployed.
 
 Deploying your function is how you publish your function and make it accessible
 to other users and systems. To see the details of what is happening during a
@@ -175,74 +186,83 @@ In your terminal type the following:
 You should see output similar to:
 
 ```yaml
-DDeploying rubyfn to app: rubyapp
+Creating function at: /rubyfn
+Function boilerplate generated.
+func.yaml created.
+~/lcl/1016 $ cd rubyfn
+~/lcl/1016/rubyfn $ ls
+Gemfile   func.rb   func.yaml
+~/lcl/1016/rubyfn $ 
+~/lcl/1016/rubyfn $ 
+~/lcl/1016/rubyfn $ 
+~/lcl/1016/rubyfn $ fn --verbose deploy --app rubyapp --local
+Deploying rubyfn to app: rubyapp
 Bumped to version 0.0.2
-Building image fndemouser/rubyfn:0.0.2
+Building image fndemouser/rubyfn:0.0.2 
 FN_REGISTRY:  fndemouser
 Current Context:  default
-Sending build context to Docker daemon  6.144kB
+Sending build context to Docker daemon   5.12kB
 Step 1/9 : FROM fnproject/ruby:dev as build-stage
 dev: Pulling from fnproject/ruby
-88286f41530e: Pull complete
-ee67ab14fe7c: Pull complete
-528d6e469a02: Pull complete
-bb1a5f0c7734: Pull complete
-b6f7bd536b78: Pull complete
+88286f41530e: Pull complete 
+ee67ab14fe7c: Pull complete 
+528d6e469a02: Pull complete 
+bb1a5f0c7734: Pull complete 
+b6f7bd536b78: Pull complete 
 Digest: sha256:056069fae8e349187114df899f1744aee548b464a91fb38497de6ce30d8c1488
 Status: Downloaded newer image for fnproject/ruby:dev
  ---> 907fbac5f177
 Step 2/9 : WORKDIR /function
- ---> Running in 0fe15cd00054
-Removing intermediate container 0fe15cd00054
- ---> 6f585ea8b1c2
+ ---> Running in 95c3e5e57b50
+Removing intermediate container 95c3e5e57b50
+ ---> e8b73f0c8416
 Step 3/9 : ADD Gemfile* /function/
- ---> 6c2703d094cb
+ ---> 713cc4c0d750
 Step 4/9 : RUN bundle install
- ---> Running in f336db81750e
+ ---> Running in 8ee8c95ebff4
 Don't run Bundler as root. Bundler can ask for sudo if it is needed, and
 installing your bundle as root will break this application for all non-root
 users on this machine.
-Fetching gem metadata from https://rubygems.org/.
+Fetching gem metadata from https://rubygems.org/..
 Fetching version metadata from https://rubygems.org/.
 Resolving dependencies...
 Using bundler 1.15.4
 Fetching json 2.1.0
 Installing json 2.1.0 with native extensions
-Fetching yajl-ruby 1.4.1
-Installing yajl-ruby 1.4.1 with native extensions
-Fetching fdk 0.0.13
-Installing fdk 0.0.13
-Bundle complete! 3 Gemfile dependencies, 4 gems now installed.
+Fetching fdk 0.0.14
+Installing fdk 0.0.14
+Bundle complete! 1 Gemfile dependency, 3 gems now installed.
 Use `bundle info [gemname]` to see where a bundled gem is installed.
-Removing intermediate container f336db81750e
- ---> 82529978bed4
+Removing intermediate container 8ee8c95ebff4
+ ---> 172f64d0553a
 Step 5/9 : FROM fnproject/ruby
 latest: Pulling from fnproject/ruby
-88286f41530e: Already exists
-ee67ab14fe7c: Already exists
-528d6e469a02: Already exists
+88286f41530e: Already exists 
+ee67ab14fe7c: Already exists 
+528d6e469a02: Already exists 
 Digest: sha256:9390a5c8df48f10499930a2ed4968bd2e46b6e6041aea8f5a5dc589b7b2ecaa2
 Status: Downloaded newer image for fnproject/ruby:latest
  ---> 9ab2c72e7fd0
 Step 6/9 : WORKDIR /function
- ---> Running in 3125212378c4
-Removing intermediate container 3125212378c4
- ---> ab611c1d7c39
+ ---> Running in 98c77e59831c
+Removing intermediate container 98c77e59831c
+ ---> 04f0c7220634
 Step 7/9 : COPY --from=build-stage /usr/lib/ruby/gems/ /usr/lib/ruby/gems/
- ---> cce7b8b0c82c
+ ---> aa358bb28a7b
 Step 8/9 : ADD . /function/
- ---> 452786dc9ffd
+ ---> 6d31c787c51c
 Step 9/9 : ENTRYPOINT ["ruby", "func.rb"]
- ---> Running in a9473f14cbdf
-Removing intermediate container a9473f14cbdf
- ---> d0d71f5a2a23
-Successfully built d0d71f5a2a23
+ ---> Running in 1258d901657e
+Removing intermediate container 1258d901657e
+ ---> f9bd02b56f9b
+Successfully built f9bd02b56f9b
 Successfully tagged fndemouser/rubyfn:0.0.2
 
 Updating function rubyfn using image fndemouser/rubyfn:0.0.2...
 Successfully created app:  rubyapp
 Successfully created function: rubyfn with fndemouser/rubyfn:0.0.2
 Successfully created trigger: rubyfn-trigger
+Trigger Endpoint: http://localhost:8080/t/rubyapp/rubyfn-trigger
 ```
 
 All the steps to load the current language Docker image are displayed.
@@ -256,27 +276,24 @@ not push the function image to a Docker registry--which would be necessary if
 we were deploying to a remote Fn server.
 
 The output message
-`Updating route /rubyfn using image fndemouser/rubyfn:0.0.2...`
+`Updating function rubyfn using image fndemouser/rubyfn:0.0.2...`
 let's us know that the function packaged in the image
 `fndemouser/rubyfn:0.0.2`.
 
-Note that the containing folder name 'rubyfn' was used as the name of the
-generated Docker container and used as the name of the route that
-container was bound to.
+Note that the containing folder name `rubyfn` was used as the name of the generated Docker container and used as the name of the function that container was bound to. By convention it is also used to create the trigger name `rubyfn-trigger`.
 
-Normally you deploy an application without the --verbose option. If you rerun the command a new image and version is created and loaded.
+Normally you deploy an application without the `--verbose` option. If you rerun the command a new image and version is created and loaded.
 
 ## Invoke your Deployed Function
-There are two ways to call your deployed function.  
+There are two ways to call your deployed function.
 
 ### Invoke with the CLI
-
 The first is using the Fn CLI which makes invoking your function relatively
 easy.  Type the following:
 
 ![user input](images/userinput.png)
 >```sh
-> fn invoke rubyapp rubyfn --content-type application/json
+> fn invoke rubyapp rubyfn
 >```
 
 which results in:
@@ -285,9 +302,9 @@ which results in:
 {"message":"Hello World!"}
 ```
 
-When you invoked "rubyapp rubyfn" the Fn server looked up the "rubyapp"
+When you invoked `rubyapp rubyfn` the Fn server looked up the `rubyapp`
 application and then looked for the Docker container image bound to the
-"rubyfn" function and executed the code. Fn `invoke` invokes your function
+`rubyfn` function and executed the code. Fn `invoke` invokes your function
 directly and independently of any associated triggers.  You can always invoke a
 function even without it having any triggers bound to it. Note the content type was specified as well.
 
@@ -302,7 +319,7 @@ You can also pass data to the invoke command. For example:
 {"message":"Hello Bob!"}
 ```
 
-The JSON data was parsed and since `name` was set to "Bob", that value is passed
+The JSON data was parsed and since `name` was set to `Bob`, that value is passed
 in the output.
 
 ### Understand Fn deploy
@@ -340,8 +357,7 @@ fndemouser/rubyfn    0.0.2               d0d71f5a2a23        11 minutes ago     
 ```
 
 ### Explore your Application
-
-The fn CLI provides a couple of commands to let us see what we've deployed.
+The Fn CLI provides a couple of commands to let us see what we've deployed.
 `fn list apps` returns a list of all of the defined applications.
 
 ![User Input Icon](images/userinput.png)
@@ -353,8 +369,8 @@ Which, in our case, returns the name of the application we created when we
 deployed our `rubyfn` function:
 
 ```sh
-NAME
-rubyapp
+NAME		ID
+rubyapp		01CT433P8VNG8G00GZJ000001A
 ```
 
 We can also see the functions that are defined by an application. Since functions are exposed via triggers, the `fn list triggers <appname>` command is used. To list the functions included in "rubyapp" we can type:
@@ -367,14 +383,16 @@ We can also see the functions that are defined by an application. Since function
 ```sh
 FUNCTION    NAME            TYPE  SOURCE          ENDPOINT
 rubyfn      rubyfn-trigger  http  /rubyfn-trigger http://localhost:8080/t/rubyapp/rubyfn-trigger
+
+FUNCTION    NAME               ID                           TYPE    SOURCE          ENDPOINT
+rubyfn      rubyfn-trigger     01CT433P9TNG8G00GZJ000001C   http    /rubyfn-trigger http://localhost:8080/t/rubyapp/
 ```
 
-The output confirms that rubyapp contains a `rubyfn` function that is
+The output confirms that `rubyapp` contains a `rubyfn` function that is
 implemented by the Docker container `fndemouser/rubyfn:0.0.2` which may be
 invoked via the specified URL.
 
 ### Invoke with Curl
-
 The other way to invoke your function is via HTTP.  The Fn server exposes our
 deployed function at `http://localhost:8080/t/rubyapp/rubyfn-trigger`, a URL
 that incorporates our application and function trigger as path elements.

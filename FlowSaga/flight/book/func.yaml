@@ -1,7 +1,12 @@
+schema_version: 20180708
 name: flight-book
-version: 0.0.64
+version: 0.0.9
 runtime: java
 cmd: com.example.fn.FlightFunction::book
-path: /flight/book
+format: http-stream
 config:
   FLIGHT_API_URL: http://172.17.0.1:3001/flight
+triggers:
+- name: flight-book
+  type: http
+  source: /flight-book

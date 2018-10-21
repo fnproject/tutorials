@@ -1,5 +1,12 @@
+schema_version: 20180708
 name: car-book
-version: 0.0.101
-runtime: node
-entrypoint: node func.js
-path: /car/book
+version: 0.0.4
+runtime: java
+cmd: com.example.fn.CarFunction::book
+format: http-stream
+config:
+  FLIGHT_API_URL: http://172.17.0.1:3001/car
+triggers:
+- name: car-book
+  type: http
+  source: /car-book

@@ -1,5 +1,10 @@
+schema_version: 20180708
 name: flight-cancel
-version: 0.0.114
+version: 0.0.6
 runtime: java
 cmd: com.example.fn.Flight::cancel
-path: /flight/cancel
+format: http-stream
+triggers:
+- name: flight-cancel
+  type: http
+  source: /flight-cancel

@@ -8,7 +8,7 @@
         <fdk.version>1.0.72</fdk.version>
     </properties>
     <groupId>com.example.fn</groupId>
-    <artifactId>flight-book</artifactId>
+    <artifactId>hotel-book</artifactId>
     <version>1.0.0</version>
 
     <repositories>

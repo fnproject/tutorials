@@ -61,7 +61,7 @@ Now get a list of the directory contents.
 >```
 
 ```txt
-Gopkg.toml func.go func.yaml  test.json
+Gopkg.toml func.go func.yaml
 ```
 
 The `func.go` file which contains your actual Go function is generated along
@@ -107,7 +107,7 @@ func myHandler(ctx context.Context, in io.Reader, out io.Writer) {
 This function looks for JSON input in the form of `{"name": "Bob"}`. If this
 JSON example is passed to the function, the function returns `{"message":"Hello
 Bob"}`. If no JSON data is found, the function returns `{"message":"Hello
-World"}`.  
+World"}`.
 
 ### Understanding func.yaml
 The `fn init` command generated a `func.yaml` function
@@ -124,7 +124,7 @@ name: gofn
 version: 0.0.1
 runtime: go
 entrypoint: ./func
-format: json
+format: http-stream
 triggers:
 - name: gofn-trigger
   type: http
@@ -141,8 +141,8 @@ declares a number of properties including:
 in `--runtime`.
 * entrypoint--the name of the executable to invoke when your function is called,
 in this case `./func`
-* format--the function uses JSON as its input/output method ([see: Open
-Function Format](https://github.com/fnproject/fn/blob/master/docs/developers/function-format.md)).
+* format--the function uses `http-stream` as its input/output method ([see: Open
+Function Format](https://github.com/fnproject/docs/blob/master/fn/develop/function-format.md)).
 * triggers--identifies the automatically generated trigger name and source. For
 example, this function would be executed from the URL
 <http://localhost:8080/t/appname/gofn-trigger>. Where appname is the name of
@@ -153,13 +153,10 @@ this example.  Note that the name of your function is taken from the containing
 folder name.  We'll see this come into play later on.
 
 ### Other Function Files
-The `fn init` command generated two other files.
+The `fn init` command generated one other file.
 
 * `Gopkg.toml` --  the Go dep tool dependency management tool file which
 specifies all the dependencies for your function.
-* `test.json` -- a test file that is used to test your function, it defines an
-input and the output of the function, helps to identify if the function works
-correctly or not. Function testing is not covered in this tutorial.
 
 ## Deploy Your First Function
 
@@ -167,6 +164,20 @@ With the `gofn` directory containing `func.go` and `func.yaml` you've got
 everything you need to deploy the function to Fn server. This server could be
 running in the cloud, in your datacenter, or on your local machine like we're
 doing here.
+
+Make sure your context is set to default and you are using a demo user. Use the `fn list context` command to check.
+
+![user input](images/userinput.png)
+>```sh
+> fn list contexts
+>```
+
+```cs
+CURRENT	NAME	PROVIDER	API URL			        REGISTRY
+*       default	default		http://localhost:8080	fndemouser
+```
+
+If your context is not configured, please see [the context installation instructions](https://github.com/fnproject/tutorials/blob/master/install/README.md#configure-your-context) before proceeding. Your context determines where your function is deployed.
 
 Deploying your function is how you publish your function and make it accessible
 to other users and systems. To see the details of what is happening during a
@@ -186,69 +197,66 @@ You should see output similar to:
 ```yaml
 Deploying gofn to app: goapp
 Bumped to version 0.0.2
-Building image fndemouser/gofn:0.0.2
+Building image fndemouser/gofn:0.0.2 
 FN_REGISTRY:  fndemouser
 Current Context:  default
-Sending build context to Docker daemon  6.144kB
+Sending build context to Docker daemon   5.12kB
 Step 1/10 : FROM fnproject/go:dev as build-stage
 dev: Pulling from fnproject/go
-ff3a5c916c92: Already exists
-f32d2ea73378: Pull complete
-3bdfb30a4c89: Pull complete
-6487ee6212c5: Pull complete
-074903419fc0: Pull complete
-3db945ee2177: Pull complete
+ff3a5c916c92: Already exists 
+f32d2ea73378: Pull complete 
+3bdfb30a4c89: Pull complete 
+6487ee6212c5: Pull complete 
+074903419fc0: Pull complete 
+3db945ee2177: Pull complete 
 Digest: sha256:6ebffaea00a2f53373c68dd52e0df209d7e464d691db0d52b31060d06df8e839
 Status: Downloaded newer image for fnproject/go:dev
  ---> fac877f7d14d
 Step 2/10 : WORKDIR /function
- ---> Running in 58c83d2e1041
-Removing intermediate container 58c83d2e1041
- ---> 4377ad7bb7b7
+ ---> Running in ec4e59c12f13
+Removing intermediate container ec4e59c12f13
+ ---> 98fcbeba3fcc
 Step 3/10 : RUN go get -u github.com/golang/dep/cmd/dep
- ---> Running in 1dfb09461b40
-Removing intermediate container 1dfb09461b40
- ---> d4b2aeab9923
+ ---> Running in d04b9dfa8dc6
+Removing intermediate container d04b9dfa8dc6
+ ---> 3bae0bbe8a81
 Step 4/10 : ADD . /go/src/func/
- ---> b69d9ed7d904
+ ---> b33514c5876b
 Step 5/10 : RUN cd /go/src/func/ && dep ensure
- ---> Running in a2f28e772805
-Removing intermediate container a2f28e772805
- ---> cbd77a519a1a
+ ---> Running in 6147e9cf3ddf
+Removing intermediate container 6147e9cf3ddf
+ ---> 2f7f21a2eb15
 Step 6/10 : RUN cd /go/src/func/ && go build -o func
- ---> Running in dd6d1f0f4cfd
-Removing intermediate container dd6d1f0f4cfd
- ---> 52090818324a
+ ---> Running in 81188a61a4d1
+Removing intermediate container 81188a61a4d1
+ ---> 1af60a363a46
 Step 7/10 : FROM fnproject/go
 latest: Pulling from fnproject/go
-1eae7a7426b0: Pull complete
-7a855df78530: Pull complete
+1eae7a7426b0: Pull complete 
+7a855df78530: Pull complete 
 Digest: sha256:8e03716b576e955c7606e4d8b8748c0f959a916ce16ba305ab262f042562340f
 Status: Downloaded newer image for fnproject/go:latest
  ---> 76aed4489768
 Step 8/10 : WORKDIR /function
- ---> Running in 69ec68217d80
-Removing intermediate container 69ec68217d80
- ---> 7dd3f73989ee
+ ---> Running in ce2fc52be3a7
+Removing intermediate container ce2fc52be3a7
+ ---> 9d2da540bf02
 Step 9/10 : COPY --from=build-stage /go/src/func/func /function/
- ---> 17f42164b51f
+ ---> cf718c6f8fd8
 Step 10/10 : ENTRYPOINT ["./func"]
- ---> Running in e2cee72aec64
-Removing intermediate container e2cee72aec64
- ---> cde014cefdad
-Successfully built cde014cefdad
+ ---> Running in a60600bcb994
+Removing intermediate container a60600bcb994
+ ---> efa4793bf85f
+Successfully built efa4793bf85f
 Successfully tagged fndemouser/gofn:0.0.2
 
 Updating function gofn using image fndemouser/gofn:0.0.2...
-Successfully created app:  goapp
-Successfully created function: gofn with fndemouser/gofn:0.0.2
-Successfully created trigger: gofn-trigger
 ```
 
 All the steps to load the current language Docker image are displayed.
 
 Functions are grouped into applications so by specifying `--app goapp`
-we're implicitly creating the application "goapp" and associating our
+we're implicitly creating the application `goapp` and associating our
 function with it.
 
 Specifying `--local` does the deployment to the local server but does
@@ -325,7 +333,7 @@ performance.  For more details on this technique see [Multi-Stage Docker
 Builds for Creating Tiny Go Images](https://medium.com/travis-on-docker/multi-stage-docker-builds-for-creating-tiny-go-images-e0e1867efe5a).
 
 When using `fn deploy --local`, fn server builds and packages your function
-into a container image which resides on your local machine.  
+into a container image which resides on your local machine.
 
 As Fn is built on Docker you can use the `docker` command to see the local
 container image you just generated. You may have a number of Docker images so
@@ -372,8 +380,7 @@ FUNCTION    NAME            TYPE    SOURCE        ENDPOINT
 gofn        gofn-trigger    http    /gofn-trigger http://localhost:8080/t/goapp/gofn-trigger
 ```
 
-The output confirms that goapp contains a `gofn` function that is implemented
-by the Docker container `fndemouser/gofn:0.0.2` which may be invoked via the
+The output confirms that `goapp` contains a `gofn` function which may be invoked via the
 specified URL.  Now that we've confirmed deployment was successsful, let's
 call our function.
 

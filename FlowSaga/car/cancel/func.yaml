@@ -1,11 +1,9 @@
 schema_version: 20180708
 name: car-cancel
-version: 0.0.7
+version: 0.0.1
 runtime: java
 cmd: com.example.fn.CarFunction::cancel
 format: http-stream
-config:
-  FLIGHT_API_URL: http://172.17.0.1:3001/car
 triggers:
 - name: car-cancel
   type: http

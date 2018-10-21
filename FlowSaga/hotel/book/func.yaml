@@ -1,11 +1,9 @@
 schema_version: 20180708
 name: hotel-book
-version: 0.0.3
+version: 0.0.1
 runtime: java
 cmd: com.example.fn.HotelFunction::book
 format: http-stream
-config:
-  FLIGHT_API_URL: http://172.17.0.1:3001/hotel
 triggers:
 - name: hotel-book
   type: http

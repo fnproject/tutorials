@@ -1,6 +1,6 @@
 schema_version: 20180708
 name: flight-cancel
-version: 0.0.6
+version: 0.0.1
 runtime: java
 cmd: com.example.fn.Flight::cancel
 format: http-stream

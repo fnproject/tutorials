@@ -1,5 +1,26 @@
 # Fn Flow Tutorial - Serverless Sagas with Fn Flow
 
+
+## :exclamation: Important :exclamation:
+
+This fork copes with the most recent Fn changes and has been tested on Fn server 0.3.593 (mid October 2018).
+
+* function are now invoked via the `functionId`. Make sure to invoke the `configure` script as it set all `functionId` as env variables.
+* Http Trigger in favor of deprecated Routes.
+* Flow is now a module, e.g. see this [pom](https://github.com/delabassee/tutorials/blob/0ef441ad8353408309ad9f737c1774a2a501c070/FlowSaga/trip/pom.xml#L39-L43)
+* `@FnFeature(FlowFeature.class)` annotation, e.g. see [here](https://github.com/delabassee/tutorials/blob/0ef441ad8353408309ad9f737c1774a2a501c070/FlowSaga/trip/src/main/java/com/example/fn/TripFunction.java#L17)
+* updated FDK and Jackson to the latest and greatest.
+* and probably other stuff that I forogt...
+
+### ToDo
+
+* Replace Java-based *Hotel* and *Car* functions with to their corresponding original Node and Ruby implmenentations.
+* Add tests!
+
+
+## About
+
+
 This tutorial is based on [Thom Leggett's "Serverless Sagas with Fn Flow" blog post](https://medium.com/fnproject/serverless-sagas-with-fn-flow-d8199b608b12).
 
 In this tutorial we’ll use Fn Flow with the [saga pattern](http://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf) to build a fault-tolerant, polyglot, serverless travel booking app. We will write a scalable, fault-tolerant function to book a trip that consists of a flight, a hotel booking and a car rental.

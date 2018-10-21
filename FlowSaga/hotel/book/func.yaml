@@ -1,6 +1,6 @@
 schema_version: 20180708
 name: hotel-book
-version: 0.0.2
+version: 0.0.1
 runtime: java
 cmd: com.example.fn.HotelFunction::book
 format: http-stream

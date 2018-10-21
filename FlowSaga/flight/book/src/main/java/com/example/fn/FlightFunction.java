@@ -32,13 +32,8 @@ public class FlightFunction {
     }
 
     public FlightBookingResponse book(FlightBookingRequest input) {
-    //public FlightBookingResponse book(FlightBookingRequest input) {
         FlightBookingResponse res = new FlightBookingResponse();
         res.confirmation = apiClient.bookFlight(input.flightCode, input.departureTime).confirmation;
         return res;
-
-        //FlightBookingResponse res = new FlightBookingResponse();
-        //res.confirmation="123456";
-        //return res;
     }
 }

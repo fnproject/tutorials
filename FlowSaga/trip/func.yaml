@@ -3,7 +3,7 @@ name: trip
 version: 0.0.1
 runtime: java
 cmd: com.example.fn.TripFunction::bookAll
-format: http
+format: http-stream
 triggers:
 - name: trip
   type: http

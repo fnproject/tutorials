@@ -48,16 +48,10 @@ public class EmailReq implements Serializable {
     }
 
 
-
     public static EmailReq composeFailEmail() {
         EmailReq result = new EmailReq();
         result.message = "We failed to book your trip, sorry.";
         return result;
     }
-
-/*    public static void sendSuccessMail(BookingRes flightRes, BookingRes hotelRes) {
-        EmailReq message = composeSuccessEmail(flightRes, hotelRes);
-        Flows.currentFlow().invokeFunction(funcEmail, message);
-    }*/
 
 }

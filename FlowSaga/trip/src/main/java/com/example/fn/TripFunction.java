@@ -48,7 +48,24 @@ public class TripFunction implements Serializable {
         funcEmail = ctx.getConfigurationByKey("EMAIL-ID")
                 .orElseThrow(() -> new RuntimeException("Missing FunctionId"));
 
-        EmailReq.setFuncEmail(funcEmail); // todo remove - set email functionId
+        EmailReq.setFuncEmail(funcEmail); // todo - set email functionId
+
+    }
+
+    public void bookFlightOnly(TripReq input) {
+
+        Flow f = Flows.currentFlow();
+
+        FlowFuture<BookingRes> flightFuture =
+                f.invokeFunction(funcFlightBook, input.flight, BookingRes.class);
+
+        flightFuture.whenComplete((bookingRes, throwable) -> {
+            if (throwable != null) {
+                System.out.println(" throwable : " + throwable.getMessage()); // TODO
+            } else {
+                EmailReq.sendSuccessMail(bookingRes, bookingRes);
+            }
+        });
 
     }
 
@@ -98,20 +115,6 @@ public class TripFunction implements Serializable {
                     } );
         ;
 
-    }
-
-    public void bookHotelOnly(TripReq input) {
-
-        Flow f = Flows.currentFlow();
-
-        FlowFuture<BookingRes> flightFuture =
-                f.invokeFunction(funcFlightBook, input.flight, BookingRes.class);
-
-        flightFuture.whenComplete((bookingRes, throwable) -> {
-            if (throwable != null) {
-                System.out.println(" throwable : " + throwable.getMessage());
-            } else EmailReq.sendSuccessMail(bookingRes, bookingRes);
-        });
     }
 
 

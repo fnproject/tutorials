@@ -1,4 +1,4 @@
 name: email
-version: 0.0.93
+version: 0.0.94
 runtime: node
 entrypoint: node func.js

@@ -2,5 +2,5 @@
 
 for value in {1..100}
 do
-  curl localhost:8080/r/myapp/myfunc
+  curl localhost:8080/t/myapp/myfunc
 done

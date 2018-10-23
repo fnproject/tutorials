@@ -49,7 +49,9 @@ and one in the `hello` folder.  If you have the `tree` utility installed
 run:
 
 ![user input](../images/userinput.png)
-> `tree`
+>```sh
+> tree
+>```
 
 This will show the structure we've created which looks like this:
 
@@ -93,12 +95,12 @@ then list application's triggers by using the `list` command, followed by `trigg
 
 ![user input](../images/userinput.png)
 >```sh
-> `fn list triggers myapp2`
+> fn list triggers myapp2
 >```
 
 ```cs
 FUNCTION    NAME            ID                          TYPE    SOURCE          ENDPOINT
-hello		hello-trigger	01CT77HZ2NNG8G00GZJ0000005	http	/hello-trigger  http://localhost:8080/t/myapp2/hello-trigger
+hello       hello-trigger   01CT77HZ2NNG8G00GZJ0000005  http    /hello-trigger  http://localhost:8080/t/myapp2/hello-trigger
 myapp2      myapp2-trigger  01CT77FWDFNG8G00GZJ000000   http    /myapp2-trigger http://localhost:8080/t/myapp2/myapp2-trigger
 ```
 

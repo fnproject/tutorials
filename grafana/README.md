@@ -90,12 +90,17 @@ The last line ` - targets: ... ` specifies the host name and port of the Fn serv
 
 Check output of the following docker command. This is used in subsequent docker commands to map the docker IP address to the hostnames `fnserver` and `prometheus`.
 
-<!-- <% raw %> -->
 >![user input](../images/userinput.png)
->```shell
->docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}'
->```
-<!--<% endraw %>-->
+
+<div>
+<blockquote>
+<code>docker network inspect bridge -f '&#123;&#123;range .IPAM.Config&#125;&#125;&#123;&#123;.Gateway&#125;&#125;&#123;&#123;end&#125;&#125;'</code>
+</blockquote>
+</div>
+
+<!-- Original command
+docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}'
+-->
 
 This should show an IP address like the following:
 
@@ -106,12 +111,18 @@ This should show an IP address like the following:
 Now start Prometheus, specifying the above config file.
 
 >![user input](../images/userinput.png)
->```shell
->docker run --rm --name=prometheus -d -p 9090:9090 \
->  -v `pwd`/prometheus.yml:/etc/prometheus/prometheus.yml \
->  --add-host="fnserver:`docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}'`" \
->  prom/prometheus
->```
+
+<div>
+<blockquote>
+<code>docker run --rm --name=prometheus -d -p 9090:9090
+ -v &#96;pwd&#96; /prometheus.yml:/etc/prometheus/prometheus.yml
+ --add-host=&quot;fnserver:&#96;docker network inspect bridge -f &apos;&#123;&#123;range .IPAM.Config&#125;&#125;&#123;&#123;.Gateway&#125;&#125;&#123;&#123;end&#125;&#125;&apos;&#96;&quot; <br> prom/prometheus</code>
+</blockquote>
+</div>
+
+<!-- Original Command
+docker run --rm --name=prometheus -d -p 9090:9090 -v `pwd`/prometheus.yml:/etc/prometheus/prometheus.yml --add-host="fnserver:`docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}'`" prom/prometheus
+-->
 
 Note: This command uses the parameter `--add-host` to define a hostname `fnserver` in the docker container and configure it to use the IP address on which the Fn server is listening.
 
@@ -136,11 +147,17 @@ Fn comes with a number of pre-defined dashboards which showcase the various metr
 From the same terminal window and the same directory as above, start Grafana on port 5000:
 
 >![user input](../images/userinput.png)
->```shell
->docker run --name=grafana -d -p 5000:3000 \
->  --add-host="prometheus:`docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}'`" \
->  grafana/grafana
->```
+
+<div>
+<blockquote>
+<code>docker run --name=grafana -d -p 5000:3000 
+--add-host=&quot;prometheus:&#96;docker network inspect bridge -f &apos;&#123;&#123;range .IPAM.Config&#125;&#125;&#123;&#123;.Gateway&#125;&#125;&#123;&#123;end&#125;&#125;&apos;&#96;&quot; grafana/grafana</code>
+</blockquote>
+</div>
+
+<!-- Original Command
+docker run --name=grafana -d -p 5000:3000 --add-host="prometheus:`docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}'`" grafana/grafana
+-->
 
 Go to the Grafana web console in a browser window:
 
@@ -224,7 +241,7 @@ This dashboard shows the four “function count” metrics. From left to right, 
 
 For each type of metric, the dashboard displays two separate graphs, one above the other:
 
-* The graph at the bottom shows the raw data, which by default is subdivided by its app and route (path) labels. So you will see one line for each function
+* The graph at the bottom shows the raw data, which by default is subdivided by its app and trigger (path) labels. So you will see one line for each function
 * The graph at the top shows the result of performing a Prometheus `sum` expression that adds together the metric values for each function. So the graph shows just one line, the grand total for all functions
 
 This demonstrates how there is more to using Prometheus than simply displaying a metric. It allows you to perform various statistical transformations on the raw data, performing a `sum` in this case.
@@ -282,24 +299,27 @@ Now run the script file 'run.bash' in the folder `<checked-out-dir>/tutorials/gr
 >bash run.bash
 >```
 
-Let it run while you watch the graphs update. All the metrics have the labels `fn_path` and `fn_appname` set to the route/path and application e.g. `/myfunc (myapp)` in the legend below each graph. You will see something like the following:
+Let it run while you watch the graphs update. All the metrics have the labels `fn_path` and `fn_appname` set to the trigger/path and application e.g. `/myfunc (myapp)` in the legend below each graph. You will see something like the following:
 
 ![user input](images/GrafanaDashboard3-1.png)
 
 >Note: If the container runs for a very short time there may be insufficient time to obtain statistics before the container terminates. So you may not see any metrics if your function is very quick and hence gives docker insufficient time to obtain the statistics before the container running your function shuts down.
- 
-Below is a **sample** `Fn docker stats` Grafana Dashboard showing multiple functions over a longer time duration: 
+
+Below is a **sample** `Fn docker stats` Grafana Dashboard showing multiple functions over a longer time duration:
 
 ![user input](images/GrafanaDashboard3.png)
 
 ## Summary
 
-Congratulations! You have a working set up of Fn Grafana dashboards integrated with Prometheus and Fn server metrics. You can leave the setup running and keep checking the dashboards as you work on other tutorials. 
+Congratulations! You have a working set up of Fn Grafana dashboards integrated with Prometheus and Fn server metrics. You can leave the setup running and keep checking the dashboards as you work on other tutorials.
 
 ## Learn more
 
 * Check the Grafana documentation to create your own custom dashboards to display the data that is important to you
 * If you enable tracing in the Fn server you can analyse these tracing spans using Zipkin. The same tracing spans are also used to generate duration metrics for Prometheus
+
+## Note on this Tutorial
+Because of output formatting issues involving Jeykyll all instances of double curly braces have been replaced with HTML chracter entities. (e.g., '&#123;&#123; example &#125;&#125;). The original command is available as an HTML comment immediately after the example in the source for the page.
 
 **Go:** [Back to Contents](../README.md) and proceed to the next tutorial.
 

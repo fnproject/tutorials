@@ -316,10 +316,10 @@ Congratulations! You have a working set up of Fn Grafana dashboards integrated w
 ## Learn more
 
 * Check the Grafana documentation to create your own custom dashboards to display the data that is important to you
-* If you enable tracing in the Fn server you can analyse these tracing spans using Zipkin. The same tracing spans are also used to generate duration metrics for Prometheus
+* If you enable tracing in the Fn server you can analyze these tracing spans using Zipkin. The same tracing spans are also used to generate duration metrics for Prometheus
 
 ## Note on this Tutorial
-Because of output formatting issues involving Jeykyll all instances of double curly braces have been replaced with HTML chracter entities. (e.g., '&#123;&#123; example &#125;&#125;). The original command is available as an HTML comment immediately after the example in the source for the page.
+Because of output formatting issues involving Jekyll all instances of double curly braces have been replaced with HTML character entities. (e.g., '&#123;&#123; example &#125;&#125;). The original command is available as an HTML comment immediately after the example in the source for the page.
 
 **Go:** [Back to Contents](../README.md) and proceed to the next tutorial.
 

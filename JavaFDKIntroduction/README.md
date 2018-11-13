@@ -92,7 +92,6 @@ runtime: java
 build_image: fnproject/fn-java-fdk-build:jdk9-1.0.75
 run_image: fnproject/fn-java-fdk:jdk9-1.0.75
 cmd: com.example.fn.HelloFunction::handleRequest
-format: http-stream
 triggers:
 - name: javafn-trigger
   type: http
@@ -109,8 +108,6 @@ class and the method that should be invoked when your `javafn` function is
 called.
 * build_image--the image used to build your function's image.
 * run_image--the image your function runs in.
-* format--the function uses `http-stream` as its input/output method ([see: Open
-Function Format](https://github.com/fnproject/docs/blob/master/fn/develop/function-format.md)).
 * triggers--identifies the automatically generated trigger name and source. For
 example, this function would be executed from the URL
 <http://localhost:8080/t/appname/javafn-trigger>. Where appname is the name of

@@ -112,7 +112,6 @@ name: pythonfn
 version: 0.0.1
 runtime: python
 entrypoint: python3 func.py
-format: http-stream
 triggers:
 - name: pythonfn-trigger
   type: http
@@ -129,7 +128,6 @@ declares a number of properties including:
 in `--runtime`.
 * entrypoint--the name of the executable to invoke when your function is called,
 in this case `python3 func.py`.
-* format--the function uses JSON as its input/output method ([see: Open Function Format](https://github.com/fnproject/docs/blob/master/fn/develop/function-format.md)).
 * triggers--identifies the automatically generated trigger name and source. For
 example, this function would be executed from the URL
 <http://localhost:8080/t/appname/pythonfn-trigger>. Where appname is the name of

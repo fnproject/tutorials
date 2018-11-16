@@ -108,7 +108,6 @@ name: nodefn
 version: 0.0.1
 runtime: node
 entrypoint: node func.js
-format: http-stream
 triggers:
 - name: nodefn-trigger
   type: http
@@ -125,7 +124,6 @@ declares a number of properties including:
 in `--runtime`.
 * entrypoint--the name of the executable to invoke when your function is called,
 in this case `node func.js`.
-* format--the function uses `http-stream` as its input/output transport ([see: Open Function Format](https://github.com/fnproject/docs/blob/master/fn/develop/function-format.md)).
 * triggers--identifies the automatically generated trigger name and source. For example, this function would be requested from the URL `http://localhost:8080/t/appname/nodefn-trigger`. Where `appname` is the name of the app chosen for your function when it is deployed.
 
 There are other user specifiable properties but these will suffice for

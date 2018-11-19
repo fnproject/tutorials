@@ -1,12 +1,11 @@
-# When committing changes to this file 
-# please update in README.md
-
-FROM node:8-alpine
-
+FROM fnproject/node:dev as build-stage
 WORKDIR /function
+ADD package.json /function/
+RUN npm install
 
-# cli should forbid this name
-ADD func.js /function/func.js
-
-# Run the handler, with a payload in the future.
-ENTRYPOINT ["node", "./func.js"]
+FROM fnproject/node
+RUN apk add --no-cache imagemagick
+WORKDIR /function
+ADD . /function/
+COPY --from=build-stage /function/node_modules/ /function/node_modules/
+ENTRYPOINT ["node", "func.js"]

@@ -1,5 +1,11 @@
 # Flow 101
 
+#### `Under Construction: Check back soon`
+```
+Due to ongoing changes to Fn core, parts of this tutorial 
+may not function as designed. Check back for updates.
+```
+
 This tutorial is based on [Matthew Gilliard's "Flow 101" blog post](https://mjg123.github.io/2017/10/10/FnProject-Flow-101.html).
 
 [Fn Project](http://fnproject.io/) was released in October 2017. [Chad Arimura](https://twitter.com/chadarimura/) explained the motivation and structure of the project in a good amount of detail in his post ["8 Reasons why we built the Fn Project"](https://medium.com/fnproject/8-reasons-why-we-built-the-fn-project-bcfe45c5ae63), with one of the major components being **Fn Flow**. Flow allows developers to build high-level workflows of functions with some notable features:

@@ -1,5 +1,11 @@
 # Fn Flow Tutorial - Serverless Sagas with Fn Flow
 
+#### `Under Construction: Check back soon`
+```
+Due to ongoing changes to Fn core, parts of this tutorial 
+may not function as designed. Check back for updates.
+```
+
 This tutorial is based on [Thom Leggett's "Serverless Sagas with Fn Flow" blog post](https://medium.com/fnproject/serverless-sagas-with-fn-flow-d8199b608b12).
 
 In this tutorial we’ll use Fn Flow with the [saga pattern](http://www.cs.cornell.edu/andru/cs711/2002fa/reading/sagas.pdf) to build a fault-tolerant, polyglot, serverless travel booking app. We will write a scalable, fault-tolerant function to book a trip that consists of a flight, a hotel booking and a car rental.

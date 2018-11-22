@@ -3,7 +3,7 @@
 #### `Under Construction: Check back soon`
 ```
 Due to ongoing changes to Fn core, parts of this tutorial 
-may not function as designed. Check back for updates.
+may not function as described. Check back for updates.
 ```
 
 This tutorial is based on [Thom Leggett's "Serverless Sagas with Fn Flow" blog post](https://medium.com/fnproject/serverless-sagas-with-fn-flow-d8199b608b12).

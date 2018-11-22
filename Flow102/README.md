@@ -3,7 +3,7 @@
 #### `Under Construction: Check back soon`
 ```
 Due to ongoing changes to Fn core, parts of this tutorial 
-may not function as designed. Check back for updates.
+may not function as described. Check back for updates.
 ```
 
 This tutorial is based on [Matthew Gilliard's "Flow 102" blog post](https://mjg123.github.io/2017/10/11/FnProject-Flow-102.html).

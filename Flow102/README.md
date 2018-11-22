@@ -1,5 +1,11 @@
 # Flow 102
 
+#### `Under Construction: Check back soon`
+```
+Due to ongoing changes to Fn core, parts of this tutorial 
+may not function as described. Check back for updates.
+```
+
 This tutorial is based on [Matthew Gilliard's "Flow 102" blog post](https://mjg123.github.io/2017/10/11/FnProject-Flow-102.html).
 
 If you haven't read [Flow 101](../Flow101/README.md) yet, we recommend you to start there to understand what Flow is, what it's used for and how it works.

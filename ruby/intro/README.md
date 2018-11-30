@@ -75,31 +75,19 @@ with several supporting files. To view your Ruby function type:
 ```ruby
 require 'fdk'
 
-def myhandler(context, input)
-	STDERR.puts "call_id: " + context.call_id
-	name = "World"
-	if input != nil
-		if context.content_type == "application/json"
-			nin = input['name']
-			if nin && nin != ""
-				name = nin
-			end
-		elsif context.content_type == "text/plain"
-			name = input
-		else
-			raise "Invalid input, expecting JSON!"
-		end
-	end
-	return {message: "Hello " + name.to_s + "!"}
+def myfunction(context:, input:)
+  input_value = input.respond_to?(:fetch) ? input.fetch('name') : input
+  name = input_value.to_s.strip.empty? ? 'World' : input_value
+  { message: "Hello #{name}!" }
 end
 
-FDK.handle(:myhandler)
+FDK.handle(target: :myfunction)
 ```
 
-This function looks for JSON input in the form of `{"name": "Bob"}`. If this
-JSON example is passed to the function, the function returns `{"message":"Hello
-Bob!"}`. If no JSON data is found, the function returns `{"message":"Hello
-World!"}`.  
+This function looks for JSON input in the form of `{"name": "Bob"}`
+If this JSON example is passed to the function, the function returns `{"message":"Hello Bob!"}`.
+If no JSON data is found, or the `name` field is missing or empty,
+the function returns `{"message":"Hello World!"}`.  
 
 ### Understand func.yaml
 The `fn init` command generated a `func.yaml` function
@@ -190,23 +178,23 @@ func.yaml created.
 ~/lcl/1016 $ cd rubyfn
 ~/lcl/1016/rubyfn $ ls
 Gemfile   func.rb   func.yaml
-~/lcl/1016/rubyfn $ 
-~/lcl/1016/rubyfn $ 
-~/lcl/1016/rubyfn $ 
+~/lcl/1016/rubyfn $
+~/lcl/1016/rubyfn $
+~/lcl/1016/rubyfn $
 ~/lcl/1016/rubyfn $ fn --verbose deploy --app rubyapp --local
 Deploying rubyfn to app: rubyapp
 Bumped to version 0.0.2
-Building image fndemouser/rubyfn:0.0.2 
+Building image fndemouser/rubyfn:0.0.2
 FN_REGISTRY:  fndemouser
 Current Context:  default
 Sending build context to Docker daemon   5.12kB
 Step 1/9 : FROM fnproject/ruby:dev as build-stage
 dev: Pulling from fnproject/ruby
-88286f41530e: Pull complete 
-ee67ab14fe7c: Pull complete 
-528d6e469a02: Pull complete 
-bb1a5f0c7734: Pull complete 
-b6f7bd536b78: Pull complete 
+88286f41530e: Pull complete
+ee67ab14fe7c: Pull complete
+528d6e469a02: Pull complete
+bb1a5f0c7734: Pull complete
+b6f7bd536b78: Pull complete
 Digest: sha256:056069fae8e349187114df899f1744aee548b464a91fb38497de6ce30d8c1488
 Status: Downloaded newer image for fnproject/ruby:dev
  ---> 907fbac5f177
@@ -235,9 +223,9 @@ Removing intermediate container 8ee8c95ebff4
  ---> 172f64d0553a
 Step 5/9 : FROM fnproject/ruby
 latest: Pulling from fnproject/ruby
-88286f41530e: Already exists 
-ee67ab14fe7c: Already exists 
-528d6e469a02: Already exists 
+88286f41530e: Already exists
+ee67ab14fe7c: Already exists
+528d6e469a02: Already exists
 Digest: sha256:9390a5c8df48f10499930a2ed4968bd2e46b6e6041aea8f5a5dc589b7b2ecaa2
 Status: Downloaded newer image for fnproject/ruby:latest
  ---> 9ab2c72e7fd0

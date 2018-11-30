@@ -1,4 +1,4 @@
-# Troubleshooting Fn
+# Troubleshooting and Logging with Fn
 
 Even if you've got excellent unit tests (e.g., using the
 [Fn Java JUnit support](https://github.com/fnproject/fdk-java/blob/master/docs/TestingFunctions.md))

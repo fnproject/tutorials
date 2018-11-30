@@ -20,7 +20,7 @@ Now that the Fn Server is up and running, you can deploy your first function. Se
 ## Test and Monitor Functions
 
 * [Monitor Fn metrics with Grafana and Prometheus](grafana/README.md) - Learn how to view Fn server metrics with Prometheus and Grafana.
-* [Troubleshoot functions](Troubleshooting/README.md) - Resolve issues at both development and deployment time.
+* [Troubleshoot and Log functions](Troubleshooting/README.md) - Resolve issues at both development and deployment time.
 
 ## Orchestrate with Fn Flow
 

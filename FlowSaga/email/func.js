@@ -1,15 +1,11 @@
-var request = require('request');
-var fs = require('fs');
+const fdk=require('@fnproject/fdk');
 
 var api_url = process.env.EMAIL_API_URL;
-var stdin = JSON.parse(fs.readFileSync('/dev/stdin').toString());
+var request = require('request');
 
-request.post(
-    api_url,
-    {json: stdin},
-    function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            console.log(JSON.stringify(response.body));
-        }
-    }
-);
+fdk.handle(function(input){
+	request(api_url, { json: input}, (err, res, body) => {
+	  if (err) { return console.log(err); }
+	});
+	return {'response': input.subject}
+})

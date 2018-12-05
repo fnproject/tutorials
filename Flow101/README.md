@@ -44,14 +44,14 @@ A simple Flow function looks like this:
 ```
 :point_up: For illustration purpose, the above code is a simplification of the Fn Flow API and hence it won't compile as-is.
 
-If you've used a promises-style API before then this will be familiar. The closest analogue in core Java is the [CompletionStage API](http://download.java.net/java/jdk9/docs/api/java/util/concurrent/CompletionStage.html) which was even called [`Promise`](http://cs.oswego.edu/pipermail/concurrency-interest/2012-December/010423.html) in a pre-release draft.
+If you've used a promises-style API before then this will be familiar. The closest analogue in core Java is the [CompletionStage API](http://download.java.net/java/jdk9/docs/api/java/util/concurrent/CompletionStage.html).
 
 Anyway it's easy to tell the stages of what's going to happen:
 
   - Start with a value provided by the user
-  - Apply some transformation `i -> i+1`
-  - Pass that to an external function called `./isPrime`
-  - Then return get the result and return it
+  - then apply some transformation `i -> i+1`
+  - then pass that to an external function
+  - finally wait for the return and return it.
 
 Internally the `Flow` class submits each stage in this workflow to the Flow Server. You'll meet it soon. The Flow Server will then orchestrate each stage as an individual call to Fn. Flow Server is responsible for working out which stages are ready to be called, calling them, handling the results and triggering any following stages until you reach the point where there's no more work to do.
 
@@ -210,7 +210,7 @@ public class HelloFunction {
 
 :point_up: Double check that your function is importing `com.fnproject.fn.api.flow.Flow` and not `java.util.concurrent.Flow`!
 
-Then deploy this to an app which we call `flow101` on the local Fn server.
+Then deploy this function to an app which we call `flow101` on the local Fn server.
 
 ![user input](../images/userinput.png)
 >```sh
@@ -253,7 +253,7 @@ Which is showing us 3 function invocations:
 
 Click on any of these and see the detail for each one expanded at the bottom of the screen.
 
-:point_up: You might want to Zoom to see more details (see at the bottom of the UI).
+:point_up: You might want to zoom to see more details, see the buttons at the bottom of the UI.
 
 Note that Fn Flow using *functionId* to reference functions. To know the *functionId* of the main function, just use the following command: `fn inspect function flow101 simple-flow` or simply `fn i f flow101 simple-flow`  ~if you're lazy~ to save some time.
 
@@ -269,7 +269,7 @@ Note that Fn Flow using *functionId* to reference functions. To know the *functi
 }
 ```
 
-The `ìd` shoud match the *functionId* of the main function that you see in the UI.
+The `id` should match the *functionId* of the main function that you see in the UI.
 
 :point_up: Make sure to not confuse `id` which is the *functionId* with the *applicationId*, i.e. `app_id`. 
 

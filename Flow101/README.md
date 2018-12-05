@@ -42,7 +42,7 @@ A simple Flow function looks like this:
     }
 
 ```
-:point_up: For illustration purpose, the above code is a simplification of the Fn Flow API and hence won't compile as is.
+:point_up: For illustration purpose, the above code is a simplification of the Fn Flow API and hence it won't compile as-is.
 
 If you've used a promises-style API before then this will be familiar. The closest analogue in core Java is the [CompletionStage API](http://download.java.net/java/jdk9/docs/api/java/util/concurrent/CompletionStage.html) which was even called [`Promise`](http://cs.oswego.edu/pipermail/concurrency-interest/2012-December/010423.html) in a pre-release draft.
 
@@ -68,16 +68,16 @@ Currently FnProject is available to download, to experiment with, and to run on 
 Install the **`fn`** CLI tool:
 
 ![user input](../images/userinput.png)
->```sh
->curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
->```
+```sh
+curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
+```
 
 Then start the **Fn server**:
 
 ![user input](../images/userinput.png)
->```sh
->fn start
->```
+```sh
+fn start
+```
 
 The output looks something like the following. The version number below is old. You should see the latest version number in your case.
 
@@ -89,7 +89,7 @@ time="2017-10-11T13:12:44Z" level=info msg="Serving Functions API on address `:8
       / /_  / __ \
      / __/ / / / /
     /_/   /_/ /_/
-        v0.3.119
+        v0.3.629
 ```
 
 The **Flow Server** needs to know how to call the Fn server, so ask Docker which IP address to use.
@@ -107,14 +107,14 @@ FNSERVER_IP=$(docker inspect --type container -f '&#123;&#123;.NetworkSettings.I
 Start the **Flow Server**:
 
 ![user input](../images/userinput.png)
->```sh
->docker run --rm -d \
->      -p 8081:8081 \
->      -e API_URL="http://$FNSERVER_IP:8080/invoke" \
->      -e no_proxy=$FNSERVER_IP \
->      --name flowserver \
->      fnproject/flow:latest
->```
+```sh
+docker run --rm -d \
+      -p 8081:8081 \
+      -e API_URL="http://$FNSERVER_IP:8080/invoke" \
+      -e no_proxy=$FNSERVER_IP \
+      --name flowserver \
+      fnproject/flow:latest
+```
 
 Then start the Flow **UI**:
 
@@ -130,14 +130,14 @@ FLOWSERVER_IP=$(docker inspect --type container -f '&#123;&#123;.NetworkSettings
 
 
 ![user input](../images/userinput.png)
->```sh
->docker run --rm -d \
->       -p 3002:3000 \
->       --name flowui \
->       -e API_URL=http://$FNSERVER_IP:8080 \
->       -e COMPLETER_BASE_URL=http://$FLOWSERVER_IP:8081 \
->       fnproject/flow:ui
->```
+```sh
+docker run --rm -d \
+       -p 3002:3000 \
+       --name flowui \
+       -e API_URL=http://$FNSERVER_IP:8080 \
+       -e COMPLETER_BASE_URL=http://$FLOWSERVER_IP:8081 \
+       fnproject/flow:ui
+```
 
 
 Now, everything's set so lets crack on!
@@ -148,27 +148,27 @@ Now, everything's set so lets crack on!
 Create a new function:
 
 ![user input](../images/userinput.png)
->```sh
->fn init --runtime=java simple-flow
->```
+```sh
+fn init --runtime=java simple-flow
+```
 
 Change directory:
 
 ![user input](../images/userinput.png)
->```sh
->cd simple-flow
->```
+```sh
+cd simple-flow
+```
 
 Flow has a comprehensive test framework, but lets concentrate on playing with the code for the time being:
 
 ![user input](../images/userinput.png)
->```sh
-> rm -rf src/test   ## yolo
->```
+```sh
+rm -rf src/test   ## yolo
+```
 
 Make peace with yourself after that, then let's get the code in shape.
 
-First, update the pom.xml to use Fn Flow.
+First, update the `pom.xml` to use Fn Flow.
 
 ```xml
 <dependencies>
@@ -205,7 +205,8 @@ public class HelloFunction {
                 .thenApply( i -> "Your number is " + i )
                 .get();
     }
-}```
+}
+```
 
 :point_up: Double check that your function is importing `com.fnproject.fn.api.flow.Flow` and not `java.util.concurrent.Flow`!
 
@@ -252,7 +253,9 @@ Which is showing us 3 function invocations:
 
 Click on any of these and see the detail for each one expanded at the bottom of the screen.
 
-Note that Fn Flow using functionId to reference functions. To know the functionId of the main function, just use the following command : `fn inspect function flow101 simple-flow` or simply `fn i f flow101 simple-flow` if you're lazy.
+:point_up: You might want to Zoom to see more (see at the bottom of the UI).
+
+Note that Fn Flow using functionId to reference functions. To know the functionId of the main function, just use the following command : `fn inspect function flow101 simple-flow` or simply `fn i f flow101 simple-flow`  ~~if you're lazy ~~ to save some time.
 
 ```json
 {

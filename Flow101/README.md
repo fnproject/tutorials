@@ -253,9 +253,9 @@ Which is showing us 3 function invocations:
 
 Click on any of these and see the detail for each one expanded at the bottom of the screen.
 
-:point_up: You might want to Zoom to see more (see at the bottom of the UI).
+:point_up: You might want to Zoom to see more details (see at the bottom of the UI).
 
-Note that Fn Flow using functionId to reference functions. To know the functionId of the main function, just use the following command : `fn inspect function flow101 simple-flow` or simply `fn i f flow101 simple-flow`  ~~if you're lazy ~~ to save some time.
+Note that Fn Flow using *functionId* to reference functions. To know the *functionId* of the main function, just use the following command: `fn inspect function flow101 simple-flow` or simply `fn i f flow101 simple-flow`  ~if you're lazy~ to save some time.
 
 ```json
 {
@@ -269,9 +269,9 @@ Note that Fn Flow using functionId to reference functions. To know the functionI
 }
 ```
 
-The `ìd` shoud match the id of the main function that you see in the UI.
+The `ìd` shoud match the *functionId* of the main function that you see in the UI.
 
-:point_up: Make sure to not confuse `id` which is the functionId with the applicationId, i.e. `app_id`. 
+:point_up: Make sure to not confuse `id` which is the *functionId* with the *applicationId*, i.e. `app_id`. 
 
 The main function is shown as running for the whole time that the `thenApply` stages are. Why? Because we are calling `.get()` at the end, so this is synchronously waiting for the final result of the chain. Exercise: Try removing the `.get()` from the code (you'll need to return a different String, and don't forget to re-deploy). Now it will look like:
 

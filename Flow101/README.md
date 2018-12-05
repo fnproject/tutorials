@@ -255,7 +255,7 @@ Click on any of these and see the detail for each one expanded at the bottom of 
 
 :point_up: You might want to zoom to see more details, see the buttons at the bottom of the UI.
 
-Note that Fn Flow using *functionId* to reference functions. To know the *functionId* of the main function, just use the following command: `fn inspect function flow101 simple-flow` or simply `fn i f flow101 simple-flow`  ~if you're lazy~ to save some time.
+Note that Fn Flow is using *functionId* to reference functions. To know the *functionId* of the main function, just use the following command: `fn inspect function flow101 simple-flow` or simply `fn i f flow101 simple-flow`  ~if you're lazy~ to save some time.
 
 ```json
 {

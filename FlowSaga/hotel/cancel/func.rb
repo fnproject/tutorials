@@ -1,24 +1,12 @@
-require 'net/http'
-require 'uri'
-require 'json'
+require 'fdk'
+require 'jsonclient'
 
-uri = URI.parse(ENV["HOTEL_API_URL"])
+def myfunction(context:, input:)
+  payload = { city: input['city'], hotel: input['hotel'], secret: ENV['HOTEL_API_SECRET'] }
+  resp = JSONClient.delete(ENV['HOTEL_API_URL'], body: payload)
+  return resp.body if resp.status < 300
 
-header = {'Content-Type': 'application/json'}
-
-args = JSON.parse(ARGF.read)
-
-hotel_request = {
-  city: args["city"],
-  hotel: args["hotel"]
-}
-
-http = Net::HTTP.new(uri.host, uri.port)
-request = Net::HTTP::Delete.new(uri.request_uri, header)
-response = http.request(request)
-
-if response.kind_of? Net::HTTPSuccess
-  puts response.body
-else
-  raise
+  raise HTTPClient::BadResponseError, resp.reason
 end
+
+FDK.handle(target: :myfunction)

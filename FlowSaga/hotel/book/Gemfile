@@ -1,5 +1,4 @@
 source 'https://rubygems.org' do
   gem 'fdk', '>= 0.0.17'
   gem 'httpclient'
-  gem 'json'
 end

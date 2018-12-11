@@ -636,6 +636,8 @@ The result is now in a JSON format.
 {"salutation":"Hello World"}
 ```
 
+**Note:** Currently an error occurs if you pass an empty value to the JSON enabled function. See [FDK-Java Issue 148](https://github.com/fnproject/fdk-java/issues/148) for details.
+
 We can pass JSON data to our function and get the value of name passed to
 the function back.
 

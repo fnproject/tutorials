@@ -1,6 +1,6 @@
 # OCI examples
 
-# List OCI compute instances
+## Details
 
 List OCI compute instances in particular region for given:
 
@@ -56,3 +56,30 @@ func.py::test_list_instances 2019-01-22 18:57:10,964 - oci.base_client.453402928
 PASSED
 
 ```
+
+## Deployment
+
+Deploying a function:
+
+```bash
+fn --verbose deploy --app oci
+```
+
+Update your local env with the following [script](oci-instances-func/setup_local.sh).
+
+Updating configuration:
+```bash
+fn config fn oci oci-instances-func OCI_USER ${OCI_USER}
+fn config fn oci oci-instances-func OCI_TENANCY ${OCI_TENANCY}
+fn config fn oci oci-instances-func OCI_FINGERPRINT ${OCI_FINGERPRINT}
+fn config fn oci oci-instances-func OCI_REGION ${OCI_REGION}
+fn config fn oci oci-instances-func OCI_COMPARTMENT ${OCI_COMPARTMENT}
+fn config fn oci oci-instances-func OCI_PRIVATE_KEY ${OCI_PRIVATE_KEY}
+fn config fn oci oci-instances-func OCI_PRIVATE_PASS ${OCI_PRIVATE_KEY_PASS}
+```
+
+Check the configuration:
+```bash
+fn inspect fn oci oci-instances-func
+```
+make sure you're ok with a function's configuration you get from `inspect` command.

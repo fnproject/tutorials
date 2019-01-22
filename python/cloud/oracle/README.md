@@ -34,7 +34,7 @@ Install `pytest`:
 
 Run tests:
 ```bash
-
+pytest -v -s --tb=long func.py
 ```
 
 Result:

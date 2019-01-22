@@ -1,3 +1,4 @@
+import base64
 import fdk
 import os
 
@@ -33,7 +34,8 @@ def create_signer():
     compartment_id = ensure_env_var("OCI_COMPARTMENT")
 
     config = {
-        "key_content": ensure_env_var("OCI_PRIVATE_KEY"),
+        "key_content": base64.b64decode(
+            ensure_env_var("OCI_PRIVATE_KEY_BASE64")),
         "pass_phrase": os.environ.get("OCI_PRIVATE_KEY_PASS", ""),
         "user": ensure_env_var("OCI_USER"),
         "tenancy": ensure_env_var("OCI_TENANCY"),

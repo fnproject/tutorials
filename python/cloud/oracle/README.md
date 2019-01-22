@@ -16,8 +16,8 @@ Required function configuration:
   - OCI_FINGERPRINT OCI user private key fingerprint
   - OCI_REGION - OCI region to talk to
   - OCI_COMPARTMENT - OCI compartment ID to search instances at
-  - OCI_PRIVATE_KEY - OCI user private key
-  - OCI_PRIVATE_PASS - OCI user private key pass phrase
+  - OCI_PRIVATE_KEY_BASE64 - OCI user private key encoded in BASE64
+  - OCI_PRIVATE_KEY_PASS - OCI user private key pass phrase
 
 
 Code available [here](oci-instances-func).
@@ -29,7 +29,7 @@ Install `pytest`:
 ```bash
     python3 -m venv .venv
     source .venv/bin/activate
-    pip3 install -r requirements pytest
+    pip3 install -r requirements.txt pytest
 ```
 
 Run tests:
@@ -69,17 +69,17 @@ Update your local env with the following [script](oci-instances-func/setup_local
 
 Updating configuration:
 ```bash
-fn config fn oci oci-instances-func OCI_USER ${OCI_USER}
-fn config fn oci oci-instances-func OCI_TENANCY ${OCI_TENANCY}
-fn config fn oci oci-instances-func OCI_FINGERPRINT ${OCI_FINGERPRINT}
-fn config fn oci oci-instances-func OCI_REGION ${OCI_REGION}
-fn config fn oci oci-instances-func OCI_COMPARTMENT ${OCI_COMPARTMENT}
-fn config fn oci oci-instances-func OCI_PRIVATE_KEY ${OCI_PRIVATE_KEY}
-fn config fn oci oci-instances-func OCI_PRIVATE_PASS ${OCI_PRIVATE_KEY_PASS}
+fn config fn oci list-instances OCI_USER ${OCI_USER}
+fn config fn oci list-instances OCI_TENANCY ${OCI_TENANCY}
+fn config fn oci list-instances OCI_FINGERPRINT ${OCI_FINGERPRINT}
+fn config fn oci list-instances OCI_REGION ${OCI_REGION}
+fn config fn oci list-instances OCI_COMPARTMENT ${OCI_COMPARTMENT}
+fn config fn oci list-instances OCI_PRIVATE_KEY_BASE64 ${OCI_PRIVATE_KEY_BASE64}
+fn config fn oci list-instances OCI_PRIVATE_PASS ${OCI_PRIVATE_KEY_PASS:-""}
 ```
 
 Check the configuration:
 ```bash
-fn inspect fn oci oci-instances-func
+fn inspect fn oci list-instances
 ```
 make sure you're ok with a function's configuration you get from `inspect` command.

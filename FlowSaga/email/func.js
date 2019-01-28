@@ -1,15 +1,31 @@
-var request = require('request');
-var fs = require('fs');
+const fdk=require('@fnproject/fdk');
+const request = require('request');
 
-var api_url = process.env.EMAIL_API_URL;
-var stdin = JSON.parse(fs.readFileSync('/dev/stdin').toString());
+function initializePromise() {
+    var options = {
+        url: process.env.EMAIL_API_URL,
+    };
+    return new Promise(function(resolve, reject) {
+        request.post(options, function(err, resp, body) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(JSON.parse(body));
+            }
+        })
+    })
 
-request.post(
-    api_url,
-    {json: stdin},
-    function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            console.log(JSON.stringify(response.body));
-        }
-    }
-);
+}
+
+
+fdk.handle(function(input){
+
+   return initializePromise().then(function(result) {
+      return result;
+   }, function(err) {
+      console.log(err);
+      return (JSON.stringify({ "status": "remote email error!"}))
+   })
+
+})
+

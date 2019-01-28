@@ -1,5 +1,9 @@
+schema_version: 20180708
 name: email
-version: 0.0.92
+version: 0.0.1
 runtime: node
 entrypoint: node func.js
-path: /email
+triggers:
+- name: email
+  type: http
+  source: /email

@@ -1,6 +1,6 @@
 schema_version: 20180708
 name: email
-version: 0.0.1
+version: 0.0.2
 runtime: node
 entrypoint: node func.js
 triggers:

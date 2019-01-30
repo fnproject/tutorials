@@ -5,7 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <fdk.version>1.0.56</fdk.version>
+        <fdk.version>1.0.83</fdk.version>
+        <skipTests>true</skipTests>
     </properties>
     <groupId>com.example.fn</groupId>
     <artifactId>trip</artifactId>
@@ -28,6 +29,11 @@
         <dependency>
             <groupId>com.fnproject.fn</groupId>
             <artifactId>api</artifactId>
+            <version>${fdk.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fnproject.fn</groupId>
+            <artifactId>flow-runtime</artifactId>
             <version>${fdk.version}</version>
         </dependency>
         <dependency>

@@ -51,11 +51,11 @@ Next, we will create some functions to simulate the booking, and cancellation of
 >fn deploy --all --local
 >```
 
-List routes for the travel app:
+List triggers for the travel app:
 
 >![user input](../images/userinput.png)
 >```shell
->fn list routes travel
+>fn list triggers travel
 >```
 
 We also need to configure these functions:
@@ -111,10 +111,10 @@ Each function execution within the Fn platform runs within the context of a flow
 The `Flow` object contains a bunch of methods for adding work to the current flow. We need to use a variant of the `invokeFunction` method:
 
 ```
-    FlowFuture<BookingRes> future = f.invokeFunction("./flight/book", input.flight, BookingRes.class);
+    FlowFuture<BookingRes> future = f.invokeFunction(funcIdFlightBook, input.flight, BookingRes.class);
 ```
 
-This tells the current flow to add an invocation of the `flight/book` function to the current flow and then returns a `FlowFuture` that represents the future value of that invocation. The `FlowFuture` itself has more methods that let us chain more work onto the flow following the completion of that future. Thus we can build up a [DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph) of computations that will each be executed as a separate serverless function invocation.
+This tells the current flow to add an invocation of the Flight Booking function (via its function Id) to the current flow and then returns a `FlowFuture` that represents the future value of that invocation. The `FlowFuture` itself has more methods that let us chain more work onto the flow following the completion of that future. Thus we can build up a [DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph) of computations that will each be executed as a separate serverless function invocation.
 
 We are going to use the `thenCompose` method to chain the hotel booking and car rental booking onto the end of the flight booking call. Our full`book1` function looks like this:
 
@@ -123,13 +123,13 @@ We are going to use the `thenCompose` method to chain the hotel booking and car 
         Flow f = Flows.currentFlow();
 
         FlowFuture<BookingRes> flightFuture =
-            f.invokeFunction("./flight/book", input.flight, BookingRes.class);
+            f.invokeFunction(funcIdFlightBook, input.flight, BookingRes.class);
 
         FlowFuture<BookingRes> hotelFuture =
-            f.invokeFunction("./hotel/book", input.hotel, BookingRes.class);
+            f.invokeFunction(funcIdHotelBook, input.hotel, BookingRes.class);
 
         FlowFuture<BookingRes> carFuture =
-            f.invokeFunction("./car/book", input.carRental, BookingRes.class);
+            f.invokeFunction(funcIdCarBook, input.carRental, BookingRes.class);
 
         flightFuture.thenCompose(
             (flightRes) -> hotelFuture.thenCompose(
@@ -146,7 +146,7 @@ We are going to use the `thenCompose` method to chain the hotel booking and car 
 
 Let’s explain the code we just wrote.
 
-First the `invokeFunction` call does just that: invokes another function in the Fn platform. In this case the flight booking function. The return value is a `FlowFuture<>` that represents the future value of this computation. We create futures for all three booking calls that we want to make.
+First the `invokeFunction` call does just that: invokes another function, via its function Id, in the Fn platform. In this case the flight booking function. The return value is a `FlowFuture<>` that represents the future value of this computation. We create futures for all three booking calls that we want to make.
 
 Next, the `thenCompose` calls chains these bits of work together. This is in the form of a lambda that takes the result of the previous future and returns another future with more work to do. In this case another `invokeFunction` call but this time to the next booking function. Note that because we’ve specified some type information in the `invokeFunction` call (`BookingRes.class`) we have type safety across multiple serverless function invocations. And the compiler was able to infer the type of the `thenCompose` lambda for us. Very cool.
 
@@ -176,7 +176,7 @@ Invoke the trip function:
 
 >![user input](../images/userinput.png)
 >```shell
->fn call travel /trip < sample-payload.json
+>fn invoke travel trip < sample-payload.json
 >```
 
 
@@ -209,7 +209,7 @@ Then re-run our trip function:
 
 >![user input](../images/userinput.png)
 >```shell
->fn call travel /trip < sample-payload.json
+>fn invoke travel trip < sample-payload.json
 >```
 
 We can see an experimental visualisation of the flow that we just created. Click on some of the nodes and see what happens: the stages that caused the selected stage to trigger are highlighted.
@@ -231,24 +231,24 @@ OK so we have a way to create useful long-running processes without leaving the 
         Flow f = Flows.currentFlow();
 
         FlowFuture<BookingRes> flightFuture =
-            f.invokeFunction("./flight/book", input.flight, BookingRes.class);
+            f.invokeFunction(funcIdFlightBook, input.flight, BookingRes.class);
 
         FlowFuture<BookingRes> hotelFuture =
-            f.invokeFunction("./hotel/book", input.hotel, BookingRes.class);
+            f.invokeFunction(funcIdHotelBook, input.hotel, BookingRes.class);
 
         FlowFuture<BookingRes> carFuture =
-            f.invokeFunction("./car/book", input.carRental, BookingRes.class);
+            f.invokeFunction(funcIdCarBook, input.carRental, BookingRes.class);
 
         flightFuture.thenCompose(
             (flightRes) -> hotelFuture.thenCompose(
                 (hotelRes) -> carFuture.whenComplete(
                     (carRes, e) -> EmailReq.sendSuccessMail(flightRes, hotelRes, carRes)
                 )
-                .exceptionallyCompose( (e) -> cancel("./car/cancel", input.carRental, e) )
+                .exceptionallyCompose( (e) -> cancel(funcIdCarCancel, input.carRental, e) )
             )
-            .exceptionallyCompose( (e) -> cancel("./hotel/cancel", input.hotel, e) )
+            .exceptionallyCompose( (e) -> cancel(funcIdHotelCancel, input.hotel, e) )
         )
-        .exceptionallyCompose( (e) -> cancel("./flight/cancel", input.flight, e) )
+        .exceptionallyCompose( (e) -> cancel(funcIdFlightCancel, input.flight, e) )
         .exceptionally( (err) -> {EmailReq.sendFailEmail(); return null;} );
     }
 
@@ -280,7 +280,7 @@ Invoke the trip function:
 
 >![user input](../images/userinput.png)
 >```shell
->fn call travel /trip < sample-payload.json
+>fn invoke travel trip < sample-payload.json
 >```
 
 And it will behave the same. Check our fake SDK dashboard for the new requests:
@@ -300,7 +300,7 @@ Invoke the trip function:
 
 >![user input](../images/userinput.png)
 >```shell
->fn call travel /trip < sample-payload.json
+>fn invoke travel trip < sample-payload.json
 >```
 
 Now we will see that the “Book Car” response shows as red because we got an error from our fake provider. We can then see the compensating transactions being issued to cancel the other bookings:
@@ -356,24 +356,24 @@ This lets us add some complex fault tolerant behaviour without adding much compl
         Flow f = Flows.currentFlow();
 
         FlowFuture<BookingRes> flightFuture =
-            f.invokeFunction("./flight/book", input.flight, BookingRes.class);
+            f.invokeFunction(funcIdFlightBook, input.flight, BookingRes.class);
 
         FlowFuture<BookingRes> hotelFuture =
-            f.invokeFunction("./hotel/book", input.hotel, BookingRes.class);
+            f.invokeFunction(funcIdHotelBook, input.hotel, BookingRes.class);
 
         FlowFuture<BookingRes> carFuture =
-            f.invokeFunction("./car/book", input.carRental, BookingRes.class);
+            f.invokeFunction(funcIdCarBook, input.carRental, BookingRes.class);
 
         flightFuture.thenCompose(
             (flightRes) -> hotelFuture.thenCompose(
                 (hotelRes) -> carFuture.whenComplete(
                     (carRes, e) -> EmailReq.sendSuccessMail(flightRes, hotelRes, carRes)
                 )
-                .exceptionallyCompose( (e) -> retryCancel("./car/cancel", input.carRental, e) )
+                .exceptionallyCompose( (e) -> retryCancel(funcIdCarCancel, input.carRental, e) )
             )
-            .exceptionallyCompose( (e) -> retryCancel("./hotel/cancel", input.hotel, e) )
+            .exceptionallyCompose( (e) -> retryCancel(funcIdHotelBook, input.hotel, e) )
         )
-        .exceptionallyCompose( (e) -> retryCancel("./flight/cancel", input.flight, e) )
+        .exceptionallyCompose( (e) -> retryCancel(funcIdFlightCancel, input.flight, e) )
         .exceptionally( (err) -> {EmailReq.sendFailEmail(); return null;} );
     }
 
@@ -410,7 +410,7 @@ Invoke the trip function:
 
 >![user input](../images/userinput.png)
 >```shell
->fn call travel /trip < sample-payload.json
+>fn invoke travel trip < sample-payload.json
 >```
 
 Here we can see retries of the car cancellation happening on the right of the graph.

@@ -1,6 +1,3 @@
-HTTP/1.1 502 Bad Gateway
-Content-Type: application/json; charset=utf-8
-Fn-Call-Id: 01D2FSR1K5NG8G00GZJ00000W4
-Date: Wed, 30 Jan 2019 16:33:50 GMT
-Content-Length: 30
-
+{
+   "model": "Tesla Model S P100D"
+}

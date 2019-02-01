@@ -1,5 +1,9 @@
+schema_version: 20180708
 name: trip
-version: 0.0.224
+version: 0.0.1
 runtime: java
 cmd: com.example.fn.TripFunction::book1
-format: http
+triggers:
+- name: trip
+  type: http
+  source: /trip

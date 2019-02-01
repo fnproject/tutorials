@@ -1,5 +1,9 @@
+schema_version: 20180708
 name: hotel-book
-version: 0.0.86
+version: 0.0.1
 runtime: ruby
 entrypoint: ruby func.rb
-path: /hotel/book
+triggers:
+- name: hotel-book
+  type: http
+  source: /hotel-book

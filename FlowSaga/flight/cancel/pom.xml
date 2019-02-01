@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <fdk.version>1.0.56</fdk.version>
+        <fdk.version>1.0.83</fdk.version>
     </properties>
     <groupId>com.example.fn</groupId>
     <artifactId>flight-cancel</artifactId>
@@ -25,33 +25,38 @@
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>com.fnproject.fn</groupId>
-            <artifactId>api</artifactId>
-            <version>${fdk.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fnproject.fn</groupId>
-            <artifactId>testing</artifactId>
-            <version>${fdk.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>fluent-hc</artifactId>
-            <version>4.5.3</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.9.1</version>
-        </dependency>
+	        <dependency>
+	            <groupId>com.fnproject.fn</groupId>
+	            <artifactId>api</artifactId>
+	            <version>${fdk.version}</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>com.fnproject.fn</groupId>
+	            <artifactId>flow-runtime</artifactId>
+	            <version>${fdk.version}</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>com.fnproject.fn</groupId>
+	            <artifactId>testing</artifactId>
+	            <version>${fdk.version}</version>
+	            <scope>test</scope>
+	        </dependency>
+	        <dependency>
+	            <groupId>junit</groupId>
+	            <artifactId>junit</artifactId>
+	            <version>4.12</version>
+	            <scope>test</scope>
+	        </dependency>
+	        <dependency>
+	            <groupId>com.fasterxml.jackson.core</groupId>
+	            <artifactId>jackson-databind</artifactId>
+	            <version>2.9.8</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.apache.httpcomponents</groupId>
+	            <artifactId>fluent-hc</artifactId>
+	            <version>4.5.7</version>
+	        </dependency>
     </dependencies>
 
     <build>

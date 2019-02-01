@@ -1,15 +1,21 @@
-var request = require('request');
+const fdk=require('@fnproject/fdk');
+const request = require('request');
 
-var api_url = process.env.CAR_API_URL;
 
-request.delete(
-    api_url,
+fdk.handle(function(input){
 
-    function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            console.log(response.body);
-        } else {
-            throw new Error();
-        }
-    }
-);
+   var options = {
+       uri: process.env.CAR_API_URL
+   };
+
+   return new Promise(function(resolve, reject) {
+       request.delete(options, function(err, resp, body) {
+          if (!err && resp.statusCode === 200) {
+             resolve(JSON.parse(body));
+           } else {
+             reject("car-cancel error, unable to cancel car booking!!"); 
+           }
+       })
+   })
+
+})

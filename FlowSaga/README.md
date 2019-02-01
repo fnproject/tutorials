@@ -320,7 +320,7 @@ as well as seeing the compensating transactions:
 
 Finally, we would like the compensating transactions to retry if they themselves encounter an error. One of the lovely things about Fn Flow is that because we have a set of distributed programming primitives we can combine and compose them in a library to encapsulate useful patterns.
 
-Take a look at the Retry class:
+Take a look at the Retry class (`FlowSaga/trip/src/main/java/com/example/fn/Retry.java`):
 
 ```
     private static <T> FlowFuture<T> _exponentialWithJitter(Flows.SerCallable<FlowFuture<T>> op, RetrySettings settings, int attempt) {

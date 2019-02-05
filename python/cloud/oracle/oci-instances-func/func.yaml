@@ -1,0 +1,7 @@
+schema_version: 20180708
+name: list-instances
+version: 0.0.1
+runtime: python3.7
+entrypoint: python3 func.py
+format: http-stream
+memory: 512

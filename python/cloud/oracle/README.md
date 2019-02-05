@@ -75,7 +75,7 @@ fn config fn oci list-instances OCI_FINGERPRINT ${OCI_FINGERPRINT}
 fn config fn oci list-instances OCI_REGION ${OCI_REGION}
 fn config fn oci list-instances OCI_COMPARTMENT ${OCI_COMPARTMENT}
 fn config fn oci list-instances OCI_PRIVATE_KEY_BASE64 ${OCI_PRIVATE_KEY_BASE64}
-fn config fn oci list-instances OCI_PRIVATE_PASS ${OCI_PRIVATE_KEY_PASS:-""}
+fn config fn oci list-instances OCI_PRIVATE_KEY_PASS ${OCI_PRIVATE_KEY_PASS:-""}
 ```
 
 Check the configuration:

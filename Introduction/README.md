@@ -162,6 +162,7 @@ everything you need to deploy the function to Fn server. This server could be
 running in the cloud, in your datacenter, or on your local machine like we're
 doing here.
 
+### Check your Context
 Make sure your context is set to default and you are using a demo user. Use the `fn list context` command to check.
 
 ![user input](images/userinput.png)
@@ -176,6 +177,22 @@ CURRENT	NAME	PROVIDER	API URL			        REGISTRY
 
 If your context is not configured, please see [the context installation instructions](https://github.com/fnproject/tutorials/blob/master/install/README.md#configure-your-context) before proceeding. Your context determines where your function is deployed.
 
+### Create an App
+Next, functions are grouped together into an application. The application acts as the main organizing structure for multiple functions. To create an application type the following:
+
+>```sh
+>fn create app goapp
+>```
+
+A confirmation is returned:
+
+```yaml
+Successfully created app:  goapp
+```
+
+Now `goapp` is ready for functions to be deployed to it.
+
+### Deploy your Function to your App
 Deploying your function is how you publish your function and make it accessible
 to other users and systems. To see the details of what is happening during a
 function deploy,  use the `--verbose` switch.  The first time you build a
@@ -248,13 +265,14 @@ Successfully built efa4793bf85f
 Successfully tagged fndemouser/gofn:0.0.2
 
 Updating function gofn using image fndemouser/gofn:0.0.2...
+Successfully created function: gofn with fndemouser/gofn:0.0.2
+Successfully created trigger: gofn-trigger
+Trigger Endpoint: http://localhost:8080/t/goapp/gofn-trigger
 ```
 
 All the steps to load the current language Docker image are displayed.
 
-Functions are grouped into applications so by specifying `--app goapp`
-we're implicitly creating the application `goapp` and associating our
-function with it.
+Specifying `--app goapp` explicitly puts the function in the application `goapp`.
 
 Specifying `--local` does the deployment to the local server but does
 not push the function image to a Docker registry--which would be necessary if
@@ -361,8 +379,8 @@ Which, in our case, returns the name of the application we created when we
 deployed our gofn function:
 
 ```sh
-NAME
-goapp
+NAME    ID
+goapp    01D37WY2N2NG8G00GZJ0000001
 ```
 
 We can also see the functions that are defined by an application. Since functions are exposed via triggers, the `fn list triggers <appname>` command is used. To list the functions included in "goapp" we can type:
@@ -373,8 +391,8 @@ We can also see the functions that are defined by an application. Since function
 >```
 
 ```sh
-FUNCTION    NAME            TYPE    SOURCE        ENDPOINT
-gofn        gofn-trigger    http    /gofn-trigger http://localhost:8080/t/goapp/gofn-trigger
+FUNCTION    NAME         ID                         TYPE    SOURCE        ENDPOINT
+gofn        gofn-trigger 01D37X3AVGNG8G00GZJ0000003 http    /gofn-trigger http://localhost:8080/t/goapp/gofn-trigger
 ```
 
 The output confirms that `goapp` contains a `gofn` function which may be invoked via the

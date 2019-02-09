@@ -106,7 +106,7 @@ Start the **Flow Server**:
 >```sh
 >docker run --rm -d \
 >      -p 8081:8081 \
->      -e API_URL="http://$FNSERVER_IP:8080/r" \
+>      -e API_URL="http://$FNSERVER_IP:8080/invoke" \
 >      -e no_proxy=$FNSERVER_IP \
 >      --name flowserver \
 >      fnproject/flow:latest
@@ -145,7 +145,7 @@ Create a new function:
 
 ![user input](../images/userinput.png)
 >```sh
->fn init --runtime=java simple-flow
+>fn init --runtime java --trigger http simple-flow
 >```
 
 Change directory:
@@ -168,29 +168,79 @@ Make peace with yourself after that, then let's get the code in shape.
 
 ```java
 package com.example.fn;
-
 import com.fnproject.fn.api.flow.Flow;
 import com.fnproject.fn.api.flow.Flows;
+import com.fnproject.fn.runtime.flow.FlowFeature;
+import com.fnproject.fn.api.FnFeature;
 
-public class HelloFunction {
+import java.io.Serializable;
 
-    public String handleRequest(int x) {
+@FnFeature(FlowFeature.class)
+public class HelloFunction implements Serializable {
 
-	Flow fl = Flows.currentFlow();
+  public String handleRequest(int x) {
+    Flow fl = Flows.currentFlow();
 
-	return fl.completedValue(x)
-                 .thenApply( i -> i*2 )
-	         .thenApply( i -> "Your number is " + i )
-	         .get();
-    }
+    return fl.completedValue(x)
+      .thenApply( i -> i * 2)
+      .thenApply( i -> "your number is: " + i)
+      .get();
+  }
 }
 ```
 
-Then deploy this to an app which we call `flow101` on the local Fn server.
+Before we can build this we need to add the Flow dependencies to the
+pom.xml file.
+
+![user input](../images/userinput.png)
+Edit pom.xml so that the dependencies section looks like this:
+```
+    <dependencies>
+        <dependency>
+            <groupId>com.fnproject.fn</groupId>
+            <artifactId>api</artifactId>
+            <version>${fdk.version}</version>
+        </dependency>
+
+        <dependency>
+          <groupId>com.fnproject.fn</groupId>
+          <artifactId>flow-runtime</artifactId>
+          <version>${fdk.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fnproject.fn</groupId>
+            <artifactId>testing-core</artifactId>
+            <version>${fdk.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fnproject.fn</groupId>
+            <artifactId>testing-junit4</artifactId>
+            <version>${fdk.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+```
+
+Then check that it builds:
 
 ![user input](../images/userinput.png)
 >```sh
->fn deploy --app flow101 --local
+>fn --verbose build
+>```
+
+Check that it has built successfully, then deploy this to an app which we call `flow101` on the local Fn server.
+
+![user input](../images/userinput.png)
+>```sh
+>fn deploy --create-app --app flow101 --local
 >```
 
 Then configure the function to talk to the Flow Server.
@@ -217,7 +267,7 @@ Alternatively, you can now invoke the function using `curl`:
 
 ![user input](../images/userinput.png)
 >```sh
->curl -d "2" http://localhost:8080/r/flow101/simple-flow
+>curl -d "2" http://localhost:8080/t/flow101/simple-flow-trigger
 >```
 
 The output looks something like the following:

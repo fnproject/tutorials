@@ -254,7 +254,7 @@ You can now invoke the function using `fn call`:
 
 ![user input](../images/userinput.png)
 >```sh
->echo 2 | fn call flow101 /simple-flow
+>echo 2 | fn invoke flow101 simple-flow
 >```
 
 The output looks something like the following:
@@ -281,6 +281,8 @@ Your number is 4
 Browsing to [http://localhost:3002](http://localhost:3002) you should see something like this:
 
 ![flow-ui](images/simple-flow-ui.png)
+
+(if it's blank, invoke the function again)
 
 Which is showing us 3 function invocations:
 

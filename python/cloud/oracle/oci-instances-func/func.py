@@ -1,6 +1,7 @@
 import base64
-import fdk
 import os
+
+from fdk import response
 
 from oci.core import compute_client
 from oci import pagination
@@ -10,11 +11,11 @@ try:
     import pytest
 
     def test_list_instances():
-        config, compartment_id = create_signer()
-        oci_compute = compute_client.ComputeClient(config)
+        test_config, test_compartment_id = create_signer()
+        oci_compute = compute_client.ComputeClient(test_config)
         result = pagination.list_call_get_all_results(
             oci_compute.list_instances,
-            compartment_id
+            test_compartment_id
         )
         assert len(result.data) >= 0
 
@@ -46,20 +47,12 @@ def create_signer():
     return config, compartment_id
 
 
-def setup_config_once():
-
+def handler(ctx, data=None):
     config, compartment_id = create_signer()
+    oci_compute = compute_client.ComputeClient(config)
+    result = pagination.list_call_get_all_results(
+        oci_compute.list_instances,
+        compartment_id
+    )
 
-    def handler(ctx, data=None):
-        oci_compute = compute_client.ComputeClient(config)
-        result = pagination.list_call_get_all_results(
-            oci_compute.list_instances,
-            compartment_id
-        )
-        return f"I have {len(result.data)} instances."
-
-    return handler
-
-
-if __name__ == "__main__":
-    fdk.handle(setup_config_once())
+    return f"I have {len(result.data)} instances."

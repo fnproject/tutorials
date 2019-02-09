@@ -1,7 +1,7 @@
 schema_version: 20180708
 name: list-instances
 version: 0.0.1
-runtime: python3.7
-entrypoint: python3 func.py
+runtime: python3.7.1
+entrypoint: /python/bin/fdk /function/func.py handler
 format: http-stream
-memory: 512
+memory: 256

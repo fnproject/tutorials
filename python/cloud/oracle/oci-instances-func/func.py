@@ -1,8 +1,6 @@
 import base64
 import os
 
-from fdk import response
-
 from oci.core import compute_client
 from oci import pagination
 

@@ -278,11 +278,9 @@ Your number is 4
 
 ## Exploring the Flow UI
 
-Browsing to [http://localhost:3002](http://localhost:3002) you should see something like this:
+Browsing to [http://localhost:3002](http://localhost:3002) you should see something like this (if it's blank, invoke the function again):
 
 ![flow-ui](images/simple-flow-ui.png)
-
-(if it's blank, invoke the function again)
 
 Which is showing us 3 function invocations:
 

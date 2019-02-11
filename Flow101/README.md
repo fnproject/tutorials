@@ -8,6 +8,12 @@ may not function as described. Check back for updates.
 
 This tutorial is based on [Matthew Gilliard's "Flow 101" blog post](https://mjg123.github.io/2017/10/10/FnProject-Flow-101.html).
 
+```
+Note that the API has changed since Matthew wrote that blog
+post, the setails of this tutorial have changed, but the philosophy
+remains the same.
+```
+
 [Fn Project](http://fnproject.io/) was released in October 2017. [Chad Arimura](https://twitter.com/chadarimura/) explained the motivation and structure of the project in a good amount of detail in his post ["8 Reasons why we built the Fn Project"](https://medium.com/fnproject/8-reasons-why-we-built-the-fn-project-bcfe45c5ae63), with one of the major components being **Fn Flow**. Flow allows developers to build high-level workflows of functions with some notable features:
 
   - Flexible model of function composition. Sequencing, fan out/in, retries, error-handling and more.
@@ -70,12 +76,19 @@ Install the **`fn`** CLI tool:
 
 Then start the **Fn server**:
 
+You can either do this in the background...
+![user input](../images/userinput.png)
+>```sh
+>fn start -d
+>```
+
+...or the foreground.
 ![user input](../images/userinput.png)
 >```sh
 >fn start
 >```
 
-The output looks something like the following. The version number below is old. You should see the latest version number in your case.
+If you started the Fn server in the foreground, the output looks something like the following. The version number below is old. You should see the latest version number in your case.
 
 ```
 ...
@@ -87,6 +100,9 @@ time="2017-10-11T13:12:44Z" level=info msg="Serving Functions API on address `:8
     /_/   /_/ /_/
         v0.3.119
 ```
+
+If your Fn server is running in the foreground, you will need a new
+terminal window.
 
 The **Flow Server** needs to know how to call the Fn server, so ask Docker which IP address to use.
 
@@ -164,7 +180,7 @@ Flow has a comprehensive test framework, but lets concentrate on playing with th
 
 Make peace with yourself after that, then let's get the code in shape.
 
-![user input](../images/userinput.png) Change `HelloFunction.java` to look like this:
+![user input](../images/userinput.png) Change `src/main/java/com/example/fn/HelloFunction.java` to look like this:
 
 ```java
 package com.example.fn;

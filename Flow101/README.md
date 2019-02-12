@@ -199,7 +199,7 @@ public class HelloFunction implements Serializable {
 
     return fl.completedValue(x)
       .thenApply( i -> i * 2)
-      .thenApply( i -> "your number is: " + i)
+      .thenApply( i -> "your number is: " + i + "\n")
       .get();
   }
 }

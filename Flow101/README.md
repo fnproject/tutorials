@@ -8,6 +8,12 @@ may not function as described. Check back for updates.
 
 This tutorial is based on [Matthew Gilliard's "Flow 101" blog post](https://mjg123.github.io/2017/10/10/FnProject-Flow-101.html).
 
+```
+Note that the API has changed since Matthew wrote that blog
+post, the setails of this tutorial have changed, but the philosophy
+remains the same.
+```
+
 [Fn Project](http://fnproject.io/) was released in October 2017. [Chad Arimura](https://twitter.com/chadarimura/) explained the motivation and structure of the project in a good amount of detail in his post ["8 Reasons why we built the Fn Project"](https://medium.com/fnproject/8-reasons-why-we-built-the-fn-project-bcfe45c5ae63), with one of the major components being **Fn Flow**. Flow allows developers to build high-level workflows of functions with some notable features:
 
   - Flexible model of function composition. Sequencing, fan out/in, retries, error-handling and more.
@@ -70,12 +76,19 @@ Install the **`fn`** CLI tool:
 
 Then start the **Fn server**:
 
+You can either do this in the background...
+![user input](../images/userinput.png)
+>```sh
+>fn start -d
+>```
+
+...or the foreground.
 ![user input](../images/userinput.png)
 >```sh
 >fn start
 >```
 
-The output looks something like the following. The version number below is old. You should see the latest version number in your case.
+If you started the Fn server in the foreground, the output looks something like the following. The version number below is old. You should see the latest version number in your case.
 
 ```
 ...
@@ -87,6 +100,9 @@ time="2017-10-11T13:12:44Z" level=info msg="Serving Functions API on address `:8
     /_/   /_/ /_/
         v0.3.119
 ```
+
+If your Fn server is running in the foreground, you will need a new
+terminal window.
 
 The **Flow Server** needs to know how to call the Fn server, so ask Docker which IP address to use.
 
@@ -106,7 +122,7 @@ Start the **Flow Server**:
 >```sh
 >docker run --rm -d \
 >      -p 8081:8081 \
->      -e API_URL="http://$FNSERVER_IP:8080/r" \
+>      -e API_URL="http://$FNSERVER_IP:8080/invoke" \
 >      -e no_proxy=$FNSERVER_IP \
 >      --name flowserver \
 >      fnproject/flow:latest
@@ -145,7 +161,7 @@ Create a new function:
 
 ![user input](../images/userinput.png)
 >```sh
->fn init --runtime=java simple-flow
+>fn init --runtime java --trigger http simple-flow
 >```
 
 Change directory:
@@ -164,33 +180,83 @@ Flow has a comprehensive test framework, but lets concentrate on playing with th
 
 Make peace with yourself after that, then let's get the code in shape.
 
-![user input](../images/userinput.png) Change `HelloFunction.java` to look like this:
+![user input](../images/userinput.png) Change `src/main/java/com/example/fn/HelloFunction.java` to look like this:
 
 ```java
 package com.example.fn;
-
 import com.fnproject.fn.api.flow.Flow;
 import com.fnproject.fn.api.flow.Flows;
+import com.fnproject.fn.runtime.flow.FlowFeature;
+import com.fnproject.fn.api.FnFeature;
 
-public class HelloFunction {
+import java.io.Serializable;
 
-    public String handleRequest(int x) {
+@FnFeature(FlowFeature.class)
+public class HelloFunction implements Serializable {
 
-	Flow fl = Flows.currentFlow();
+  public String handleRequest(int x) {
+    Flow fl = Flows.currentFlow();
 
-	return fl.completedValue(x)
-                 .thenApply( i -> i*2 )
-	         .thenApply( i -> "Your number is " + i )
-	         .get();
-    }
+    return fl.completedValue(x)
+      .thenApply( i -> i * 2)
+      .thenApply( i -> "your number is: " + i)
+      .get();
+  }
 }
 ```
 
-Then deploy this to an app which we call `flow101` on the local Fn server.
+Before we can build this we need to add the Flow dependencies to the
+pom.xml file.
+
+![user input](../images/userinput.png)
+Edit pom.xml so that the dependencies section looks like this:
+```
+    <dependencies>
+        <dependency>
+            <groupId>com.fnproject.fn</groupId>
+            <artifactId>api</artifactId>
+            <version>${fdk.version}</version>
+        </dependency>
+
+        <dependency>
+          <groupId>com.fnproject.fn</groupId>
+          <artifactId>flow-runtime</artifactId>
+          <version>${fdk.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fnproject.fn</groupId>
+            <artifactId>testing-core</artifactId>
+            <version>${fdk.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fnproject.fn</groupId>
+            <artifactId>testing-junit4</artifactId>
+            <version>${fdk.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+```
+
+Then check that it builds:
 
 ![user input](../images/userinput.png)
 >```sh
->fn deploy --app flow101 --local
+>fn --verbose build
+>```
+
+Check that it has built successfully, then deploy this to an app which we call `flow101` on the local Fn server.
+
+![user input](../images/userinput.png)
+>```sh
+>fn deploy --create-app --app flow101 --local
 >```
 
 Then configure the function to talk to the Flow Server.
@@ -200,11 +266,11 @@ Then configure the function to talk to the Flow Server.
 >fn config app flow101 COMPLETER_BASE_URL "http://$FLOWSERVER_IP:8081"
 >```
 
-You can now invoke the function using `fn call`:
+You can now invoke the function using `fn invoke`:
 
 ![user input](../images/userinput.png)
 >```sh
->echo 2 | fn call flow101 /simple-flow
+>echo 2 | fn invoke flow101 simple-flow
 >```
 
 The output looks something like the following:
@@ -217,7 +283,7 @@ Alternatively, you can now invoke the function using `curl`:
 
 ![user input](../images/userinput.png)
 >```sh
->curl -d "2" http://localhost:8080/r/flow101/simple-flow
+>curl -d "2" http://localhost:8080/t/flow101/simple-flow-trigger
 >```
 
 The output looks something like the following:
@@ -228,7 +294,7 @@ Your number is 4
 
 ## Exploring the Flow UI
 
-Browsing to [http://localhost:3002](http://localhost:3002) you should see something like this:
+Browsing to [http://localhost:3002](http://localhost:3002) you should see something like this (if it's blank, invoke the function again):
 
 ![flow-ui](images/simple-flow-ui.png)
 

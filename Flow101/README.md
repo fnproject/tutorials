@@ -10,7 +10,7 @@ This tutorial is based on [Matthew Gilliard's "Flow 101" blog post](https://mjg1
 
 ```
 Note that the API has changed since Matthew wrote that blog
-post, the setails of this tutorial have changed, but the philosophy
+post, the details of this tutorial have changed, but the philosophy
 remains the same.
 ```
 

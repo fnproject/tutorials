@@ -331,7 +331,7 @@ Trigger Endpoint: http://localhost:8080/t/java-app/javafn-trigger
 
 All the steps to load the current language Docker image are displayed.
 
-Specifying `--app java-app` explicitly puts the function in the application "nodeapp".
+Specifying `--app java-app` explicitly puts the function in the application "java-app".
 
 Specifying `--local` does the deployment to the local server but does
 not push the function image to a Docker registry--which would be necessary if

@@ -467,7 +467,7 @@ namespace csharpfn
         {
             FdkHandler.Handle((ctx, input) =>
             {
-                var inputData = input.AsJson();
+                dynamic inputData = input.AsJson();
                 return new {
                     Message = "Hello " + inputData.Name
                 };

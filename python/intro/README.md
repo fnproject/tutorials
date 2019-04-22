@@ -114,12 +114,12 @@ schema_version: 20180708
 name: pythonfn
 version: 0.0.1
 runtime: python
-memory: 256
 entrypoint: /python/bin/fdk /function/func.py handler
+memory: 256
 triggers:
-- name: pythonfn-trigger
+- name: pythonfn
   type: http
-  source: /pythonfn-trigger
+  source: /pythonfn
 ```
 
 The generated `func.yaml` file contains metadata about your function and
@@ -135,7 +135,7 @@ in `--runtime`.
 in this case `python3 func.py`.
 * triggers--identifies the automatically generated trigger name and source. For
 example, this function would be executed from the URL
-<http://localhost:8080/t/appname/pythonfn-trigger>. Where appname is the name of
+<http://localhost:8080/t/appname/pythonfn>. Where appname is the name of
 the app chosen for your function when it is deployed.
 
 There are other user specifiable properties but these will suffice for
@@ -300,8 +300,8 @@ Successfully tagged fndemouser/pythonfn:0.0.2
 
 Updating function pythonfn using image fndemouser/pythonfn:0.0.2...
 Successfully created function: pythonfn with fndemouser/pythonfn:0.0.2
-Successfully created trigger: pythonfn-trigger
-Trigger Endpoint: http://localhost:8080/t/pythonapp/pythonfn-trigger
+Successfully created trigger: pythonfn
+Trigger Endpoint: http://localhost:8080/t/pythonapp/pythonfn
 ```
 
 All the steps to load the current language Docker image are displayed.
@@ -319,7 +319,7 @@ image `fndemouser/pythonfn:0.0.2`.
 Note that the containing folder name `pythonfn` was used as the name of the
 generated Docker container and used as the name of the function that container
 was bound to. By convention it is also used to create the trigger name
-`pythonfn-trigger`.
+`pythonfn`.
 
 Normally you deploy an application without the `--verbose` option. If you rerun the command a new image and version is created and loaded.
 
@@ -425,8 +425,8 @@ We can also see the functions that are defined by an application. Since function
 >```
 
 ```sh
-FUNCTION  NAME              ID                          TYPE  SOURCE            ENDPOINT
-pythonfn  pythonfn-trigger  01D4BBW440NG8G00GZJ0000003  http  /pythonfn-trigger http://localhost:8080/t/pythonapp/pythonfn-trigger
+FUNCTION        NAME            ID                              TYPE    SOURCE          ENDPOINT
+pythonfn        pythonfn        01D8VGFVBBNG8G00GZJ0000003      http    /pythonfn       http://localhost:8080/t/pythonapp/pythonfn
 ```
 
 The output confirms that pythonapp contains a `pythonfn` function which may be
@@ -435,14 +435,14 @@ requested via the specified URL.
 ### Invoke with Curl
 
 The other way to invoke your function is via HTTP.  The Fn server exposes our
-deployed function at `http://localhost:8080/t/pythonapp/pythonfn-trigger`, a URL
+deployed function at `http://localhost:8080/t/pythonapp/pythonfn`, a URL
 that incorporates our application and function trigger as path elements.
 
 Use `curl` to invoke the function:
 
 ![user input](images/userinput.png)
 >```sh
-> curl -H "Content-Type: application/json" http://localhost:8080/t/pythonapp/pythonfn-trigger
+> curl -H "Content-Type: application/json" http://localhost:8080/t/pythonapp/pythonfn
 >```
 
 The result is once again the same.
@@ -456,7 +456,7 @@ the function back.
 
 ![user input](images/userinput.png)
 >```
-> curl -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/t/pythonapp/pythonfn-trigger
+> curl -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/t/pythonapp/pythonfn
 >```
 
 The result is once again the same.

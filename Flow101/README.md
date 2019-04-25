@@ -6,7 +6,9 @@ Due to ongoing changes to Fn core, parts of this tutorial
 may not function as described. Check back for updates.
 ```
 
-This tutorial is based on [Matthew Gilliard's "Flow 101" blog post](https://mjg123.github.io/2017/10/10/FnProject-Flow-101.html).
+This tutorial is based on [Matthew Gilliard's "Flow 101" blog post](https://mjg123.github.io/2017/10/10/FnProject-Flow-101.html). 
+
+:point_up: Please be aware that the Fn Flow API has evolved since Matthew wrote his "Flow 101" post.
 
 ```
 Note that the API has changed since Matthew wrote that blog
@@ -37,23 +39,25 @@ A simple Flow function looks like this:
     public String handleRequest(int x) {
 
         Flow flow = Flows.currentFlow();
+        String funcToInvoke = "..."; // functionId of the function to invoke
 
         return flow.completedValue(x)
                    .thenApply(i -> i+1)
-                   .thenCompose( s -> Flow.invokeFunction("./isPrime", s) )
+                   .thenCompose( s -> Flow.invokeFunction(funcToInvoke, ... )
                    .get();
     }
 
 ```
+:point_up: For illustration purpose, the above code is a simplification of the Fn Flow API and hence it won't compile as-is.
 
-If you've used a promises-style API before then this will be familiar. The closest analogue in core Java is the [CompletionStage API](http://download.java.net/java/jdk9/docs/api/java/util/concurrent/CompletionStage.html) which was even called [`Promise`](http://cs.oswego.edu/pipermail/concurrency-interest/2012-December/010423.html) in a pre-release draft.
+If you've used a promises-style API before then this will be familiar. The closest analogue in core Java is the [CompletionStage API](http://download.java.net/java/jdk9/docs/api/java/util/concurrent/CompletionStage.html).
 
 Anyway it's easy to tell the stages of what's going to happen:
 
   - Start with a value provided by the user
-  - Apply some transformation `i -> i+1`
-  - Pass that to an external function called `./isPrime`
-  - Then return get the result and return it
+  - then apply some transformation `i -> i+1`
+  - then pass that to an external function
+  - finally wait for the return and return it.
 
 Internally the `Flow` class submits each stage in this workflow to the Flow Server. You'll meet it soon. The Flow Server will then orchestrate each stage as an individual call to Fn. Flow Server is responsible for working out which stages are ready to be called, calling them, handling the results and triggering any following stages until you reach the point where there's no more work to do.
 
@@ -70,9 +74,9 @@ Currently FnProject is available to download, to experiment with, and to run on 
 Install the **`fn`** CLI tool:
 
 ![user input](../images/userinput.png)
->```sh
->curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
->```
+```sh
+curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
+```
 
 Then start the **Fn server**:
 
@@ -84,9 +88,9 @@ You can either do this in the background...
 
 ...or the foreground.
 ![user input](../images/userinput.png)
->```sh
->fn start
->```
+```sh
+fn start
+```
 
 If you started the Fn server in the foreground, the output looks something like the following. The version number below is old. You should see the latest version number in your case.
 
@@ -98,7 +102,7 @@ time="2017-10-11T13:12:44Z" level=info msg="Serving Functions API on address `:8
       / /_  / __ \
      / __/ / / / /
     /_/   /_/ /_/
-        v0.3.119
+        v0.3.629
 ```
 
 If your Fn server is running in the foreground, you will need a new
@@ -142,14 +146,14 @@ FLOWSERVER_IP=$(docker inspect --type container -f '&#123;&#123;.NetworkSettings
 
 
 ![user input](../images/userinput.png)
->```sh
->docker run --rm -d \
->       -p 3002:3000 \
->       --name flowui \
->       -e API_URL=http://$FNSERVER_IP:8080 \
->       -e COMPLETER_BASE_URL=http://$FLOWSERVER_IP:8081 \
->       fnproject/flow:ui
->```
+```sh
+docker run --rm -d \
+       -p 3002:3000 \
+       --name flowui \
+       -e API_URL=http://$FNSERVER_IP:8080 \
+       -e COMPLETER_BASE_URL=http://$FLOWSERVER_IP:8081 \
+       fnproject/flow:ui
+```
 
 
 Now, everything's set so lets crack on!
@@ -167,18 +171,19 @@ Create a new function:
 Change directory:
 
 ![user input](../images/userinput.png)
->```sh
->cd simple-flow
->```
+```sh
+cd simple-flow
+```
 
 Flow has a comprehensive test framework, but lets concentrate on playing with the code for the time being:
 
 ![user input](../images/userinput.png)
->```sh
-> rm -rf src/test   ## yolo
->```
+```sh
+rm -rf src/test   ## yolo
+```
 
 Make peace with yourself after that, then let's get the code in shape.
+
 
 ![user input](../images/userinput.png) Change `src/main/java/com/example/fn/HelloFunction.java` to look like this:
 
@@ -266,7 +271,8 @@ Then configure the function to talk to the Flow Server.
 >fn config app flow101 COMPLETER_BASE_URL "http://$FLOWSERVER_IP:8081"
 >```
 
-You can now invoke the function using `fn invoke`:
+
+You can now invoke the function using `fn invoke flow101 simple-flow`:
 
 ![user input](../images/userinput.png)
 >```sh
@@ -300,13 +306,33 @@ Browsing to [http://localhost:3002](http://localhost:3002) you should see someth
 
 Which is showing us 3 function invocations:
 
-  * The main flow function, in blue
+  * The main flow function at the top
   * `.thenApply` for the code `i -> i*2`
   * `.thenApply` for the code `i -> "Your number is " + i`
 
 Click on any of these and see the detail for each one expanded at the bottom of the screen.
 
-The blue function is shown as running for the whole time that the `thenApply` stages are. Why? Because we are calling `.get()` at the end, so this is synchronously waiting for the final result of the chain. Exercise: Try removing the `.get()` from the code (you'll need to return a different String, and don't forget to re-deploy). Now it will look like:
+:point_up: You might want to zoom to see more details, see the buttons at the bottom of the UI.
+
+Note that Fn Flow is using *functionId* to reference functions. To know the *functionId* of the main function, just use the following command: `fn inspect function flow101 simple-flow` or simply `fn i f flow101 simple-flow`  ~if you're lazy~ to save some time.
+
+```json
+{
+   "annotations": {
+      "fnproject.io/fn/invokeEndpoint": "http://localhost:8080/invoke/01CXZF8FF8NG8G00GZJ000002R"
+   },
+   "app_id": "...",
+   "created_at": "...",
+   "id": "01CXZF8FF8NG8G00GZJ000002R",
+   ...
+}
+```
+
+The `id` should match the *functionId* of the main function that you see in the UI.
+
+:point_up: Make sure to not confuse `id` which is the *functionId* with the *applicationId*, i.e. `app_id`. 
+
+The main function is shown as running for the whole time that the `thenApply` stages are. Why? Because we are calling `.get()` at the end, so this is synchronously waiting for the final result of the chain. Exercise: Try removing the `.get()` from the code (you'll need to return a different String, and don't forget to re-deploy). Now it will look like:
 
 ![flow-ui](images/simple-flow-ui-async.png)
 

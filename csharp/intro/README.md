@@ -459,9 +459,11 @@ namespace csharpfn
 
     public class Function
     {
-        public Task<string> InvokeAsync(MyInput input, CancellationToken timedOut)
+        public async Task<object> InvokeAsync(MyInput input, CancellationToken timedOut)
         {
-            return Task.FromResult("Hello " + input.Name);
+            return new {
+                Message = "Hello " + input.Name
+            };
         }
 
         public static void Main()

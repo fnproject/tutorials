@@ -50,7 +50,7 @@ A simple Flow function looks like this:
 ```
 :point_up: For illustration purpose, the above code is a simplification of the Fn Flow API and hence it won't compile as-is.
 
-If you've used a promises-style API before then this will be familiar. The closest analogue in core Java is the [CompletionStage API](http://download.java.net/java/jdk9/docs/api/java/util/concurrent/CompletionStage.html).
+If you've used a promises-style API before then this will be familiar. The closest analogue in core Java is the [CompletionStage API](https://docs.oracle.com/apps/search/search.jsp?category=java&product=e92405-01&q=completionstage).
 
 Anyway it's easy to tell the stages of what's going to happen:
 
@@ -65,7 +65,7 @@ This example could easily be written without Flow but it's good to start simple.
 
 ## Before you begin
 
-Currently FnProject is available to download, to experiment with, and to run on your private cloud. A managed service by Oracle is in the works. To play with Flow at the moment you will need to run everything locally, but it's not hard. We need **`fn`**, the **Fn server**, the **Flow Server** and not necessary but nice-to-have is the Flow Server **UI**. These run on ports 8080, 8081 and 3002 respectively so you might need to configure firewalls to allow access.
+Currently FnProject is available to download, to experiment with, and to run on your private cloud. A managed service by Oracle is in the works. To play with Flow at the moment you will need to run everything locally, but it's not hard. We need **`fn`**, the **Fn Server**, the **Flow Server** and not necessary but nice-to-have is the Flow Server **UI**. These run on ports 8080, 8081 and 3002 respectively so you might need to configure firewalls to allow access.
 
 > As you make your way through this tutorial, look out for this icon ![](../images/userinput.png). Whenever you see it, it's time for you to perform an action.
 
@@ -78,7 +78,7 @@ Install the **`fn`** CLI tool:
 curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
 ```
 
-Then start the **Fn server**:
+Then start the Fn server:
 
 You can either do this in the background...
 ![user input](../images/userinput.png)

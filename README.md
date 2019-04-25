@@ -7,12 +7,17 @@ Before deploying your first function, you need to [install the Fn cli and start 
 
 Now that the Fn Server is up and running, you can deploy your first function. Select your preferred language:
 
-* [C#](csharp/intro/README.md)
+Official:
+
 * [Go](Introduction/README.md)
 * [Java](JavaFDKIntroduction//README.md)
 * [Node.js](node/intro/README.md)
 * [Ruby](ruby/intro/README.md)
 * [Python](python/intro/README.md)
+
+Community Supported:
+
+* [C#](csharp/intro/README.md)
 
 ## Explore Fn
 * [Create Apps with Fn](Apps/README.md) - Learn how to group your functions into an application/API and deploy them together.

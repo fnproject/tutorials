@@ -1,8 +1,11 @@
 # Introduction to Fn with C# on .NET Core
+
+*Note: This is a community-contributed and maintained tutorial*
+
 Fn is a lightweight Docker-based serverless functions platform you can run on
 your laptop, server, or cloud.  In this introductory tutorial we'll walk through
 developing a function using the C# programming language using .NET Core (without
-installing and .NET tools!), and deploying that function to a local Fn server.
+installing any .NET tools!), and deploying that function to a local Fn server.
 We'll also learn about the core Fn concepts like applications and triggers.
 
 ### Before you Begin
@@ -290,8 +293,8 @@ The output message
 lets us know that the function is packaged in the image
 "fndemouser/csharpfn:0.0.2".
 
-Note that the containing folder name 'csharpfn' was used as the name of the
-generated Docker container and used as the name of the function that
+Note that the containing folder 'csharpfn' was used as the name of the
+generated Docker container and used as the name of the function that the
 container was bound to. By convention it is also used to create the trigger name
 `csharpfn-trigger`.
 
@@ -497,4 +500,4 @@ HTTP.
 
 To learn more about developing Fn functions using C#, refer to the [fdk-dotnet documentation](https://github.com/Daniel15/fdk-dotnet/).
 
-**Go:** [Back to Contents](../README.md)
+**Go:** [Back to Contents](/tutorials/)

@@ -9,7 +9,7 @@ required to be very Docker-savvy to develop functions with Fn.
 However, sometimes you need to handle advanced use cases and must take
 complete control of the creation of the function container image. Fortunately
 the design and implementation of Fn enables you to do exactly that.  Let's
-build a simple custom function conainer image to become familiar with the key
+build a simple custom function container image to become familiar with the key
 elements of the process.
 
 As you make your way through this tutorial, look out for this icon.
@@ -244,7 +244,7 @@ an application named 'tutorial':
 
 ![](images/userinput.png)
 >```
-> fn deploy --app tutorial --local --no-bump
+> fn deploy --create-app --app tutorial --local --no-bump
 >```
 
 We can confirm the function is correctly defined by getting a list of the

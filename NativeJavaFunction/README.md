@@ -148,7 +148,6 @@ copy it's dependencies in order to do the AoT compilation.
 name: nativejavafn
 version: 0.0.1
 runtime: docker
-format: http
 ```
 
 ## Building the Function Image

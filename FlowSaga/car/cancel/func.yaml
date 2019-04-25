@@ -1,5 +1,9 @@
+schema_version: 20180708
 name: car-cancel
-version: 0.0.88
+version: 0.0.2
 runtime: node
 entrypoint: node func.js
-path: /car/cancel
+triggers:
+- name: car-cancel
+  type: http
+  source: /car-cancel

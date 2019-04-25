@@ -1,5 +1,9 @@
+schema_version: 20180708
 name: car-book
-version: 0.0.101
+version: 0.0.1
 runtime: node
 entrypoint: node func.js
-path: /car/book
+triggers:
+- name: car-book
+  type: http
+  source: /car-book

@@ -8,8 +8,8 @@ organize and deploy.
 * Make sure Fn server is up and running by completing the [Install and Start Fn Tutorial](https://github.com/fnproject/tutorials/blob/master/install/README.md).
     * Make sure you have set your Fn context registry value for local development. (for example, "fndemouser". [See here](https://github.com/fnproject/tutorials/blob/master/install/README.md#configure-your-context).)
 
-> As you make your way through this tutorial, look out for this icon.
-![](images/userinput.png) Whenever you see it, it's time for you to
+> As you make your way through this tutorial, look out for this icon:
+![user input](../images/userinput.png). Whenever you see it, it's time for you to
 perform an action.
 
 ## Create an App
@@ -73,7 +73,7 @@ Now we can deploy the entire application with one command:
 
 ![user input](../images/userinput.png)
 >```sh
-> fn deploy --all --local
+> fn deploy --create-app --all --local
 >```
 
 Once the command is done we can examine the structure of the `myapp2` application.  First, get a

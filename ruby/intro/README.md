@@ -34,7 +34,6 @@ The output will be
 
 ```yaml
 Creating function at: /rubyfn
-Runtime: ruby
 Function boilerplate generated.
 func.yaml created.
 ```
@@ -101,7 +100,7 @@ configuration file. Let's look at the contents:
 ```yaml
 schema_version: 20180708
 name: rubyfn
-version: 0.0.2
+version: 0.0.1
 runtime: ruby
 entrypoint: ruby func.rb
 triggers:
@@ -142,6 +141,7 @@ everything you need to deploy the function to Fn server. This server could be
 running in the cloud, in your datacenter, or on your local machine like we're
 doing here.
 
+### Check your Context
 Make sure your context is set to default and you are using a demo user. Use the `fn list context` command to check.
 
 ![user input](images/userinput.png)
@@ -156,6 +156,23 @@ CURRENT	NAME	PROVIDER	API URL			        REGISTRY
 
 If your context is not configured, please see [the context installation instructions](https://github.com/fnproject/tutorials/blob/master/install/README.md#configure-your-context) before proceeding. Your context determines where your function is deployed.
 
+### Create an App
+Next, functions are grouped together into an application. The application acts as the main organizing structure for multiple functions. To create an application type the following:
+
+![user input](images/userinput.png)
+>```sh
+> fn create app rubyapp
+>``` 
+
+A confirmation is returned:
+
+```yaml
+Successfully created app:  rubyapp
+```
+
+Now `rubyapp` is ready for functions to be deployed to it.
+
+### Deploy your Function to your App
 Deploying your function is how you publish your function and make it accessible
 to other users and systems. To see the details of what is happening during a
 function deploy,  use the `--verbose` switch.  The first time you build a
@@ -172,80 +189,70 @@ In your terminal type the following:
 You should see output similar to:
 
 ```yaml
-Creating function at: /rubyfn
-Function boilerplate generated.
-func.yaml created.
-~/lcl/1016 $ cd rubyfn
-~/lcl/1016/rubyfn $ ls
-Gemfile   func.rb   func.yaml
-~/lcl/1016/rubyfn $
-~/lcl/1016/rubyfn $
-~/lcl/1016/rubyfn $
-~/lcl/1016/rubyfn $ fn --verbose deploy --app rubyapp --local
 Deploying rubyfn to app: rubyapp
 Bumped to version 0.0.2
-Building image fndemouser/rubyfn:0.0.2
+Building image fndemouser/rubyfn:0.0.2 
 FN_REGISTRY:  fndemouser
 Current Context:  default
 Sending build context to Docker daemon   5.12kB
 Step 1/9 : FROM fnproject/ruby:dev as build-stage
 dev: Pulling from fnproject/ruby
-88286f41530e: Pull complete
-ee67ab14fe7c: Pull complete
-528d6e469a02: Pull complete
-bb1a5f0c7734: Pull complete
-b6f7bd536b78: Pull complete
-Digest: sha256:056069fae8e349187114df899f1744aee548b464a91fb38497de6ce30d8c1488
+cd784148e348: Already exists 
+dc557ec385e9: Pull complete 
+1da25603bb9b: Pull complete 
+4b4f9165fe22: Pull complete 
+cb19460a63ec: Pull complete 
+Digest: sha256:1d810dd09525d7d5c7c98b60e8138bfda26dc227c68e8861a34c5fb3a1918ac8
 Status: Downloaded newer image for fnproject/ruby:dev
- ---> 907fbac5f177
+ ---> 8f015ef7f730
 Step 2/9 : WORKDIR /function
- ---> Running in 95c3e5e57b50
-Removing intermediate container 95c3e5e57b50
- ---> e8b73f0c8416
+ ---> Running in 05a9394fd0c3
+Removing intermediate container 05a9394fd0c3
+ ---> a6ede4bf3e4a
 Step 3/9 : ADD Gemfile* /function/
- ---> 713cc4c0d750
+ ---> be0ac9361ac2
 Step 4/9 : RUN bundle install
- ---> Running in 8ee8c95ebff4
+ ---> Running in 7cf6c166509e
 Don't run Bundler as root. Bundler can ask for sudo if it is needed, and
 installing your bundle as root will break this application for all non-root
 users on this machine.
 Fetching gem metadata from https://rubygems.org/..
-Fetching version metadata from https://rubygems.org/.
 Resolving dependencies...
-Using bundler 1.15.4
+Using bundler 2.0.1
 Fetching json 2.1.0
 Installing json 2.1.0 with native extensions
-Fetching fdk 0.0.14
-Installing fdk 0.0.14
-Bundle complete! 1 Gemfile dependency, 3 gems now installed.
+Fetching webrick 1.4.2
+Installing webrick 1.4.2
+Fetching fdk 0.0.18
+Installing fdk 0.0.18
+Bundle complete! 1 Gemfile dependency, 4 gems now installed.
 Use `bundle info [gemname]` to see where a bundled gem is installed.
-Removing intermediate container 8ee8c95ebff4
- ---> 172f64d0553a
+Removing intermediate container 7cf6c166509e
+ ---> a40fd74b7b33
 Step 5/9 : FROM fnproject/ruby
 latest: Pulling from fnproject/ruby
-88286f41530e: Already exists
-ee67ab14fe7c: Already exists
-528d6e469a02: Already exists
-Digest: sha256:9390a5c8df48f10499930a2ed4968bd2e46b6e6041aea8f5a5dc589b7b2ecaa2
+cd784148e348: Already exists 
+dc557ec385e9: Already exists 
+1da25603bb9b: Already exists 
+Digest: sha256:c7a22b37d040361c43d91ec11a86a787454bea9f6ff58840ab6c6187c0e7417d
 Status: Downloaded newer image for fnproject/ruby:latest
- ---> 9ab2c72e7fd0
+ ---> b8ffc8f5dd00
 Step 6/9 : WORKDIR /function
- ---> Running in 98c77e59831c
-Removing intermediate container 98c77e59831c
- ---> 04f0c7220634
+ ---> Running in a102b7cb5e02
+Removing intermediate container a102b7cb5e02
+ ---> c585eaa8237c
 Step 7/9 : COPY --from=build-stage /usr/lib/ruby/gems/ /usr/lib/ruby/gems/
- ---> aa358bb28a7b
+ ---> c35bc61d347b
 Step 8/9 : ADD . /function/
- ---> 6d31c787c51c
+ ---> 8e27331240a0
 Step 9/9 : ENTRYPOINT ["ruby", "func.rb"]
- ---> Running in 1258d901657e
-Removing intermediate container 1258d901657e
- ---> f9bd02b56f9b
-Successfully built f9bd02b56f9b
+ ---> Running in aa073542028b
+Removing intermediate container aa073542028b
+ ---> 661255862190
+Successfully built 661255862190
 Successfully tagged fndemouser/rubyfn:0.0.2
 
 Updating function rubyfn using image fndemouser/rubyfn:0.0.2...
-Successfully created app:  rubyapp
 Successfully created function: rubyfn with fndemouser/rubyfn:0.0.2
 Successfully created trigger: rubyfn-trigger
 Trigger Endpoint: http://localhost:8080/t/rubyapp/rubyfn-trigger
@@ -253,9 +260,7 @@ Trigger Endpoint: http://localhost:8080/t/rubyapp/rubyfn-trigger
 
 All the steps to load the current language Docker image are displayed.
 
-Functions are grouped into applications so by specifying `--app rubyapp`
-we're implicitly creating the application `rubyapp` and associating our
-function with it.
+Specifying `--app rubyapp` explicitly puts the function in the application `rubyapp`.
 
 Specifying `--local` does the deployment to the local server but does
 not push the function image to a Docker registry--which would be necessary if
@@ -367,11 +372,8 @@ We can also see the functions that are defined by an application. Since function
 >```
 
 ```sh
-FUNCTION    NAME            TYPE  SOURCE          ENDPOINT
-rubyfn      rubyfn-trigger  http  /rubyfn-trigger http://localhost:8080/t/rubyapp/rubyfn-trigger
-
-FUNCTION    NAME               ID                           TYPE    SOURCE          ENDPOINT
-rubyfn      rubyfn-trigger     01CT433P9TNG8G00GZJ000001C   http    /rubyfn-trigger http://localhost:8080/t/rubyapp/
+FUNCTION    NAME           ID                           TYPE  SOURCE          ENDPOINT
+rubyfn		rubyfn-trigger 01D46F1SZANG8G00GZJ0000003	http  /rubyfn-trigger http://localhost:8080/t/rubyapp/rubyfn-trigger
 ```
 
 The output confirms that `rubyapp` contains a `rubyfn` function that is

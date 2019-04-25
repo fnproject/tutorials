@@ -89,8 +89,8 @@ schema_version: 20180708
 name: javafn
 version: 0.0.1
 runtime: java
-build_image: fnproject/fn-java-fdk-build:jdk9-1.0.75
-run_image: fnproject/fn-java-fdk:jdk9-1.0.75
+build_image: fnproject/fn-java-fdk-build:jdk11-1.0.85
+run_image: fnproject/fn-java-fdk:jre11-1.0.85
 cmd: com.example.fn.HelloFunction::handleRequest
 triggers:
 - name: javafn-trigger
@@ -103,11 +103,11 @@ declares a number of properties including:
 
 * schema_version--identifies the version of the schema for this function file. * version--the version of the function.
 * runtime--the language used for this function.
+* build_image--the image used to build your function's image.
+* run_image--the image your function runs in.
 * cmd--the `cmd` property is set to the fully qualified name of the function
 class and the method that should be invoked when your `javafn` function is
 called.
-* build_image--the image used to build your function's image.
-* run_image--the image your function runs in.
 * triggers--identifies the automatically generated trigger name and source. For
 example, this function would be executed from the URL
 <http://localhost:8080/t/appname/javafn-trigger>. Where appname is the name of
@@ -137,6 +137,23 @@ CURRENT	NAME	PROVIDER	API URL			        REGISTRY
 
 If your context is not configured, please see [the context installation instructions](https://github.com/fnproject/tutorials/blob/master/install/README.md#configure-your-context) before proceeding. Your context determines where your function is deployed.
 
+### Create an App
+Next, functions are grouped together into an application. The application acts as the main organizing structure for multiple functions. To create an application type the following:
+
+![user input](images/userinput.png)
+>```sh
+> fn create app java-app
+>``` 
+
+A confirmation is returned:
+
+```yaml
+Successfully created app:  java-app
+```
+
+Now `java-app` is ready for functions to be deployed to it.
+
+### Deploy your Function to your App
 Deploying your function is how you publish your function and make it accessible
 to other users and systems. To see the details of what is happening during a
 function deploy,  use the `--verbose` switch.  The first time you build a
@@ -307,16 +324,14 @@ Successfully built 0cbe66bb9e2b
 Successfully tagged fndemouser/javafn:0.0.2
 
 Updating function javafn using image fndemouser/javafn:0.0.2...
-Successfully created app:  java-app
 Successfully created function: javafn with fndemouser/javafn:0.0.2
 Successfully created trigger: javafn-trigger
+Trigger Endpoint: http://localhost:8080/t/java-app/javafn-trigger
 ```
 
 All the steps to load the current language Docker image are displayed.
 
-Functions are grouped into applications so by specifying `--app java-app`
-we're implicitly creating the application `java-app` and associating our
-function with it.
+Specifying `--app java-app` explicitly puts the function in the application "java-app".
 
 Specifying `--local` does the deployment to the local server but does
 not push the function image to a Docker registry--which would be necessary if
@@ -635,6 +650,8 @@ The result is now in a JSON format.
 ```js
 {"salutation":"Hello World"}
 ```
+
+**Note:** Currently an error occurs if you pass an empty value to the JSON enabled function. See [FDK-Java Issue 148](https://github.com/fnproject/fdk-java/issues/148) for details.
 
 We can pass JSON data to our function and get the value of name passed to
 the function back.

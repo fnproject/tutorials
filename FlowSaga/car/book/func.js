@@ -1,17 +1,21 @@
-var request = require('request');
-var fs = require('fs');
+const fdk=require('@fnproject/fdk');
+const request = require('request');
 
-var api_url = process.env.CAR_API_URL;
-var stdin = JSON.parse(fs.readFileSync('/dev/stdin').toString());
 
-request.post(
-    api_url,
-    { json: stdin },
-    function (error, response, body) {
-        if (!error && response.statusCode === 200) {
-            console.log(JSON.stringify(response.body));
-        } else {
-            throw new Error();
-        }
-    }
-);
+fdk.handle(function(input){
+
+   var options = {
+       uri: process.env.CAR_API_URL
+   };
+
+   return new Promise(function(resolve, reject) {
+       request.post(options, function(err, resp, body) {
+          if (!err && resp.statusCode === 200) {
+             resolve(JSON.parse(body));
+           } else {
+             reject("car-book error, unable to book a car!!"); 
+           }
+       })
+   })
+
+})

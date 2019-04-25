@@ -148,7 +148,8 @@ everything you need to deploy the function to Fn server. This server could be
 running in the cloud, in your datacenter, or on your local machine like we're
 doing here.
 
-Make sure your context is set to default and you are using a demo user. Use the `fn list context` command to check.
+### Check your Context
+Make sure your context is set to default and you are using a demo user. Use the `fn list contexts` command to check.
 
 ![user input](images/userinput.png)
 >```sh
@@ -160,8 +161,25 @@ CURRENT	NAME	PROVIDER	API URL			        REGISTRY
 *       default	default		http://localhost:8080	fndemouser
 ```
 
-If your context is not configured, please see [the context installation instructions](https://github.com/fnproject/tutorials/blob/master/install/README.md#configure-your-context) before proceeding. Your context determines where your function is deployed.
+If your context is not configured, please see [the context installation instructions](https://github.com/fnproject/tutorials/blob/master/install/README.md#configure-your-context) before proceeding. Your context determines the server your function is deployed to.
 
+### Create an App
+Next, functions are grouped together into an application. The application acts as the main organizing structure for multiple functions. To create an application type the following:
+
+![user input](images/userinput.png)
+>```sh
+> fn create app nodeapp
+>``` 
+
+A confirmation is returned:
+
+```yaml
+Successfully created app:  nodeapp
+```
+
+Now `nodeapp` is ready for functions to be deployed to it.
+
+### Deploy your Function to your App
 Deploying your function is how you publish your function and make it accessible
 to other users and systems. To see the details of what is happening during a
 function deploy,  use the `--verbose` switch.  The first time you build a
@@ -180,81 +198,62 @@ You should see output similar to:
 ```yaml
 Deploying nodefn to app: nodeapp
 Bumped to version 0.0.2
-Building image fndemouser/nodefn:0.0.2
+Building image fndemouser/nodefn:0.0.2 
 FN_REGISTRY:  fndemouser
 Current Context:  default
 Sending build context to Docker daemon   5.12kB
 Step 1/9 : FROM fnproject/node:dev as build-stage
 dev: Pulling from fnproject/node
-88286f41530e: Pull complete 
-f2f101846395: Pull complete 
-ff57497de382: Pull complete 
-Digest: sha256:613685c22f65d01f2264bdd49b8a336488e14faf29f3ff9b6bf76a4da23c4700
+cd784148e348: Pull complete 
+b44a6bdc3ce6: Pull complete 
+4a521620f99f: Pull complete 
+Digest: sha256:af86804c77b827efefa7f16395908f47842558382ab2cbdfcba8d78ab912c711
 Status: Downloaded newer image for fnproject/node:dev
- ---> 016382f39a51
+ ---> 1959078abed4
 Step 2/9 : WORKDIR /function
- ---> Running in 17d09f41ee90
-Removing intermediate container 17d09f41ee90
- ---> db4b1e998348
+ ---> Running in bae6000b50b2
+Removing intermediate container bae6000b50b2
+ ---> 5c8692d1e321
 Step 3/9 : ADD package.json /function/
- ---> 5acbd4f3710d
+ ---> 8a609ca9d62d
 Step 4/9 : RUN npm install
- ---> Running in 9c0da981c192
-npm info it worked if it ends with ok
-npm info using npm@5.3.0
-npm info using node@v8.4.0
-npm info lifecycle hellofn@1.0.0~preinstall: hellofn@1.0.0
-npm http fetch GET 200 https://registry.npmjs.org/@fnproject%2ffdk 456ms
-http fetch GET 200 https://registry.npmjs.org/@fnproject/fdk/-/fdk-0.0.11.tgz 206ms
-npm info lifecycle @fnproject/fdk@0.0.11~preinstall: @fnproject/fdk@0.0.11
-npm info linkStuff @fnproject/fdk@0.0.11
-npm info lifecycle @fnproject/fdk@0.0.11~install: @fnproject/fdk@0.0.11
-npm info lifecycle @fnproject/fdk@0.0.11~postinstall: @fnproject/fdk@0.0.11
-npm info linkStuff hellofn@1.0.0
-npm info lifecycle hellofn@1.0.0~install: hellofn@1.0.0
-npm info lifecycle hellofn@1.0.0~postinstall: hellofn@1.0.0
-npm info lifecycle hellofn@1.0.0~prepublish: hellofn@1.0.0
-npm info lifecycle hellofn@1.0.0~prepare: hellofn@1.0.0
-npm info lifecycle undefined~preshrinkwrap: undefined
-npm info lifecycle undefined~shrinkwrap: undefined
+ ---> Running in ac0389a21058
 npm notice created a lockfile as package-lock.json. You should commit this file.
-npm info lifecycle undefined~postshrinkwrap: undefined
 npm WARN hellofn@1.0.0 No repository field.
 
-added 1 package in 1.486s
-npm info ok 
-Removing intermediate container 9c0da981c192
- ---> 5ea578bf9df9
+added 1 package from 2 contributors and audited 1 package in 1.628s
+found 0 vulnerabilities
+
+Removing intermediate container ac0389a21058
+ ---> f27015c4e988
 Step 5/9 : FROM fnproject/node
 latest: Pulling from fnproject/node
-Digest: sha256:613685c22f65d01f2264bdd49b8a336488e14faf29f3ff9b6bf76a4da23c4700
+Digest: sha256:af86804c77b827efefa7f16395908f47842558382ab2cbdfcba8d78ab912c711
 Status: Downloaded newer image for fnproject/node:latest
- ---> 016382f39a51
+ ---> 1959078abed4
 Step 6/9 : WORKDIR /function
  ---> Using cache
- ---> db4b1e998348
+ ---> 5c8692d1e321
 Step 7/9 : ADD . /function/
- ---> 6f9312321676
+ ---> 322790c57f6a
 Step 8/9 : COPY --from=build-stage /function/node_modules/ /function/node_modules/
- ---> 31399d7f619d
+ ---> 71035a700e7f
 Step 9/9 : ENTRYPOINT ["node", "func.js"]
- ---> Running in 9a5e505e8bb2
-Removing intermediate container 9a5e505e8bb2
- ---> 2f7b61423621
-Successfully built 2f7b61423621
+ ---> Running in 85aaa3aa14eb
+Removing intermediate container 85aaa3aa14eb
+ ---> 9f6cf7646cdf
+Successfully built 9f6cf7646cdf
 Successfully tagged fndemouser/nodefn:0.0.2
 
 Updating function nodefn using image fndemouser/nodefn:0.0.2...
-Successfully created app:  nodeapp
 Successfully created function: nodefn with fndemouser/nodefn:0.0.2
 Successfully created trigger: nodefn-trigger
+Trigger Endpoint: http://localhost:8080/t/nodeapp/nodefn-trigger
 ```
 
 All the steps to load the current language Docker image are displayed.
 
-Functions are grouped into applications so by specifying `--app nodeapp`
-we're implicitly creating the application "nodeapp" and associating our
-function with it.
+Specifying `--app nodeapp` explicitly puts the function in the application "nodeapp".
 
 Specifying `--local` does the deployment to the local server but does
 not push the function image to a Docker registry--which would be necessary if

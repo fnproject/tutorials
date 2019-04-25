@@ -88,7 +88,7 @@ This shows the contents of `prometheus.yml` file
 
 The last line ` - targets: ... ` specifies the host name and port of the Fn server from which metrics will be obtained. The name `fnserver` used in this example is defined below in the docker command to start Prometheus server. If you are running a cluster of Fn servers then you can specify them all here.
 
-Check output of the following docker command. This is used in subsequent docker commands to map the docker IP address to the hostnames `fnserver` and `prometheus`.
+Check the output of the following docker command. This is used in subsequent docker commands to map the docker IP address to the hostnames `fnserver` and `prometheus`.
 
 >![user input](../images/userinput.png)
 
@@ -115,8 +115,8 @@ Now start Prometheus, specifying the above config file.
 <div>
 <blockquote>
 <code>docker run --rm --name=prometheus -d -p 9090:9090
- -v &#96;pwd&#96; /prometheus.yml:/etc/prometheus/prometheus.yml
- --add-host=&quot;fnserver:&#96;docker network inspect bridge -f &apos;&#123;&#123;range .IPAM.Config&#125;&#125;&#123;&#123;.Gateway&#125;&#125;&#123;&#123;end&#125;&#125;&apos;&#96;&quot; <br> prom/prometheus</code>
+ -v &#96;pwd&#96;/prometheus.yml:/etc/prometheus/prometheus.yml
+ --add-host=&quot;fnserver:&#96;docker network inspect bridge -f &apos;&#123;&#123;range .IPAM.Config&#125;&#125;&#123;&#123;.Gateway&#125;&#125;&#123;&#123;end&#125;&#125;&apos;&#96;&quot; prom/prometheus</code>
 </blockquote>
 </div>
 

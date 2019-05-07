@@ -113,7 +113,7 @@ the `FN_API_URL` environment variable:
 Alternatively, you can also set the `api_url` using Fn [contexts](https://github.com/fnproject/cli/blob/master/CONTEXT.md).
 
 ## Test the Install
-Let's verify everthing is up and running correctly.
+Let's verify everything is up and running correctly.
 
 **Open a new terminal** and run the following:
 

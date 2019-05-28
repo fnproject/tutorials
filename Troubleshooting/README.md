@@ -185,7 +185,7 @@ Fn server running locally you can follow the
 ![user input](images/userinput.png)
 >```sh
 > fn deploy --app tutorial --local
-```
+>```
 
 ```sh
 Deploying trouble to app: tutorial
@@ -202,14 +202,14 @@ the functions of the 'tutorial' app:
 ![user input](images/userinput.png)
 >```sh
 > fn ls functions tutorial
-```
+>```
 
 Or the slightly more economical:
 
 ![user input](images/userinput.png)
 >```sh
 > fn ls f tutorial
-```
+>```
 
 ```sh
 NAME     IMAGE          ID

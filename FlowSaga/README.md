@@ -82,7 +82,7 @@ We have created a skeleton trip function in the `trip` directory. Open the `trip
 
 First familiarise ourselves with the input structure, `TripReq`. This corresponds to the JSON in `sample-payload.json`:
 
-```
+```json
     {
       "flight": {
         "departureTime": "2017-10-01",
@@ -116,9 +116,9 @@ The `Flow` object contains a bunch of methods for adding work to the current flo
 
 This tells the current flow to add an invocation of the Flight Booking function (via its function Id) to the current flow and then returns a `FlowFuture` that represents the future value of that invocation. The `FlowFuture` itself has more methods that let us chain more work onto the flow following the completion of that future. Thus we can build up a [DAG](https://en.wikipedia.org/wiki/Directed_acyclic_graph) of computations that will each be executed as a separate serverless function invocation.
 
-We are going to use the `thenCompose` method to chain the hotel booking and car rental booking onto the end of the flight booking call. Our full`book1` function looks like this:
+We are going to use the `thenCompose` method to chain the hotel booking and car rental booking onto the end of the flight booking call. Our full `book1` function looks like this:
 
-```
+```java
     public void book1(TripReq input) {
         Flow f = Flows.currentFlow();
 
@@ -154,7 +154,7 @@ Finally there is the `whenComplete` call which triggers when all of the precedin
 
 What’s interesting here is the way we’re able to do *fan-in* to collect the results from the previous calls. Each lambda has access to the outer scope so the `sendSuccessEmail` call can simply reference the results of the previous function calls. The flow server deals with making sure that the right values are available for us at the right time even though these invocations might be in different JVMs, on different hosts and separated by hours, days or weeks.
 
-The combination of a distributed type-safe promises API and an auto-scaling function execution platform provides us with a [really powerful set of distributed programming primitive](https://github.com/fnproject/fdk-java/blob/master/docs/FnFlowsUserGuide.md)so that we can use to write long-running, fault-tolerant workflows.
+The combination of a distributed type-safe promises API and an auto-scaling function execution platform provides us with a [really powerful set of distributed programming primitive](https://github.com/fnproject/fdk-java/blob/master/docs/FnFlowsUserGuide.md) so that we can use to write long-running, fault-tolerant workflows.
 
 It’s time to deploy and run this new trip function.
 
@@ -180,7 +180,7 @@ Invoke the trip function:
 >```
 
 
-## Introducing the fake SDK dashbaord
+## Introducing the fake SDK dashboard
 
 So, booking a trip every time we run this tutorial would quickly get expensive. We also need a way to see what’s happening as a result of our function calls. To that end we are already running a “fake SDK dashboard” that provides a way for us to see what calls are being made to our flight, hotel and car rental booking providers. In fact all that our booking functions that we created above do is forward requests to this dashboard which will return a simple canned response.
 
@@ -224,9 +224,9 @@ This is super-useful for seeing what’s going on when we encounter an error.
 
 ## To Err Is Human
 
-OK so we have a way to create useful long-running processes without leaving the comfort of our favourite programming language. But we need a way to deal with faults. Fn Flow provides a few more primitives to help us with this. We are going to use `exceptionallyCompose` which triggers only if the preceding stage completes with an error. By inserting these calls at the appropriate point in the DAG we can implement our compensating transactions to cancel a booking if there was a problem with a subsequent booking. The next iteration of our book function, `book2`looks like this:
+OK so we have a way to create useful long-running processes without leaving the comfort of our favourite programming language. But we need a way to deal with faults. Fn Flow provides a few more primitives to help us with this. We are going to use `exceptionallyCompose` which triggers only if the preceding stage completes with an error. By inserting these calls at the appropriate point in the DAG we can implement our compensating transactions to cancel a booking if there was a problem with a subsequent booking. The next iteration of our book function, `book2` looks like this:
 
-```
+```java
     public void book2(TripReq input) {
         Flow f = Flows.currentFlow();
 
@@ -322,7 +322,7 @@ Finally, we would like the compensating transactions to retry if they themselves
 
 Take a look at the Retry class (`FlowSaga/trip/src/main/java/com/example/fn/Retry.java`):
 
-```
+```java
     private static <T> FlowFuture<T> _exponentialWithJitter(Flows.SerCallable<FlowFuture<T>> op, RetrySettings settings, int attempt) {
         Flow f = Flows.currentFlow();
         try {
@@ -351,7 +351,7 @@ What we’re doing here is defining an exponential backoff in terms of the primi
 
 This lets us add some complex fault tolerant behaviour without adding much complexity to the overall flow. The final version of our flow then looks like this:
 
-```
+```java
     public void book3(TripReq input) {
         Flow f = Flows.currentFlow();
 
@@ -384,7 +384,7 @@ This lets us add some complex fault tolerant behaviour without adding much compl
     }
 ```
 
-Note that we are now using the `retryCancel` method that simply wraps the cancelation function invocation with our encapsulated retry logic.
+Note that we are now using the `retryCancel` method that simply wraps the cancellation function invocation with our encapsulated retry logic.
 
 If we now simulate an error during one of our compensating transactions, say the car cancellation, we will see some retry behaviour:
 

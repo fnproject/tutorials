@@ -61,7 +61,7 @@ Now get a list of the directory contents.
 >```
 
 ```txt
-Gopkg.toml func.go func.yaml
+func.go func.yaml go.mod
 ```
 
 The `func.go` file which contains your actual Go function is generated along
@@ -152,7 +152,7 @@ folder name.  We'll see this come into play later on.
 ### Other Function Files
 The `fn init` command generated one other file.
 
-* `Gopkg.toml` --  the Go dep tool dependency management tool file which
+* `go.mod` --  the Go dep tool dependency management tool file which
 specifies all the dependencies for your function.
 
 ## Deploy Your First Function

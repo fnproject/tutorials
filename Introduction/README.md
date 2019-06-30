@@ -34,7 +34,7 @@ In the terminal type the following:
 The output will be
 
 ```yaml
-Creating function at: /gofn
+Creating function at: ./gofn
 Runtime: go
 Function boilerplate generated.
 func.yaml created.
@@ -43,10 +43,10 @@ func.yaml created.
 The `fn init` command creates an simple function with a bit of boilerplate to
 get you started. The `--runtime` option is used to indicate that the function
 we're going to develop will be written in Go. A number of other runtimes are
-also supported.  Fn creates the simple function along with several supporting files in the `/gofn` directory.
+also supported.  Fn creates the simple function along with several supporting files in the `./gofn` directory.
 
 ### Review your Function File
-With your function created change into the `/gofn` directory.
+With your function created change into the `./gofn` directory.
 
 ![User Input Icon](images/userinput.png)
 >```sh

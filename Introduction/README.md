@@ -125,9 +125,9 @@ version: 0.0.1
 runtime: go
 entrypoint: ./func
 triggers:
-- name: gofn-trigger
+- name: gofn
   type: http
-  source: /gofn-trigger
+  source: /gofn
 ```
 
 The generated `func.yaml` file contains metadata about your function and
@@ -142,7 +142,7 @@ in `--runtime`.
 in this case `./func`
 * triggers--identifies the automatically generated trigger name and source. For
 example, this function would be executed from the URL
-<http://localhost:8080/t/appname/gofn-trigger>. Where appname is the name of
+<http://localhost:8080/t/appname/gofn>. Where appname is the name of
 the app chosen for your function when it is deployed.
 
 There are other user specifiable properties but these will suffice for
@@ -266,8 +266,8 @@ Successfully tagged fndemouser/gofn:0.0.2
 
 Updating function gofn using image fndemouser/gofn:0.0.2...
 Successfully created function: gofn with fndemouser/gofn:0.0.2
-Successfully created trigger: gofn-trigger
-Trigger Endpoint: http://localhost:8080/t/goapp/gofn-trigger
+Successfully created trigger: gofn
+Trigger Endpoint: http://localhost:8080/t/goapp/gofn
 ```
 
 All the steps to load the current language Docker image are displayed.
@@ -285,7 +285,7 @@ let's us know that the function is packaged in the image
 Note that the containing folder name `gofn` was used as the name of the
 generated Docker container and used as the name of the function that container
 was bound to. By convention it is also used to create the trigger name
-`gofn-trigger`.
+`gofn`.
 
 Normally you deploy an application without the `--verbose` option. If you rerun the command a new image and version is created and loaded.
 
@@ -392,7 +392,7 @@ We can also see the functions that are defined by an application. Since function
 
 ```sh
 FUNCTION    NAME         ID                         TYPE    SOURCE        ENDPOINT
-gofn        gofn-trigger 01D37X3AVGNG8G00GZJ0000003 http    /gofn-trigger http://localhost:8080/t/goapp/gofn-trigger
+gofn        gofn         01D37X3AVGNG8G00GZJ0000003 http    /gofn         http://localhost:8080/t/goapp/gofn
 ```
 
 The output confirms that `goapp` contains a `gofn` function which may be invoked via the
@@ -402,14 +402,14 @@ call our function.
 ### Invoke with Curl
 
 The other way to invoke your function is via HTTP.  The Fn server exposes our
-deployed function at `http://localhost:8080/t/goapp/gofn-trigger`, a URL
+deployed function at `http://localhost:8080/t/goapp/gofn`, a URL
 that incorporates our application and function trigger as path elements.
 
 Use `curl` to invoke the function:
 
 ![user input](images/userinput.png)
 >```sh
-> curl -H "Content-Type: application/json" http://localhost:8080/t/goapp/gofn-trigger
+> curl -H "Content-Type: application/json" http://localhost:8080/t/goapp/gofn
 >```
 
 The result is once again the same.
@@ -423,7 +423,7 @@ the function back.
 
 ![user input](images/userinput.png)
 >```
-> curl -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/t/goapp/gofn-trigger
+> curl -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/t/goapp/gofn
 >```
 
 The result is once again the same.

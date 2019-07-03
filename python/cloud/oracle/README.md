@@ -67,6 +67,11 @@ fn --verbose deploy --app oci
 
 Update your local env with the following [script](oci-instances-func/setup_local.sh).
 
+Run the following command to configure OCI_PRIVATE_KEY_BASE64:
+```bash
+fn config fn [INPUT_APP_NAME] [INPUT_FUNCTION_NAME] OCI_PRIVATE_KEY_BASE64 $(cat ~/.oci/[INPUT_PRIVATE_KEY_FILE_NAME] | base64)
+```
+
 Updating configuration:
 ```bash
 fn config fn oci list-instances OCI_USER ${OCI_USER}

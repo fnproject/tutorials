@@ -195,7 +195,7 @@ Next, deploy your function to that app.
 >```
 
 We can confirm the function is correctly defined by getting a list of the
-functions in the "tutorial" application:
+functions in the "revapp" application:
 
 ![](images/userinput.png)
 >```sh

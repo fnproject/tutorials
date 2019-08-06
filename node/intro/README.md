@@ -36,7 +36,6 @@ The output will be
 
 ```yaml
 Creating function at: /nodefn
-Runtime: node
 Function boilerplate generated.
 func.yaml created.
 ```
@@ -109,9 +108,9 @@ version: 0.0.1
 runtime: node
 entrypoint: node func.js
 triggers:
-- name: nodefn-trigger
+- name: nodefn
   type: http
-  source: /nodefn-trigger
+  source: /nodefn
 ```
 
 The generated `func.yaml` file contains metadata about your function and
@@ -122,9 +121,9 @@ declares a number of properties including:
 * version--automatically starting at 0.0.1.
 * runtime--the name of the runtime/language which was set based on the value set
 in `--runtime`.
-* entrypoint--the name of the executable to invoke when your function is called,
+* entrypoint--the name of the Docker execution command to invoke when your function is called,
 in this case `node func.js`.
-* triggers--identifies the automatically generated trigger name and source. For example, this function would be requested from the URL `http://localhost:8080/t/appname/nodefn-trigger`. Where `appname` is the name of the app chosen for your function when it is deployed.
+* triggers--identifies the automatically generated trigger name and source. For example, this function would be requested from the URL `http://localhost:8080/t/appname/nodefn`. Where `appname` is the name of the app chosen for your function when it is deployed.
 
 There are other user specifiable properties but these will suffice for
 this example.  Note that the name of your function is taken from the containing
@@ -204,51 +203,56 @@ Current Context:  default
 Sending build context to Docker daemon   5.12kB
 Step 1/9 : FROM fnproject/node:dev as build-stage
 dev: Pulling from fnproject/node
-cd784148e348: Pull complete 
-b44a6bdc3ce6: Pull complete 
-4a521620f99f: Pull complete 
-Digest: sha256:af86804c77b827efefa7f16395908f47842558382ab2cbdfcba8d78ab912c711
+bdf0201b3a05: Already exists 
+ed514f6061af: Already exists 
+bc8940a76c7f: Already exists 
+Digest: sha256:c77966d42f46328662978a68ecd5b3b3b26cf9e4c29a91c6064f07f59f97621a
 Status: Downloaded newer image for fnproject/node:dev
- ---> 1959078abed4
+ ---> b557a05fec78
 Step 2/9 : WORKDIR /function
- ---> Running in bae6000b50b2
-Removing intermediate container bae6000b50b2
- ---> 5c8692d1e321
+ ---> Running in 62a348f4d39b
+Removing intermediate container 62a348f4d39b
+ ---> ea3ae80dbec2
 Step 3/9 : ADD package.json /function/
- ---> 8a609ca9d62d
+ ---> e7d319e022d2
 Step 4/9 : RUN npm install
- ---> Running in ac0389a21058
+ ---> Running in c963c8b1f699
 npm notice created a lockfile as package-lock.json. You should commit this file.
 npm WARN hellofn@1.0.0 No repository field.
 
-added 1 package from 2 contributors and audited 1 package in 1.628s
+added 1 package from 2 contributors and audited 1 package in 0.935s
 found 0 vulnerabilities
 
-Removing intermediate container ac0389a21058
- ---> f27015c4e988
+Removing intermediate container c963c8b1f699
+ ---> bf5b6313c055
 Step 5/9 : FROM fnproject/node
 latest: Pulling from fnproject/node
-Digest: sha256:af86804c77b827efefa7f16395908f47842558382ab2cbdfcba8d78ab912c711
+bdf0201b3a05: Already exists 
+ed514f6061af: Already exists 
+bc8940a76c7f: Already exists 
+f93406d580f9: Already exists 
+Digest: sha256:2ee8e9e4b1de3a29cde6fa957e3d7aaf6d2486f46926863e42af92c9d4a02404
 Status: Downloaded newer image for fnproject/node:latest
- ---> 1959078abed4
+ ---> c8da69259495
 Step 6/9 : WORKDIR /function
- ---> Using cache
- ---> 5c8692d1e321
+ ---> Running in 128681aed76f
+Removing intermediate container 128681aed76f
+ ---> 1fe19c6ca66c
 Step 7/9 : ADD . /function/
- ---> 322790c57f6a
+ ---> 3ca3886160d0
 Step 8/9 : COPY --from=build-stage /function/node_modules/ /function/node_modules/
- ---> 71035a700e7f
+ ---> 48940744e184
 Step 9/9 : ENTRYPOINT ["node", "func.js"]
- ---> Running in 85aaa3aa14eb
-Removing intermediate container 85aaa3aa14eb
- ---> 9f6cf7646cdf
-Successfully built 9f6cf7646cdf
+ ---> Running in 50ac03eeaec7
+Removing intermediate container 50ac03eeaec7
+ ---> 82e19d55d014
+Successfully built 82e19d55d014
 Successfully tagged fndemouser/nodefn:0.0.2
 
 Updating function nodefn using image fndemouser/nodefn:0.0.2...
 Successfully created function: nodefn with fndemouser/nodefn:0.0.2
-Successfully created trigger: nodefn-trigger
-Trigger Endpoint: http://localhost:8080/t/nodeapp/nodefn-trigger
+Successfully created trigger: nodefn
+Trigger Endpoint: http://localhost:8080/t/nodeapp/nodefn
 ```
 
 All the steps to load the current language Docker image are displayed.
@@ -266,8 +270,7 @@ let's us know that the function is packaged in the image
 
 Note that the containing folder name 'nodefn' was used as the name of the
 generated Docker container and used as the name of the function that
-container was bound to. By convention it is also used to create the trigger name
-`nodefn-trigger`.
+container was bound to. By convention it is also used for the trigger name.
 
 Normally you deploy an application without the `--verbose` option. If you rerun the command a new image and version is created and loaded.
 
@@ -357,9 +360,9 @@ The fn CLI provides a couple of commands to let us see what we've deployed.
 Which, in our case, returns the name of the application we created when we
 deployed our `nodefn` function:
 
-```cs
-NAME
-nodeapp
+```
+NAME     ID
+nodeapp  01DHHSP6X3NG8G00GZJ0000001
 ```
 
 We can also see the functions that are defined by an application.  Since
@@ -371,9 +374,9 @@ is used.  To list the functions included in "nodeapp" we can type:
 > fn list triggers nodeapp
 >```
 
-```sh
-FUNCTION    NAME             TYPE    SOURCE          ENDPOINT
-nodefn      nodefn-trigger   http    /nodefn-trigger http://localhost:8080/t/nodeapp/nodefn-trigger
+```
+FUNCTION    NAME    ID                          TYPE  SOURCE   ENDPOINT
+nodefn      nodefn  01DHHSPYT9NG8G00GZJ0000003  http  /nodefn  http://localhost:8080/t/nodeapp/nodefn
 ```
 
 The output confirms that nodeapp contains a `nodefn` function that can be called via this URL.
@@ -381,14 +384,14 @@ The output confirms that nodeapp contains a `nodefn` function that can be called
 ### Invoke with Curl
 
 The other way to invoke your function is via HTTP.  The Fn server exposes our
-deployed function at `http://localhost:8080/t/nodeapp/nodefn-trigger`, a URL
+deployed function at `http://localhost:8080/t/nodeapp/nodefn`, a URL
 that incorporates our application and function trigger as path elements.
 
 Use curl to invoke the function:
 
 ![user input](images/userinput.png)
 >```sh
-> curl -H "Content-Type: application/json" http://localhost:8080/t/nodeapp/nodefn-trigger
+> curl -H "Content-Type: application/json" http://localhost:8080/t/nodeapp/nodefn
 >```
 
 The result is once again the same.
@@ -402,7 +405,7 @@ function back.
 
 ![user input](images/userinput.png)
 >```sh
-> curl -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/t/nodeapp/nodefn-trigger
+> curl -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/t/nodeapp/nodefn
 >```
 
 The result is once again the same.
@@ -417,4 +420,4 @@ Congratulations!  In this tutorial you've accomplished a lot.  You've created
 your first function, deployed it to your local Fn server and invoked it over
 HTTP.
 
-**Go:** [Back to Contents](../README.md)
+**Go:** [Back to Contents](../../README.md)

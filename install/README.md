@@ -47,7 +47,7 @@ fn version 0.4.87
 
 ```
 
-**Note:** The above Fn CLI install script requires write access to restricted folders like /usr/local/bin. If the user doesn't have write access to /usr/local/bin, or if you prefer to install Fn CLI in a different location, please see the [Fn Manual Install](#fn-manual-install) section.
+**Note:** The above Fn CLI install script requires write access to restricted folders like /usr/local/bin. If the user doesn&apos;t have write access to /usr/local/bin, or if you prefer to install Fn CLI in a different location, please see the [Fn Manual Install](#fn-manual-install) section.
 
 ## Start the Fn Server
 
@@ -113,7 +113,7 @@ the `FN_API_URL` environment variable:
 Alternatively, you can also set the `api_url` using Fn [contexts](https://github.com/fnproject/cli/blob/master/CONTEXT.md).
 
 ## Test the Install
-Let's verify everything is up and running correctly.
+Let&apos;s verify everything is up and running correctly.
 
 **Open a new terminal** and run the following:
 
@@ -132,7 +132,7 @@ Server version:  0.3.439
 
 **Note:**   
 If the server version is '?' then the Fn CLI cannot reach the Fn server. If this
-happens it's likely you have something else running on port 8080 or you started
+happens it&apos;s likely you have something else running on port 8080 or you started
 the server on a different port but forgot to set the `FN_API_URL`.
 
 ## Configure your Context
@@ -160,10 +160,16 @@ The result should be similar to this:
 
 ```txt
 CURRENT     NAME    PROVIDER    API URL                    REGISTRY
-            default default     http://localhost:8080/v1   
+            default default     http://localhost:8080
 ```
 
 Notice we have a default context which deploys to a local Fn server. The default context is created the first time you run the Fn CLI. However, we need to select default as our current context and set a registry value for remote or local Docker use.
+
+>**Note:** Old versions of Fn used an API URL of `http://localhost:8080/v1`. This may cause 404 errors when using Fn. To update the context API URL use the command:
+
+>```sh
+>fn update context api-url http://localhost:8080
+>```
 
 ### Select a Context
 
@@ -220,7 +226,7 @@ option you should get the following results.
 
 ```txt
 CURRENT     NAME    PROVIDER    API URL                    REGISTRY
-*           default default     http://localhost:8080/v1   fndemouser
+*           default default     http://localhost:8080      fndemouser
 ```
 
 The default context is now our current context and has a registry value of
@@ -233,7 +239,7 @@ here](https://github.com/fnproject/cli/blob/master/CONTEXT.md).
 ## Fn Manual Install
 The steps to install Fn manually are described in this section. The system requirements are the same as those outlined for the script installation.
 
-You will need to follow these steps if the user doesn't have write access to /usr/local/bin, or if you prefer to install Fn CLI in a different location.
+You will need to follow these steps if the user doesn&amp;t have write access to /usr/local/bin, or if you prefer to install Fn CLI in a different location.
 
 ### Download Fn CLI
 Download the CLI for your operating system. For this example, files are saved to the `~/Downloads` directory.

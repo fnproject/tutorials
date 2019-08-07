@@ -9,7 +9,7 @@ Setting up a working Fn installation involves these three simple steps:
 * Download the Fn command line interface (CLI) utility
 * Run `fn start` command which will download the Fn server docker image and start the Fn server
 
-### Before you Begin
+## Before you Begin
 
 Before we can install Fn you'll need:
 
@@ -36,9 +36,8 @@ Once installed you'll see the Fn CLI version printed out.  You should see
 something similar to the following displayed (although likely with a later
 version number):
 
-```sh
-fn version 0.4.87
-
+```txt
+fn version 0.5.84
         ______
        / ____/___
       / /_  / __ \
@@ -66,19 +65,18 @@ stop with Ctrl-C:
 
 If the Fn Server starts up successfully, you should see output similar to:
 
-```sh
+```txt
 ...
-time="2018-05-10T11:32:49Z" level=info msg="available cpu" availCPU=2000 totalCPU=2000
-time="2018-05-10T11:32:49Z" level=info msg="sync and async cpu reservations" cpuAsync=1600 cpuAsyncHWMark=1280 cpuSync=400
-
+time="2019-08-07T14:55:55Z" level=info msg="ram reservations" avail_memory=1388138496
+time="2019-08-07T14:55:55Z" level=info msg="available cpu" avail_cpu=4000 total_cpu=4000
+time="2019-08-07T14:55:55Z" level=info msg="cpu reservations" cpu=4000
         ______
        / ____/___
       / /_  / __ \
      / __/ / / / /
     /_/   /_/ /_/
-        v0.3.439
 
-time="2018-05-10T11:32:49Z" level=info msg="Fn serving on `:8080`" type=full
+time="2019-08-07T14:55:55Z" level=info msg="Fn serving on `:8080`" type=full version=0.3.728
 ```
 
 **Note:** The Fn server stores its metadata in the `~/.fn/data` directory. If you run in to errors after updating the Fn server, you may want to delete the contents of this `data` directory and restart Fn server.
@@ -94,7 +92,7 @@ docker: Error response from daemon: driver failed programming external connectiv
 In this case you can stop the other process and run `fn start` again. Alternatively,
 you can start Fn server on a different port.
 
-#### Start the Fn Server on a Different Port
+### Start the Fn Server on a Different Port
 Fn Server starts on port 8080 by default. To use a different port use the `--port` or the `-p` option. For example
 
 ![user input](images/userinput.png)
@@ -125,15 +123,15 @@ Let&apos;s verify everything is up and running correctly.
 You should see the version of the Fn CLI (client) and server displayed (your
 version will likely differ):
 
-```sh
-Client version:  0.4.87
-Server version:  0.3.439
+```txt
+Client version:  0.5.84
+Server version:  0.3.728
 ```
 
-**Note:**   
+**Note:**
 If the server version is '?' then the Fn CLI cannot reach the Fn server. If this
-happens it&apos;s likely you have something else running on port 8080 or you started
-the server on a different port but forgot to set the `FN_API_URL`.
+happens it&apos;s likely you have something else running on port 8080 or you
+started the server on a different port but forgot to set the `FN_API_URL`.
 
 ## Configure your Context
 

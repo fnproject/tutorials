@@ -29,8 +29,7 @@ Let's start by creating a new function.  In a terminal type the following:
 The output will be:
 
 ```sh
-Creating function at: /javafn
-Runtime: java
+Creating function at: ./javafn
 Function boilerplate generated.
 func.yaml created.
 ```
@@ -89,13 +88,13 @@ schema_version: 20180708
 name: javafn
 version: 0.0.1
 runtime: java
-build_image: fnproject/fn-java-fdk-build:jdk11-1.0.85
-run_image: fnproject/fn-java-fdk:jre11-1.0.85
+build_image: fnproject/fn-java-fdk-build:jdk11-1.0.98
+run_image: fnproject/fn-java-fdk:jre11-1.0.98
 cmd: com.example.fn.HelloFunction::handleRequest
 triggers:
-- name: javafn-trigger
+- name: javafn
   type: http
-  source: /javafn-trigger
+  source: /javafn
 ```
 
 The generated `func.yaml` file contains metadata about your function and
@@ -110,7 +109,7 @@ class and the method that should be invoked when your `javafn` function is
 called.
 * triggers--identifies the automatically generated trigger name and source. For
 example, this function would be executed from the URL
-<http://localhost:8080/t/appname/javafn-trigger>. Where appname is the name of
+`http://localhost:8080/t/appname/javafn`. Where appname is the name of
 the app chosen for your function when it is deployed.
 
 The Java function init also generates a Maven `pom.xml` file to build and test your function.  The pom includes the Fn Java FDK runtime and test libraries your function needs.
@@ -161,7 +160,9 @@ function of a particular language it takes longer as Fn downloads the necessary
 Docker images. The `--verbose` option allows you to see this process.
 
 ![](images/userinput.png)
->`fn --verbose deploy --app java-app --local`
+>```sh
+> fn --verbose deploy --app java-app --local
+>```
 
 ```yaml
 Deploying javafn to app: java-app
@@ -170,57 +171,113 @@ Building image fndemouser/javafn:0.0.2
 FN_REGISTRY:  fndemouser
 Current Context:  default
 Sending build context to Docker daemon  14.34kB
-Step 1/11 : FROM fnproject/fn-java-fdk-build:jdk9-1.0.75 as build-stage
-jdk9-1.0.75: Pulling from fnproject/fn-java-fdk-build
-c2ad77de49ce: Already exists 
-d6485a2cca95: Already exists 
-4f4ea4e6ab41: Already exists 
-649f9534d72b: Already exists 
-6e47a95e0938: Already exists 
-d46a954202a9: Pull complete 
-5a73fd16c382: Pull complete 
-6028b8203fcc: Pull complete 
-98a6eaf5f83b: Pull complete 
-7afb9733d3e4: Pull complete 
-107a8e7e5bd9: Pull complete 
-384cc00c5a4f: Pull complete 
-bb19e03dd551: Pull complete 
-b7f4aa3f1f42: Pull complete 
-Digest: sha256:5be1aff1f7107b8a1a50e4b906b91fc6487977a9e70639e6133cdaaa8b58d74d
-Status: Downloaded newer image for fnproject/fn-java-fdk-build:jdk9-1.0.75
- ---> 10c10a1cd2ae
+Step 1/11 : FROM fnproject/fn-java-fdk-build:jdk11-1.0.98 as build-stage
+ ---> d490a89232cf
 Step 2/11 : WORKDIR /function
- ---> Running in 68884bc0f125
-Removing intermediate container 68884bc0f125
- ---> 44432a740323
+ ---> Using cache
+ ---> 9eb5a3bc5e31
 Step 3/11 : ENV MAVEN_OPTS -Dhttp.proxyHost= -Dhttp.proxyPort= -Dhttps.proxyHost= -Dhttps.proxyPort= -Dhttp.nonProxyHosts= -Dmaven.repo.local=/usr/share/maven/ref/repository
- ---> Running in b6f5256bc328
-Removing intermediate container b6f5256bc328
- ---> 401d12925a1f
+ ---> Using cache
+ ---> 8f96e5fc45a1
 Step 4/11 : ADD pom.xml /function/pom.xml
- ---> 92803f3eba9d
+ ---> 151ef69e4a27
 Step 5/11 : RUN ["mvn", "package", "dependency:copy-dependencies", "-DincludeScope=runtime", "-DskipTests=true", "-Dmdep.prependGroupId=true", "-DoutputDirectory=target", "--fail-never"]
- ---> Running in 13af70800045
+ ---> Running in 1477b839c8b4
 [INFO] Scanning for projects...
 Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-compiler-plugin/3.3/maven-compiler-plugin-3.3.pom
-...more maven downloads here, removed for brevity...
-
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-compiler-plugin/3.3/maven-compiler-plugin-3.3.pom (11 kB at 18 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-plugins/27/maven-plugins-27.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-plugins/27/maven-plugins-27.pom (11 kB at 277 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-parent/26/maven-parent-26.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-parent/26/maven-parent-26.pom (40 kB at 846 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-compiler-plugin/3.3/maven-compiler-plugin-3.3.jar
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-compiler-plugin/3.3/maven-compiler-plugin-3.3.jar (46 kB at 1.0 MB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-deploy-plugin/2.7/maven-deploy-plugin-2.7.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-deploy-plugin/2.7/maven-deploy-plugin-2.7.pom (5.6 kB at 165 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-deploy-plugin/2.7/maven-deploy-plugin-2.7.jar
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-deploy-plugin/2.7/maven-deploy-plugin-2.7.jar (27 kB at 838 kB/s)
 [INFO] 
 [INFO] ------------------------< com.example.fn:hello >------------------------
 [INFO] Building hello 1.0.0
 [INFO] --------------------------------[ jar ]---------------------------------
-Downloading from fn-release-repo: https://dl.bintray.com/fnproject/fnproject/com/fnproject/fn/api/1.0.75/api-1.0.75.pom
-...more maven downloads here, removed for brevity...
-
+Downloading from fn-release-repo: https://dl.bintray.com/fnproject/fnproject/com/fnproject/fn/api/1.0.98/api-1.0.98.pom
+Downloaded from fn-release-repo: https://dl.bintray.com/fnproject/fnproject/com/fnproject/fn/api/1.0.98/api-1.0.98.pom (0 B at 0 B/s)
+Downloading from fn-release-repo: https://dl.bintray.com/fnproject/fnproject/com/fnproject/fn/fdk/1.0.98/fdk-1.0.98.pom
+Downloaded from fn-release-repo: https://dl.bintray.com/fnproject/fnproject/com/fnproject/fn/fdk/1.0.98/fdk-1.0.98.pom (0 B at 0 B/s)
+Downloading from fn-release-repo: https://dl.bintray.com/fnproject/fnproject/com/fnproject/fn/testing-core/1.0.98/testing-core-1.0.98.pom
+Downloaded from fn-release-repo: https://dl.bintray.com/fnproject/fnproject/com/fnproject/fn/testing-core/1.0.98/testing-core-1.0.98.pom (0 B at 0 B/s)
+Downloading from fn-release-repo: https://dl.bintray.com/fnproject/fnproject/com/fnproject/fn/runtime/1.0.98/runtime-1.0.98.pom
+Downloaded from fn-release-repo: https://dl.bintray.com/fnproject/fnproject/com/fnproject/fn/runtime/1.0.98/runtime-1.0.98.pom (0 B at 0 B/s)
+Downloading from fn-release-repo: https://dl.bintray.com/fnproject/fnproject/com/fnproject/fn/testing-junit4/1.0.98/testing-junit4-1.0.98.pom
+Downloaded from fn-release-repo: https://dl.bintray.com/fnproject/fnproject/com/fnproject/fn/testing-junit4/1.0.98/testing-junit4-1.0.98.pom (0 B at 0 B/s)
+Downloading from fn-release-repo: https://dl.bintray.com/fnproject/fnproject/com/fnproject/fn/api/1.0.98/api-1.0.98.jar
+Downloading from fn-release-repo: https://dl.bintray.com/fnproject/fnproject/com/fnproject/fn/runtime/1.0.98/runtime-1.0.98.jar
+Downloading from fn-release-repo: https://dl.bintray.com/fnproject/fnproject/com/fnproject/fn/testing-core/1.0.98/testing-core-1.0.98.jar
+Downloading from fn-release-repo: https://dl.bintray.com/fnproject/fnproject/com/fnproject/fn/testing-junit4/1.0.98/testing-junit4-1.0.98.jar
+Downloaded from fn-release-repo: https://dl.bintray.com/fnproject/fnproject/com/fnproject/fn/testing-core/1.0.98/testing-core-1.0.98.jar (0 B at 0 B/s)
+Downloaded from fn-release-repo: https://dl.bintray.com/fnproject/fnproject/com/fnproject/fn/api/1.0.98/api-1.0.98.jar (0 B at 0 B/s)
+Downloaded from fn-release-repo: https://dl.bintray.com/fnproject/fnproject/com/fnproject/fn/testing-junit4/1.0.98/testing-junit4-1.0.98.jar (0 B at 0 B/s)
+Downloaded from fn-release-repo: https://dl.bintray.com/fnproject/fnproject/com/fnproject/fn/runtime/1.0.98/runtime-1.0.98.jar (0 B at 0 B/s)
 [INFO] 
 [INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ hello ---
 [INFO] Using 'UTF-8' encoding to copy filtered resources.
 [INFO] skip non existing resourceDirectory /function/src/main/resources
 [INFO] 
 [INFO] --- maven-compiler-plugin:3.3:compile (default-compile) @ hello ---
-Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/maven-toolchain/2.2.1/maven-toolchain-2.2.1.pom
-...more maven downloads here, removed for brevity...
-
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/reporting/maven-reporting-api/2.2.1/maven-reporting-api-2.2.1.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/reporting/maven-reporting-api/2.2.1/maven-reporting-api-2.2.1.pom (1.9 kB at 60 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/reporting/maven-reporting/2.2.1/maven-reporting-2.2.1.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/reporting/maven-reporting/2.2.1/maven-reporting-2.2.1.pom (1.4 kB at 50 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/doxia/doxia-sink-api/1.1/doxia-sink-api-1.1.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/doxia/doxia-sink-api/1.1/doxia-sink-api-1.1.pom (2.0 kB at 66 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/doxia/doxia/1.1/doxia-1.1.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/doxia/doxia/1.1/doxia-1.1.pom (15 kB at 434 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/doxia/doxia-logging-api/1.1/doxia-logging-api-1.1.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/doxia/doxia-logging-api/1.1/doxia-logging-api-1.1.pom (1.6 kB at 56 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/commons-cli/commons-cli/1.2/commons-cli-1.2.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/commons-cli/commons-cli/1.2/commons-cli-1.2.pom (8.0 kB at 296 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/commons/commons-parent/11/commons-parent-11.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/commons/commons-parent/11/commons-parent-11.pom (25 kB at 822 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-utils/0.7/maven-shared-utils-0.7.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-utils/0.7/maven-shared-utils-0.7.pom (5.0 kB at 167 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-components/20/maven-shared-components-20.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-components/20/maven-shared-components-20.pom (5.1 kB at 160 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-api/2.5/plexus-compiler-api-2.5.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-api/2.5/plexus-compiler-api-2.5.pom (865 B at 26 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler/2.5/plexus-compiler-2.5.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler/2.5/plexus-compiler-2.5.pom (5.3 kB at 136 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-components/1.3.1/plexus-components-1.3.1.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-components/1.3.1/plexus-components-1.3.1.pom (3.1 kB at 113 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-manager/2.5/plexus-compiler-manager-2.5.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-manager/2.5/plexus-compiler-manager-2.5.pom (690 B at 22 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-javac/2.5/plexus-compiler-javac-2.5.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-javac/2.5/plexus-compiler-javac-2.5.pom (769 B at 27 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compilers/2.5/plexus-compilers-2.5.pom
+Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compilers/2.5/plexus-compilers-2.5.pom (1.3 kB at 46 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-utils/0.7/maven-shared-utils-0.7.jar
+Downloading from central: https://repo.maven.apache.org/maven2/com/google/code/findbugs/jsr305/2.0.1/jsr305-2.0.1.jar
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-manager/2.5/plexus-compiler-manager-2.5.jar
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-api/2.5/plexus-compiler-api-2.5.jar
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-javac/2.5/plexus-compiler-javac-2.5.jar
+Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-manager/2.5/plexus-compiler-manager-2.5.jar (4.6 kB at 52 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-container-default/1.5.5/plexus-container-default-1.5.5.jar
+Downloaded from central: https://repo.maven.apache.org/maven2/com/google/code/findbugs/jsr305/2.0.1/jsr305-2.0.1.jar (32 kB at 287 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-classworlds/2.2.2/plexus-classworlds-2.2.2.jar
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/maven/shared/maven-shared-utils/0.7/maven-shared-utils-0.7.jar (170 kB at 1.0 MB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/org/apache/xbean/xbean-reflect/3.4/xbean-reflect-3.4.jar
+Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-api/2.5/plexus-compiler-api-2.5.jar (25 kB at 149 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/log4j/log4j/1.2.12/log4j-1.2.12.jar
+Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-compiler-javac/2.5/plexus-compiler-javac-2.5.jar (19 kB at 109 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/commons-logging/commons-logging-api/1.1/commons-logging-api-1.1.jar
+Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-classworlds/2.2.2/plexus-classworlds-2.2.2.jar (46 kB at 162 kB/s)
+Downloaded from central: https://repo.maven.apache.org/maven2/commons-logging/commons-logging-api/1.1/commons-logging-api-1.1.jar (45 kB at 154 kB/s)
+Downloading from central: https://repo.maven.apache.org/maven2/junit/junit/3.8.2/junit-3.8.2.jar
+Downloading from central: https://repo.maven.apache.org/maven2/com/google/collections/google-collections/1.0/google-collections-1.0.jar
+Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/xbean/xbean-reflect/3.4/xbean-reflect-3.4.jar (134 kB at 426 kB/s)
+Downloaded from central: https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-container-default/1.5.5/plexus-container-default-1.5.5.jar (217 kB at 572 kB/s)
+Downloaded from central: https://repo.maven.apache.org/maven2/junit/junit/3.8.2/junit-3.8.2.jar (121 kB at 302 kB/s)
+Downloaded from central: https://repo.maven.apache.org/maven2/log4j/log4j/1.2.12/log4j-1.2.12.jar (358 kB at 719 kB/s)
+Downloaded from central: https://repo.maven.apache.org/maven2/com/google/collections/google-collections/1.0/google-collections-1.0.jar (640 kB at 1.1 MB/s)
 [INFO] No sources to compile
 [INFO] 
 [INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ hello ---
@@ -230,7 +287,7 @@ Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/
 [INFO] --- maven-compiler-plugin:3.3:testCompile (default-testCompile) @ hello ---
 [INFO] No sources to compile
 [INFO] 
-[INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ hello ---
+[INFO] --- maven-surefire-plugin:2.22.1:test (default-test) @ hello ---
 [INFO] Tests are skipped.
 [INFO] 
 [INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ hello ---
@@ -238,19 +295,19 @@ Downloading from central: https://repo.maven.apache.org/maven2/org/apache/maven/
 [INFO] Building jar: /function/target/hello-1.0.0.jar
 [INFO] 
 [INFO] --- maven-dependency-plugin:2.8:copy-dependencies (default-cli) @ hello ---
-[INFO] Copying api-1.0.75.jar to /function/target/com.fnproject.fn.api-1.0.75.jar
+[INFO] Copying api-1.0.98.jar to /function/target/com.fnproject.fn.api-1.0.98.jar
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time: 5.628 s
-[INFO] Finished at: 2018-10-16T22:46:45Z
+[INFO] Total time:  7.250 s
+[INFO] Finished at: 2019-08-13T17:52:36Z
 [INFO] ------------------------------------------------------------------------
-Removing intermediate container 13af70800045
- ---> 641e7944d2af
+Removing intermediate container 1477b839c8b4
+ ---> 5b0ef6939c62
 Step 6/11 : ADD src /function/src
- ---> ca6c3f1b91ef
+ ---> b060ef411b98
 Step 7/11 : RUN ["mvn", "package"]
- ---> Running in 1bb7f99d39f8
+ ---> Running in 424aa607d7c1
 [INFO] Scanning for projects...
 [INFO] 
 [INFO] ------------------------< com.example.fn:hello >------------------------
@@ -273,60 +330,47 @@ Step 7/11 : RUN ["mvn", "package"]
 [INFO] Changes detected - recompiling the module!
 [INFO] Compiling 1 source file to /function/target/test-classes
 [INFO] 
-[INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ hello ---
-[INFO] Surefire report directory: /function/target/surefire-reports
-
--------------------------------------------------------
- T E S T S
--------------------------------------------------------
-Running com.example.fn.HelloFunctionTest
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.394 sec
-
-Results :
-
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
-
+[INFO] --- maven-surefire-plugin:2.22.1:test (default-test) @ hello ---
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.example.fn.HelloFunctionTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.588 s - in com.example.fn.HelloFunctionTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
 [INFO] 
 [INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ hello ---
 [INFO] Building jar: /function/target/hello-1.0.0.jar
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time: 2.978 s
-[INFO] Finished at: 2018-10-16T22:46:51Z
+[INFO] Total time:  4.240 s
+[INFO] Finished at: 2019-08-13T17:52:44Z
 [INFO] ------------------------------------------------------------------------
-Removing intermediate container 1bb7f99d39f8
- ---> f927528437d9
-Step 8/11 : FROM fnproject/fn-java-fdk:jdk9-1.0.75
-jdk9-1.0.75: Pulling from fnproject/fn-java-fdk
-c2ad77de49ce: Already exists 
-d6485a2cca95: Already exists 
-4f4ea4e6ab41: Already exists 
-649f9534d72b: Already exists 
-6e47a95e0938: Already exists 
-8068f9696b91: Pull complete 
-6c20847ce4f9: Pull complete 
-10e1d186dcc9: Pull complete 
-Digest: sha256:a317732d9dd12ae8f9078591e86bba2ed569c7ec823e4c763ff176c07c8add3f
-Status: Downloaded newer image for fnproject/fn-java-fdk:jdk9-1.0.75
- ---> 5ca9da5945c4
+Removing intermediate container 424aa607d7c1
+ ---> 1500cd7d9a00
+Step 8/11 : FROM fnproject/fn-java-fdk:jre11-1.0.98
+ ---> b1ea566de6f5
 Step 9/11 : WORKDIR /function
- ---> Running in 0f94631cd8f9
-Removing intermediate container 0f94631cd8f9
- ---> a6da0230bf05
+ ---> Using cache
+ ---> c73084000ac2
 Step 10/11 : COPY --from=build-stage /function/target/*.jar /function/app/
- ---> 9fb385022aeb
+ ---> 672bb4f1c695
 Step 11/11 : CMD ["com.example.fn.HelloFunction::handleRequest"]
- ---> Running in 8b571cbd24af
-Removing intermediate container 8b571cbd24af
- ---> 0cbe66bb9e2b
-Successfully built 0cbe66bb9e2b
+ ---> Running in e942508c98c3
+Removing intermediate container e942508c98c3
+ ---> 02e1a32d6c44
+Successfully built 02e1a32d6c44
 Successfully tagged fndemouser/javafn:0.0.2
 
 Updating function javafn using image fndemouser/javafn:0.0.2...
 Successfully created function: javafn with fndemouser/javafn:0.0.2
-Successfully created trigger: javafn-trigger
-Trigger Endpoint: http://localhost:8080/t/java-app/javafn-trigger
+Successfully created trigger: javafn
+Trigger Endpoint: http://localhost:8080/t/java-app/javafn
 ```
 
 All the steps to load the current language Docker image are displayed.
@@ -345,7 +389,7 @@ let's us know that the function is packaged in the image
 Note that the containing folder name `javafn` was used as the name of the
 generated Docker container and used as the name of the function that
 container was bound to. By convention it is also used to create the trigger name
-`javafn-trigger`.
+`javafn`.
 
 Normally you deploy an application without the `--verbose` option. If you rerun the command a new image and version is created and loaded.
 
@@ -517,7 +561,7 @@ to and changed the function signature to use these Pojos.  The
 Java FDK will automatically bind input data based on the Java arguments
 to the function. JSON support is built-in but input and output binding
 is extensible and you could plug in marshallers for other
-data formats like protobuf, avro or xml.
+data formats like `protobuf`, `avro` or `xml`.
 
 Let's build the updated function:
 
@@ -607,15 +651,11 @@ In the new `shouldReturnGreeting()` test method we're passing in the
 JSON document
 
 ```js
-{
-    "name": "Bob"
-}
+{ "name": "Bob" }
 ```
 and expecting a result of
 ```js
-{
-    "salutation": "Hello Bob"
-}
+{ "salutation": "Hello Bob" }
 ```
 
 If you re-run the test via `fn -verbose build` we can see that it now passes:
@@ -628,7 +668,7 @@ If you re-run the test via `fn -verbose build` we can see that it now passes:
 
 The other way to invoke your function is via HTTP. With the changes to the code,
 we can pass JSON and return JSON from the the function.  The Fn server exposes
-our deployed function at `http://localhost:8080/t/myapp/javafn-trigger`, a URL
+our deployed function at `http://localhost:8080/t/myapp/javafn`, a URL
 that incorporates our application and function trigger as path elements.
 
 Redeploy your updated Java function
@@ -642,7 +682,7 @@ Use `curl` to invoke the function:
 
 ![user input](images/userinput.png)
 >```sh
-> curl -H "Content-Type: application/json" http://localhost:8080/t/java-app/javafn-trigger
+> curl -H "Content-Type: application/json" http://localhost:8080/t/java-app/javafn
 >```
 
 The result is now in a JSON format.
@@ -658,7 +698,7 @@ the function back.
 
 ![user input](images/userinput.png)
 >```
-> curl -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/t/java-app/javafn-trigger
+> curl -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/t/java-app/javafn
 >```
 
 The result is now in JSON format with the passed value returned.

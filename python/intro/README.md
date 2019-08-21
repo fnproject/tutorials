@@ -28,7 +28,7 @@ In the terminal type the following:
 
 ![user input](images/userinput.png)
 >```sh
-> fn init --runtime python --trigger http pythonfn
+> fn init --runtime python pythonfn
 >```
 
 The output will be
@@ -89,7 +89,7 @@ def handler(ctx, data: io.BytesIO=None):
 
     return response.Response(
         ctx, response_data=json.dumps(
-            {"message": "Hello {0}".format(name)}), 
+            {"message": "Hello {0}".format(name)}),
         headers={"Content-Type": "application/json"}
     )
 
@@ -116,10 +116,6 @@ version: 0.0.1
 runtime: python
 entrypoint: /python/bin/fdk /function/func.py handler
 memory: 256
-triggers:
-- name: pythonfn
-  type: http
-  source: /pythonfn
 ```
 
 The generated `func.yaml` file contains metadata about your function and
@@ -132,11 +128,7 @@ declares a number of properties including:
 in `--runtime`.
 * memory--The max memory size for a function in megabytes.
 * entrypoint--the name of the executable to invoke when your function is called,
-in this case `python3 func.py`.
-* triggers--identifies the automatically generated trigger name and source. For
-example, this function would be executed from the URL
-<http://localhost:8080/t/appname/pythonfn>. Where appname is the name of
-the app chosen for your function when it is deployed.
+in this case `/python/bin/fdk /function/func.py handler`.
 
 There are other user specifiable properties but these will suffice for
 this example.  Note that the name of your function is taken from the containing
@@ -164,8 +156,8 @@ Make sure your context is set to default and you are using a demo user. Use the 
 >```
 
 ```cs
-CURRENT	NAME	PROVIDER	API URL			        REGISTRY
-*       default	default		http://localhost:8080	fndemouser
+CURRENT NAME     PROVIDER  API URL                REGISTRY
+*       default  default   http://localhost:8080  fndemouser
 ```
 
 If your context is not configured, please see [the context installation instructions](https://github.com/fnproject/tutorials/blob/master/install/README.md#configure-your-context) before proceeding. Your context determines where your function is deployed.
@@ -176,7 +168,7 @@ Next, functions are grouped together into an application. The application acts a
 ![user input](images/userinput.png)
 >```sh
 > fn create app pythonapp
->``` 
+>```
 
 A confirmation is returned:
 
@@ -206,18 +198,18 @@ You should see something similar to:
 ```yaml
 Deploying pythonfn to app: pythonapp
 Bumped to version 0.0.2
-Building image fndemouser/pythonfn:0.0.2 
+Building image fndemouser/pythonfn:0.0.2
 FN_REGISTRY:  fndemouser
 Current Context:  default
 Sending build context to Docker daemon  5.632kB
 Step 1/12 : FROM fnproject/python:3.7.1-dev as build-stage
 3.7.1-dev: Pulling from fnproject/python
-a5a6f2f73cd8: Pull complete 
-3a6fba040982: Pull complete 
-738ebe0cf907: Pull complete 
-a4b11c375c52: Pull complete 
-02c57c00f1bc: Pull complete 
-5dac448549aa: Pull complete 
+a5a6f2f73cd8: Pull complete
+3a6fba040982: Pull complete
+738ebe0cf907: Pull complete
+a4b11c375c52: Pull complete
+02c57c00f1bc: Pull complete
+5dac448549aa: Pull complete
 Digest: sha256:80dd569dfc2a616b513bba52d0e03ae9db933c7aa6039687c13bf59c1ce47410
 Status: Downloaded newer image for fnproject/python:3.7.1-dev
  ---> f1676f17ed78
@@ -271,11 +263,11 @@ Removing intermediate container 389e75d27ea5
  ---> fe7635e860ca
 Step 7/12 : FROM fnproject/python:3.7.1
 3.7.1: Pulling from fnproject/python
-a5a6f2f73cd8: Already exists 
-3a6fba040982: Already exists 
-738ebe0cf907: Already exists 
-a4b11c375c52: Already exists 
-02c57c00f1bc: Already exists 
+a5a6f2f73cd8: Already exists
+3a6fba040982: Already exists
+738ebe0cf907: Already exists
+a4b11c375c52: Already exists
+02c57c00f1bc: Already exists
 Digest: sha256:af0c785e711e34f8d0ba5a346e9a7900f6557d9cd96a0e7d0ea6e51adba6e797
 Status: Downloaded newer image for fnproject/python:3.7.1
  ---> eda33421b45b
@@ -300,8 +292,6 @@ Successfully tagged fndemouser/pythonfn:0.0.2
 
 Updating function pythonfn using image fndemouser/pythonfn:0.0.2...
 Successfully created function: pythonfn with fndemouser/pythonfn:0.0.2
-Successfully created trigger: pythonfn
-Trigger Endpoint: http://localhost:8080/t/pythonapp/pythonfn
 ```
 
 All the steps to load the current language Docker image are displayed.
@@ -318,52 +308,10 @@ image `fndemouser/pythonfn:0.0.2`.
 
 Note that the containing folder name `pythonfn` was used as the name of the
 generated Docker container and used as the name of the function that container
-was bound to. By convention it is also used to create the trigger name
-`pythonfn`.
+was bound to.
 
 Normally you deploy an application without the `--verbose` option. If you rerun the command a new image and version is created and loaded.
 
-
-## Invoke your Deployed Function
-
-There are two ways to call your deployed function.  
-
-### Invoke with the CLI
-
-The first is using the Fn CLI which makes invoking your function relatively
-easy.  Type the following:
-
-![user input](images/userinput.png)
->```sh
-> fn invoke pythonapp pythonfn
->```
-
-which results in:
-
-```js
-{"message":"Hello World"}
-```
-
-When you invoked "pythonapp pythonfn" the fn server looked up the "pythonapp"
-application and then looked for the Docker container image bound to the
-"pythonfn" function and executed the code. Fn `invoke` invokes your function
-directly and independently of any associated triggers.  You can always invoke a
-function even without it having any triggers bound to it.
-
-You can also pass data to the invoke command. Note that you set the content type
-for the data passed. For example:
-
-![user input](images/userinput.png)
->```sh
-> echo -n '{"name":"Bob"}' | fn invoke pythonapp pythonfn --content-type application/json
->```
-
-```js
-{"message":"Hello Bob"}
-```
-
-The JSON data was parsed and since `name` was set to "Bob", that value is passed
-in the output.
 
 ### Understand fn deploy
 If you have used Docker before the output of `fn --verbose deploy` should look
@@ -400,7 +348,6 @@ fndemouser/pythonfn      0.0.2               cde014cefdad        7 minutes ago  
 ```
 
 ### Explore your Application
-
 The fn CLI provides a couple of commands to let us see what we've deployed.
 `fn list apps` returns a list of all of the defined applications.
 
@@ -417,32 +364,93 @@ NAME        ID
 pythonapp   01D4BBS7BPNG8G00GZJ0000001
 ```
 
-We can also see the functions that are defined by an application. Since functions are exposed via triggers, the `fn list triggers <appname>` command is used. To list the functions included in "pythonapp" we can type:
+The fn list functions <app-name> command lists all the functions associated with and app.
 
 ![User Input Icon](images/userinput.png)
 >```sh
-> fn list triggers pythonapp
+> fn list functions pythonapp
 >```
 
 ```sh
-FUNCTION        NAME            ID                              TYPE    SOURCE          ENDPOINT
-pythonfn        pythonfn        01D8VGFVBBNG8G00GZJ0000003      http    /pythonfn       http://localhost:8080/t/pythonapp/pythonfn
+NAME      IMAGE                      ID
+pythonfn  fndemouser/pythonfn:0.0.2  01DJRP8FT8NG8G00GZJ0000002
 ```
 
-The output confirms that pythonapp contains a `pythonfn` function which may be
-requested via the specified URL.
+## Invoke your Deployed Function
+There are two ways to call your deployed function.  
+
+### Invoke with the CLI
+The first is using the Fn CLI which makes invoking your function relatively
+easy.  Type the following:
+
+![user input](images/userinput.png)
+>```sh
+> fn invoke pythonapp pythonfn
+>```
+
+which results in:
+
+```js
+{"message":"Hello World"}
+```
+
+When you invoked "pythonapp pythonfn" the fn server looked up the "pythonapp"
+application and then looked for the Docker container image bound to the
+"pythonfn" function and executed the code. Fn `invoke` invokes your function
+directly and independently.
+
+You can also pass data to the invoke command. Note that you set the content type
+for the data passed. For example:
+
+![user input](images/userinput.png)
+>```sh
+> echo -n '{"name":"Bob"}' | fn invoke pythonapp pythonfn --content-type application/json
+>```
+
+```js
+{"message":"Hello Bob"}
+```
+
+The JSON data was parsed and since `name` was set to "Bob", that value is passed
+in the output.
+
+
+### Getting a Function's Invoke Endpoint
+In addition to using the Fn invoke command, we can call a function by using a URL. To do this, we must get the function's invoke endpoint. Use the command `fn inspect function <appname> <function-name>`. To list the nodefn function's invoke endpoint we can type:
+
+![user input](images/userinput.png)
+>```sh
+> fn inspect function pythonapp pythonfn
+>```
+
+```js
+{
+	"annotations": {
+		"fnproject.io/fn/invokeEndpoint": "http://localhost:8080/invoke/01DJRP8FT8NG8G00GZJ0000002"
+	},
+	"app_id": "01DJRP674QNG8G00GZJ0000001",
+	"created_at": "2019-08-20T23:37:12.776Z",
+	"id": "01DJRP8FT8NG8G00GZJ0000002",
+	"idle_timeout": 30,
+	"image": "fndemouser/pythonfn:0.0.2",
+	"memory": 256,
+	"name": "pythonfn",
+	"timeout": 30,
+	"updated_at": "2019-08-20T23:42:47.297Z"
+}
+```
+
+The output confirms that `nodefn` functions invoke endpoint is:
+`http://localhost:8080/invoke/01DJRP8FT8NG8G00GZJ0000002`. We can use this URL
+to call the function.
+
 
 ### Invoke with Curl
-
-The other way to invoke your function is via HTTP.  The Fn server exposes our
-deployed function at `http://localhost:8080/t/pythonapp/pythonfn`, a URL
-that incorporates our application and function trigger as path elements.
-
 Use `curl` to invoke the function:
 
 ![user input](images/userinput.png)
 >```sh
-> curl -H "Content-Type: application/json" http://localhost:8080/t/pythonapp/pythonfn
+> curl -X "POST" -H "Content-Type: application/json" http://localhost:8080/invoke/01DJRP8FT8NG8G00GZJ0000002
 >```
 
 The result is once again the same.
@@ -456,7 +464,7 @@ the function back.
 
 ![user input](images/userinput.png)
 >```
-> curl -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/t/pythonapp/pythonfn
+> curl -X "POST" -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/invoke/01DJRP8FT8NG8G00GZJ0000002
 >```
 
 The result is once again the same.

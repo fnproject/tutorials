@@ -61,7 +61,7 @@ Now get a list of the directory contents.
 >```
 
 ```txt
-Gopkg.toml func.go func.yaml
+func.go func.yaml go.mod
 ```
 
 The `func.go` file which contains your actual Go function is generated along
@@ -125,9 +125,9 @@ version: 0.0.1
 runtime: go
 entrypoint: ./func
 triggers:
-- name: gofn-trigger
+- name: gofn
   type: http
-  source: /gofn-trigger
+  source: /gofn
 ```
 
 The generated `func.yaml` file contains metadata about your function and
@@ -142,7 +142,7 @@ in `--runtime`.
 in this case `./func`
 * triggers--identifies the automatically generated trigger name and source. For
 example, this function would be executed from the URL
-<http://localhost:8080/t/appname/gofn-trigger>. Where appname is the name of
+<http://localhost:8080/t/appname/gofn>. Where `appname` is the name of
 the app chosen for your function when it is deployed.
 
 There are other user specifiable properties but these will suffice for
@@ -152,7 +152,7 @@ folder name.  We'll see this come into play later on.
 ### Other Function Files
 The `fn init` command generated one other file.
 
-* `Gopkg.toml` --  the Go dep tool dependency management tool file which
+* `go.mod` --  the Go modules file which
 specifies all the dependencies for your function.
 
 ## Deploy Your First Function
@@ -211,63 +211,44 @@ You should see output similar to:
 ```yaml
 Deploying gofn to app: goapp
 Bumped to version 0.0.2
-Building image fndemouser/gofn:0.0.2 
+Building image fndemouser/gofn:0.0.2
 FN_REGISTRY:  fndemouser
 Current Context:  default
 Sending build context to Docker daemon   5.12kB
 Step 1/10 : FROM fnproject/go:dev as build-stage
-dev: Pulling from fnproject/go
-ff3a5c916c92: Already exists 
-f32d2ea73378: Pull complete 
-3bdfb30a4c89: Pull complete 
-6487ee6212c5: Pull complete 
-074903419fc0: Pull complete 
-3db945ee2177: Pull complete 
-Digest: sha256:6ebffaea00a2f53373c68dd52e0df209d7e464d691db0d52b31060d06df8e839
-Status: Downloaded newer image for fnproject/go:dev
- ---> fac877f7d14d
+ ---> 96c8fb94a8e1
 Step 2/10 : WORKDIR /function
- ---> Running in ec4e59c12f13
-Removing intermediate container ec4e59c12f13
- ---> 98fcbeba3fcc
-Step 3/10 : RUN go get -u github.com/golang/dep/cmd/dep
- ---> Running in d04b9dfa8dc6
-Removing intermediate container d04b9dfa8dc6
- ---> 3bae0bbe8a81
-Step 4/10 : ADD . /go/src/func/
- ---> b33514c5876b
-Step 5/10 : RUN cd /go/src/func/ && dep ensure
- ---> Running in 6147e9cf3ddf
-Removing intermediate container 6147e9cf3ddf
- ---> 2f7f21a2eb15
+ ---> Using cache
+ ---> bee171e861d4
+Step 3/10 : WORKDIR /go/src/func/
+ ---> Using cache
+ ---> d0102d3148a1
+Step 4/10 : ENV GO111MODULE=on
+ ---> Using cache
+ ---> 22ecbf50c559
+Step 5/10 : COPY . .
+ ---> 0a2992d2d99a
 Step 6/10 : RUN cd /go/src/func/ && go build -o func
- ---> Running in 81188a61a4d1
-Removing intermediate container 81188a61a4d1
- ---> 1af60a363a46
+ ---> Running in e480baa937d4
+go: finding github.com/fnproject/fdk-go latest
+go: downloading github.com/fnproject/fdk-go v0.0.0-20190716163646-1458ca84e01d
+Removing intermediate container e480baa937d4
+ ---> d8cc615e1e64
 Step 7/10 : FROM fnproject/go
-latest: Pulling from fnproject/go
-1eae7a7426b0: Pull complete 
-7a855df78530: Pull complete 
-Digest: sha256:8e03716b576e955c7606e4d8b8748c0f959a916ce16ba305ab262f042562340f
-Status: Downloaded newer image for fnproject/go:latest
- ---> 76aed4489768
+ ---> bc635796c9df
 Step 8/10 : WORKDIR /function
- ---> Running in ce2fc52be3a7
-Removing intermediate container ce2fc52be3a7
- ---> 9d2da540bf02
+ ---> Using cache
+ ---> b853b5d6b840
 Step 9/10 : COPY --from=build-stage /go/src/func/func /function/
- ---> cf718c6f8fd8
+ ---> Using cache
+ ---> ee3af55a0670
 Step 10/10 : ENTRYPOINT ["./func"]
- ---> Running in a60600bcb994
-Removing intermediate container a60600bcb994
- ---> efa4793bf85f
-Successfully built efa4793bf85f
+ ---> Using cache
+ ---> 3e41594de5c8
+Successfully built 3e41594de5c8
 Successfully tagged fndemouser/gofn:0.0.2
 
 Updating function gofn using image fndemouser/gofn:0.0.2...
-Successfully created function: gofn with fndemouser/gofn:0.0.2
-Successfully created trigger: gofn-trigger
-Trigger Endpoint: http://localhost:8080/t/goapp/gofn-trigger
 ```
 
 All the steps to load the current language Docker image are displayed.
@@ -285,7 +266,7 @@ let's us know that the function is packaged in the image
 Note that the containing folder name `gofn` was used as the name of the
 generated Docker container and used as the name of the function that container
 was bound to. By convention it is also used to create the trigger name
-`gofn-trigger`.
+`gofn`.
 
 Normally you deploy an application without the `--verbose` option. If you rerun the command a new image and version is created and loaded.
 
@@ -392,24 +373,24 @@ We can also see the functions that are defined by an application. Since function
 
 ```sh
 FUNCTION    NAME         ID                         TYPE    SOURCE        ENDPOINT
-gofn        gofn-trigger 01D37X3AVGNG8G00GZJ0000003 http    /gofn-trigger http://localhost:8080/t/goapp/gofn-trigger
+gofn        gofn         01D37X3AVGNG8G00GZJ0000003 http    /gofn         http://localhost:8080/t/goapp/gofn
 ```
 
 The output confirms that `goapp` contains a `gofn` function which may be invoked via the
-specified URL.  Now that we've confirmed deployment was successsful, let's
+specified URL.  Now that we've confirmed deployment was successful, let's
 call our function.
 
 ### Invoke with Curl
 
 The other way to invoke your function is via HTTP.  The Fn server exposes our
-deployed function at `http://localhost:8080/t/goapp/gofn-trigger`, a URL
+deployed function at `http://localhost:8080/t/goapp/gofn`, a URL
 that incorporates our application and function trigger as path elements.
 
 Use `curl` to invoke the function:
 
 ![user input](images/userinput.png)
 >```sh
-> curl -H "Content-Type: application/json" http://localhost:8080/t/goapp/gofn-trigger
+> curl -H "Content-Type: application/json" http://localhost:8080/t/goapp/gofn
 >```
 
 The result is once again the same.
@@ -423,7 +404,7 @@ the function back.
 
 ![user input](images/userinput.png)
 >```
-> curl -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/t/goapp/gofn-trigger
+> curl -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/t/goapp/gofn
 >```
 
 The result is once again the same.

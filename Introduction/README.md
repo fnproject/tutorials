@@ -28,14 +28,13 @@ In the terminal type the following:
 
 ![User Input Icon](images/userinput.png)
 >```sh
-> fn init --runtime go --trigger http gofn
+> fn init --runtime go gofn
 >```
 
 The output will be
 
 ```yaml
-Creating function at: /gofn
-Runtime: go
+Creating function at: ./gofn
 Function boilerplate generated.
 func.yaml created.
 ```
@@ -124,10 +123,6 @@ name: gofn
 version: 0.0.1
 runtime: go
 entrypoint: ./func
-triggers:
-- name: gofn
-  type: http
-  source: /gofn
 ```
 
 The generated `func.yaml` file contains metadata about your function and
@@ -140,10 +135,6 @@ declares a number of properties including:
 in `--runtime`.
 * entrypoint--the name of the executable to invoke when your function is called,
 in this case `./func`
-* triggers--identifies the automatically generated trigger name and source. For
-example, this function would be executed from the URL
-<http://localhost:8080/t/appname/gofn>. Where `appname` is the name of
-the app chosen for your function when it is deployed.
 
 There are other user specifiable properties but these will suffice for
 this example.  Note that the name of your function is taken from the containing
@@ -163,7 +154,7 @@ running in the cloud, in your datacenter, or on your local machine like we're
 doing here.
 
 ### Check your Context
-Make sure your context is set to default and you are using a demo user. Use the `fn list context` command to check.
+Make sure your context is set to default and you are using a demo user. Use the `fn list contexts` command to check.
 
 ![user input](images/userinput.png)
 >```sh
@@ -249,6 +240,7 @@ Successfully built 3e41594de5c8
 Successfully tagged fndemouser/gofn:0.0.2
 
 Updating function gofn using image fndemouser/gofn:0.0.2...
+Successfully created function: gofn with fndemouser/gofn:0.0.2
 ```
 
 All the steps to load the current language Docker image are displayed.
@@ -265,8 +257,7 @@ let's us know that the function is packaged in the image
 
 Note that the containing folder name `gofn` was used as the name of the
 generated Docker container and used as the name of the function that container
-was bound to. By convention it is also used to create the trigger name
-`gofn`.
+was bound to.
 
 Normally you deploy an application without the `--verbose` option. If you rerun the command a new image and version is created and loaded.
 
@@ -364,33 +355,107 @@ NAME    ID
 goapp    01D37WY2N2NG8G00GZJ0000001
 ```
 
-We can also see the functions that are defined by an application. Since functions are exposed via triggers, the `fn list triggers <appname>` command is used. To list the functions included in "goapp" we can type:
+The `fn list functions <app-name>` command lists all the functions associated with an app.
 
-![User Input Icon](images/userinput.png)
+![user input](images/userinput.png)
 >```sh
-> fn list triggers goapp
+> fn list functions goapp
 >```
 
-```sh
-FUNCTION    NAME         ID                         TYPE    SOURCE        ENDPOINT
-gofn        gofn         01D37X3AVGNG8G00GZJ0000003 http    /gofn         http://localhost:8080/t/goapp/gofn
+The returns all the functions associated with the `goapp`.
+
+```
+NAME	IMAGE                    ID
+gofn	fndemouser/gofn:0.0.2	 01DJZQXW47NG8G00GZJ0000014
 ```
 
 The output confirms that `goapp` contains a `gofn` function which may be invoked via the
 specified URL.  Now that we've confirmed deployment was successful, let's
 call our function.
 
-### Invoke with Curl
+# Invoke your Deployed Function
 
-The other way to invoke your function is via HTTP.  The Fn server exposes our
-deployed function at `http://localhost:8080/t/goapp/gofn`, a URL
-that incorporates our application and function trigger as path elements.
+There are two ways to call your deployed function.
 
-Use `curl` to invoke the function:
+### Invoke with the CLI
+
+The first is using the `fn` CLI which makes invoking your function relatively
+easy.  Type the following:
 
 ![user input](images/userinput.png)
 >```sh
-> curl -H "Content-Type: application/json" http://localhost:8080/t/goapp/gofn
+> fn invoke goapp gofn
+>```
+
+which results in:
+
+```js
+{"message":"Hello World"}
+```
+
+When you invoked "goapp gofn" the Fn server looked up the
+"goapp" application and then looked for the Docker container image
+bound to the "gofn" function and executed the code.
+
+You can also pass data to the run command. Note that you set the content type for the data passed. For example:
+
+![user input](images/userinput.png)
+>```sh
+> echo -n '{"name":"Bob"}' | fn invoke goapp gofn --content-type application/json
+>```
+
+```js
+{"message":"Hello Bob"}
+```
+
+The JSON data was parsed and since `name` was set to "Bob", that value is passed
+in the output.
+
+
+### Getting a Function's Invoke Endpoint
+
+In addition to using the Fn `invoke` command, we can call a function by using a
+URL. To do this, we must get the function's invoke endpoint. Use the command
+`fn inspect function <appname> <function-name>`.  To list the `gofn` function's
+invoke endpoint we can type:
+
+![user input](images/userinput.png)
+>```sh
+> fn inspect function goapp gofn
+>```
+
+```js
+{
+	"annotations": {
+		"fnproject.io/fn/invokeEndpoint": "http://localhost:8080/invoke/01DJZQXW47NG8G00GZJ0000014"
+	},
+	"app_id": "01DJZQWHVWNG8G00GZJ0000013",
+	"created_at": "2019-08-23T17:21:03.111Z",
+	"id": "01DJZQXW47NG8G00GZJ0000014",
+	"idle_timeout": 30,
+	"image": "fndemouser/gofn:0.0.2",
+	"memory": 128,
+	"name": "gofn",
+	"timeout": 30,
+	"updated_at": "2019-08-23T17:21:03.111Z"
+}
+```
+
+The output confirms that the `gofn` function's invoke endpoint is:
+`http://localhost:8080/invoke/01DJZQXW47NG8G00GZJ0000014`. We can use this URL
+to call the function.
+
+### Invoke with Curl
+
+Once we have the invoke endpoint, the second method for invoking our function
+can be used, HTTP.  The Fn server exposes our deployed function at
+`http://localhost:8080/invoke/01DJZQXW47NG8G00GZJ0000014`.
+
+Use curl to invoke the function:
+
+![user input](images/userinput.png)
+>```sh
+> curl -X "POST" -H "Content-Type: application/json" http://localhost:8080/invoke/01DJZQXW47NG8G00GZJ0000014
 >```
 
 The result is once again the same.
@@ -399,12 +464,12 @@ The result is once again the same.
 {"message":"Hello World"}
 ```
 
-We can again pass JSON data to our function and get the value of name passed to
-the function back.
+We can again pass JSON data to our function get the value of name passed to the
+function back.
 
 ![user input](images/userinput.png)
->```
-> curl -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/t/goapp/gofn
+>```sh
+> curl -X "POST" -H "Content-Type: application/json" -d '{"name":"Bob"}' http://localhost:8080/invoke/01DJZQXW47NG8G00GZJ0000014
 >```
 
 The result is once again the same.
@@ -415,8 +480,8 @@ The result is once again the same.
 
 ## Wrap Up
 
-Congratulations! In this tutorial you've accomplished a lot. You've created your
-first function, deployed it to your local Fn server and invoked it
-over HTTP.
+Congratulations!  In this tutorial you've accomplished a lot.  You've created
+your first function, deployed it to your local Fn server and invoked it over
+HTTP.
 
-**Go:** [Back to Contents](../README.md)
+**Go:** [Back to Contents](../../README.md)

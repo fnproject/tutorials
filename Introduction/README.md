@@ -162,8 +162,8 @@ Make sure your context is set to default and you are using a demo user. Use the 
 >```
 
 ```cs
-CURRENT	NAME	PROVIDER	API URL			        REGISTRY
-*       default	default		http://localhost:8080	fndemouser
+CURRENT	NAME    PROVIDER    API URL                 REGISTRY
+*       default	default     http://localhost:8080   fndemouser
 ```
 
 If your context is not configured, please see [the context installation instructions](https://github.com/fnproject/tutorials/blob/master/install/README.md#configure-your-context) before proceeding. Your context determines where your function is deployed.

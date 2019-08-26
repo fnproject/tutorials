@@ -484,4 +484,4 @@ Congratulations!  In this tutorial you've accomplished a lot.  You've created
 your first function, deployed it to your local Fn server and invoked it over
 HTTP.
 
-**Go:** [Back to Contents](../../README.md)
+**Go:** [Back to Contents](../README.md)

@@ -24,8 +24,13 @@ installed and running.
 perform an action.
 
 ## Download and Install the Fn CLI
+For a MacOS installation you can use Homebrew:
 
-From a terminal type the following:
+>```sh
+> brew update && brew install fn
+> ```
+
+Or, alternatively for Linux/Unix/MacOS from a terminal type the following:
 
 ![](images/userinput.png)
 >```sh
@@ -37,7 +42,7 @@ something similar to the following displayed (although likely with a later
 version number):
 
 ```txt
-fn version 0.5.84
+fn version 0.5.86
         ______
        / ____/___
       / /_  / __ \
@@ -124,7 +129,7 @@ You should see the version of the Fn CLI (client) and server displayed (your
 version will likely differ):
 
 ```txt
-Client version:  0.5.84
+Client version:  0.5.86
 Server version:  0.3.728
 ```
 

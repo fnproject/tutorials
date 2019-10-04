@@ -1,0 +1,17 @@
+{
+    "name": "nodedb-test",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Node DB Test application",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "keywords": [
+        "myapp"
+    ],
+    "dependencies": {
+        "oracledb" : "^3.1"
+    },
+    "author": "Fn Example",
+    "license": "MIT"
+}

@@ -1,6 +1,6 @@
 schema_version: 20180708
 name: hellodb
-version: 0.0.2
+version: 0.0.1
 runtime: docker
 entrypoint: node func.js
-memory: 1024
+memory: 512

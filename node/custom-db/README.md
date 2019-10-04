@@ -26,7 +26,7 @@ This tutorial requires the following:
 **Note:** Docker commands shown are for Linux. If you are using MacOS, the `sudo` command is not required.
 
 ## Getting Started with Docker Image
-As a first step, let's create and run our starting Docker image.
+As a first step, let's create and run our initial Docker image.
 
 **Note:** You can find these files in the `docker-only` directory.
 
@@ -80,7 +80,7 @@ const oracledb = require('oracledb')
 console.log(oracledb.versionString)
 ```
 
-An `oracledb` constant is called to return the version of the driver.
+An `oracledb` constant is called to return the version of the driver. Getting the version string validates that the driver code is packaged correctly in the Docker container and the driver is functional. In a production situation, you would actually connect to a database.
 
 We are now ready to build the Docker image.
 
@@ -131,16 +131,16 @@ CMD exec node func.js
 Most of the changes are just cosmetic. The working directory name is "function" rather than "myapp". The launch script is changed from `index.js` to `func.js`  following a normal function template.
 
 Next let's add a `func.yaml` file.
-```js
+```yaml
 schema_version: 20180708
 name: hellodb
 version: 0.0.1
 runtime: docker
 entrypoint: node func.js
-memory: 1024
+memory: 512
 ```
 
-The function name is `hellodb` so our code should be in a directory with that name. The runtime is set to `docker`. Again notice our node script is `func.js` in this case.
+The function name is `hellodb`. The runtime is set to `docker`. Again notice our node script is `func.js` in this case.
 
 Next, we update the `package.json` file.
 ```js
@@ -181,15 +181,7 @@ With those changes in place perform the following steps to execute the function.
 > cd hellodb
 >```
 
-(3) Next, build your function.
-![](images/userinput.png)
->```
-> fn -v build
->```
-
-This builds the function Docker image and saves it locally for Docker.
-
-(4) Create an Fn application to deploy our function to.
+(3) Create an Fn application to deploy our function to.
 ![](images/userinput.png)
 >```
 > fn create app helloapp
@@ -197,7 +189,7 @@ This builds the function Docker image and saves it locally for Docker.
 
 The `helloapp` application is ready to store our function.
 
-(5) Deploy the function to Fn and the `helloapp` application.
+(4) Deploy the function to Fn and the `helloapp` application.
 ![](images/userinput.png)
 >```
 > fn -v deploy --app helloapp --local
@@ -205,7 +197,7 @@ The `helloapp` application is ready to store our function.
 
 This deploys the function locally.
 
-(6) Invoke the function.
+(5) Invoke the function.
 ![](images/userinput.png)
 >```
 > fn invoke helloapp hellodb
@@ -218,6 +210,7 @@ This returns the version of the Oracle DB driver in JSON format:
 ```
 
 That's it. You have converted a Node Docker image into a function.
+
 
 # Conclusion
 

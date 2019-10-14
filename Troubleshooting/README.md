@@ -298,7 +298,7 @@ Which will return JSON looking something like:
 	"id": "01CT1QZFJ7NG8G00GZJ0000001",
 	"name": "tutorial",
 	"syslog_url": "tcp://logs7.papertrailapp.com:NNNN",
-	"updated_at": "20189-10-13T15:55:50.628Z"
+	"updated_at": "2019-10-13T15:55:50.628Z"
 }
 ```
 

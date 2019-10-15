@@ -112,7 +112,7 @@ Error during build. Run with `--verbose` flag to see what went wrong. eg: `fn --
 
 Fn: error running docker build: exit status 1
 
-See 'fn <command> --help' for more information. Client version: 0.5.16
+See 'fn <command> --help' for more information. Client version: 0.5.86
 ```
 
 Now let's try the build with the `--verbose` flag, which you need to put 
@@ -128,8 +128,8 @@ Now we see details of the build and the failure (output abbreviated):
 ```sh
 Building image trouble:0.0.1
 Sending build context to Docker daemon  10.24kB
-Step 1/11 : FROM fnproject/fn-java-fdk-build:jdk9-1.0.56 as build-stage
- ---> dbeadad33cac
+Step 1/11 : FROM fnproject/fn-java-fdk-build:jdk11-1.0.102 as build-stage
+ ---> cc41c56dd693
 ...
 [INFO] --- maven-compiler-plugin:3.3:compile (default-compile) @ hello ---
 [INFO] Changes detected - recompiling the module!
@@ -137,11 +137,11 @@ Step 1/11 : FROM fnproject/fn-java-fdk-build:jdk9-1.0.56 as build-stage
 [INFO] -------------------------------------------------------------
 [ERROR] COMPILATION ERROR :
 [INFO] -------------------------------------------------------------
-[ERROR] /function/src/main/java/com/example/fn/HelloFunction.java:[13,5] missing return statement
+[ERROR] /function/src/main/java/com/example/fn/HelloFunction.java:[9,5] missing return statement
 [INFO] 1 error
 ...
 [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.3:compile (default-compile) on project hello: Compilation failure
-[ERROR] /function/src/main/java/com/example/fn/HelloFunction.java:[13,5] missing return statement
+[ERROR] /function/src/main/java/com/example/fn/HelloFunction.java:[9,5] missing return statement
 ...
 The command 'mvn package' returned a non-zero code: 1
 ...
@@ -161,7 +161,13 @@ it to a syslog server, if configured. So if you have a
 function throwing an exception and the stack trace is being written to standard
 error it's straightforward to get that stack trace via syslog.
 
-Let's update our HelloFunction so that it throws an exception in the
+Create the `tutorial` application.
+![user input](images/userinput.png)
+>```sh
+> fn create app tutorial
+>```
+
+Let's update our HelloFunction so that it writes an error message and then throws an exception in the
 `handleRequst` method.  Replace the definition of HelloFunction with the
 following:
 
@@ -172,6 +178,7 @@ package com.example.fn;
 public class HelloFunction {
 
     public String handleRequest(String input) {
+        System.err.println("Something wrong is going to happen");
         throw new RuntimeException("Something went horribly wrong!");
     }
 
@@ -224,9 +231,7 @@ With the function defined let's invoke it and see what happens when if fails:
 >```
 
 ```sh
-Fn: Error calling function: status 502
-
-See 'fn <command> --help' for more information. Client version: 0.5.16
+Error invoking function. status: 502 message: function failed
 ```
 
 This is not much information to go on to debug the problem.  What we need to
@@ -289,11 +294,11 @@ Which will return JSON looking something like:
 
 ```sh
 {
-	"created_at": "2018-10-17T19:27:59.047Z",
+	"created_at": "2019-10-13T14:54:45.459Z",
 	"id": "01CT1QZFJ7NG8G00GZJ0000001",
 	"name": "tutorial",
 	"syslog_url": "tcp://logs7.papertrailapp.com:NNNN",
-	"updated_at": "2018-10-17T19:56:39.819Z"
+	"updated_at": "2019-10-13T15:55:50.628Z"
 }
 ```
 
@@ -342,13 +347,14 @@ Accept-Encoding: gzip
 
 
 HTTP/1.1 200 OK
-Content-Length: 196
+Content-Length: 977
 Content-Type: application/json; charset=utf-8
-Date: Wed, 17 Oct 2018 19:22:39 GMT
+Date: Sun, 13 Oct 2019 16:45:56 GMT
 
-{"items":[{"id":"01CSZ9NG1KNG8G00GZJ0000006","name":"tutorial","syslog_url":"tcp://logs7.papertrailapp.com:NNNN","created_at":"2018-10-16T20:39:22.931Z","updated_at":"2018-10-17T19:04:26.971Z"}]}
+
+{"items":[{"id":"01DQ2STN6KNG8G00GZJ000001Q","name":"tutorial","syslog_url":"tcp://logs3.papertrailapp.com:NNNN","created_at":"2019-10-13T14:54:45.459Z","updated_at":"2019-10-13T15:55:50.628Z"}]}
 NAME		ID
-tutorial	01CSZ9NG1KNG8G00GZJ0000006
+tutorial	01DQ2STN6KNG8G00GZJ000001Q
 ```
 
 All debug output is written to stderr while the normal response is written

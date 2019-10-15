@@ -158,7 +158,7 @@ Successfully tagged fndemouser/revfunc:0.0.1
 
 Just like with a default build, the output is a container image.  From this
 point forward everything is just as it would be for any Fn function.  Since
-you've previously started an Fn server, you can deploy it.  First, reate
+you've previously started an Fn server, you can deploy it.  First, create
 an application named 'revapp'.
 
 ![](images/userinput.png)

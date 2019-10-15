@@ -41,14 +41,15 @@ Start the Fn server using the `fn` cli:
 The [Fn HotWrap tool](https://github.com/fnproject/hotwrap) allows you to create functions using conventional Unix command line tools and a Docker container. The tool provides the FDK contract for any command that can be run on the command line. Once wrapped, event data is passed to your function via STDIN and the output is returned through STDOUT.
 
 
-## Initial Linux Command 
+## Initial Linux Command
 To begin with, let's use the Linux `rev` command. The command reverses text, so this command:
 
+![](images/userinput.png)
 >```sh
-> echo "Hello World!" | rev
+> echo "Hello World" | rev
 >```
 
-Produces: 
+Produces:
 
 >```sh
 > dlroW olleH
@@ -61,21 +62,21 @@ So we only need to call the command `/bin/rev` for our function.
 Next we need a directory for our project.
 
 ![](images/userinput.png)
-> Create a folder named **rev-func**. Change into the folder.
- 
+> Create a folder named **revfunc**. Change into the folder.
+
 ![](images/userinput.png)
 > In the folder , create a `func.yaml` file and copy/paste the following as its
 > content:
 
 ```yaml
 schema_version: 20180708
-name: rev-func
+name: revfunc
 version: 0.0.1
 runtime: docker
 triggers:
-- name: rev-func-trigger
+- name: revfunc
   type: http
-  source: /rev-func
+  source: /revfunc
 ```
 
 This is a typical `func.yaml` except that instead of declaring the **runtime**
@@ -98,11 +99,8 @@ Now you need to create a `Dockerfile`.
 ```Dockerfile
 FROM alpine:latest
 
-# Install hotwrap binary in your container 
-COPY --from=fnproject/hotwrap:latest  /hotwrap /hotwrap 
-
-RUN  addgroup --g 1000 fn
-RUN  adduser -D -G fn -u 1000 fn
+# Install hotwrap binary in your container
+COPY --from=fnproject/hotwrap:latest  /hotwrap /hotwrap
 
 CMD "/bin/rev"
 
@@ -112,21 +110,7 @@ ENTRYPOINT ["/hotwrap"]
 Here is an explanation of each of the Docker commands.
 
 * `FROM alpine:latest` - Use the latest version of Alpine Linux as the base image.
-* `COPY --from=fnproject/hotwrap:latest  /hotwrap /hotwrap` - Install the HotWrap Fn tool. 
-* Fn Docker containers run as a non-root user. So for a custom image, an Fn user and group must be created. The following commands create an `fn` group and user for Alpine Linux.
- 
-```sh
-RUN  addgroup --g 1000 fn
-RUN  adduser -D -G fn -u 1000 fn
-```
-
-If you are using a Debian or Redhat version of Linux for your custom image the commands change slightly to create the group and user:
-
-```sh
-RUN  groupadd --gid 1000 fn
-RUN  useradd --uid 1000 --gid fn fn
-```
-
+* `COPY --from=fnproject/hotwrap:latest  /hotwrap /hotwrap` - Install the HotWrap Fn tool.
 * `CMD "/bin/rev"` - The Linux command to run.
 * `ENTRYPOINT ["/hotwrap"]` - Tells the container to execute the previous command using HotWrap: `/hotwrap /bin/rev`
 
@@ -144,34 +128,32 @@ your function.  Give it a try:
 You should see output similar to:
 
 ```sh
-Building image fndemouser/rev-func:0.0.1 
+Building image fndemouser/revfunc:0.0.1
 FN_REGISTRY:  fndemouser
 Current Context:  default
 Sending build context to Docker daemon  3.072kB
-Step 1/6 : FROM alpine:latest
- ---> b7b28af77ffe
-Step 2/6 : COPY --from=fnproject/hotwrap:latest  /hotwrap /hotwrap
- ---> Using cache
- ---> 28d19bebf9da
-Step 3/6 : RUN  addgroup --g 1000 fn
- ---> Using cache
- ---> f9941fc9ff41
-Step 4/6 : RUN  adduser -D -G fn -u 1000 fn
- ---> Running in 99c7b971b6b6
-Removing intermediate container 99c7b971b6b6
- ---> 991656085fe9
-Step 5/6 : CMD "/bin/rev"
- ---> Running in e309f1134bf1
-Removing intermediate container e309f1134bf1
- ---> 5b44c434999f
-Step 6/6 : ENTRYPOINT ["/hotwrap"]
- ---> Running in 9e3da6cc3ace
-Removing intermediate container 9e3da6cc3ace
- ---> f915b4715385
-Successfully built f915b4715385
-Successfully tagged fndemouser/rev-func:0.0.1
-
-Function fndemouser/rev-func:0.0.1 built successfully.
+Step 1/4 : FROM alpine:latest
+latest: Pulling from library/alpine
+9d48c3bd43c5: Pull complete
+Digest: sha256:72c42ed48c3a2db31b7dafe17d275b634664a708d901ec9fd57b1529280f01fb
+Status: Downloaded newer image for alpine:latest
+ ---> 961769676411
+Step 2/4 : COPY --from=fnproject/hotwrap:latest  /hotwrap /hotwrap
+latest: Pulling from fnproject/hotwrap
+e6b890787691: Pull complete
+Digest: sha256:bf6303d7d216581c0e760f33dd74c3cdea83edad69f3d9614b7f573ba62c22b4
+Status: Downloaded newer image for fnproject/hotwrap:latest
+ ---> b999e7d793ff
+Step 3/4 : CMD "/bin/rev"
+ ---> Running in b60971040cd0
+Removing intermediate container b60971040cd0
+ ---> 5fa7a768081c
+Step 4/4 : ENTRYPOINT ["/hotwrap"]
+ ---> Running in 693c2d86cb7e
+Removing intermediate container 693c2d86cb7e
+ ---> 34d833b6acc2
+Successfully built 34d833b6acc2
+Successfully tagged fndemouser/revfunc:0.0.1
 ```
 
 Just like with a default build, the output is a container image.  From this
@@ -205,24 +187,18 @@ functions in the "revapp" application:
 You should get output similar to:
 
 ```sh
-NAME		IMAGE				ID
-rev-func	fndemouser/rev-func:0.0.1	01DGNXSP4HNG8G00GZJ0000002	
+NAME    IMAGE                       ID
+revfunc fndemouser/revfunc:0.0.1    01DQ8R97QTNG8G00GZJ0000002
 ```
 
-**Pro tip**: The fn cli let's you abbreviate most of the keywords so you can
-also say `fn ls f revapp`!
+**Pro tip**: The Fn cli let's you abbreviate most of the keywords so you can
+also say `fn ls f revapp`! You should see the same output.
 
-You should see output similar to:
-
-```shell
-NAME        IMAGE             ID
-imagedims   imagedims:0.0.1   01CWFAS9DBNG8G00RZJ0000002
-```
 
 ## Invoking the Function
 
 With the function deployed let's invoke it to make sure it's working as
-expected. 
+expected.
 
 ![](images/userinput.png)
 >```sh
@@ -242,7 +218,7 @@ the function with `curl`:
 
 ![](images/userinput.png)
 >```sh
-> curl --data "Hello World" -H "Content-Type: text/plain" -X POST http://localhost:8080/t/revapp/rev-func
+> curl --data "Hello World" -H "Content-Type: text/plain" -X POST http://localhost:8080/t/revapp/revfunc
 >```
 
 You should get exactly the same output as when using `fn invoke`.
@@ -256,9 +232,9 @@ You should get exactly the same output as when using `fn invoke`.
 
 One of the most powerful features of Fn is the ability to use custom defined
 Docker container images as functions. This feature makes it possible to
-customize your function's runtime environment including letting you use Linux command line tools as your function. And thanks to
-the Fn CLI's support for Dockerfiles it's the same user experience as when
-developing any function.
+customize your function's runtime environment including letting you use Linux
+command line tools as your function. And thanks to the Fn CLI's support for
+Dockerfiles it's the same user experience as when developing any function.
 
 Having completed this tutorial you've successfully built a function using
 a custom Dockerfile. Congratulations!

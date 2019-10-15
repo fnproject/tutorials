@@ -22,6 +22,7 @@ Community Supported:
 ## Explore Fn
 * [Create Apps with Fn](Apps/README.md) - Learn how to group your functions into an application/API and deploy them together.
 * [Create a Function with a Docker Container](ContainerAsFunction/README.md) - This tutorial provides a simple example of how to define an Fn function using a custom built Docker container.
+* [Create a Function with a Linux Command and HotWrap](docker/CustomLinuxContainer/README.md) - This tutorial provides an example of how to define an Fn function using Linux commands, HotWrap, and a custom Docker container.
 
 ## Test and Monitor Functions
 

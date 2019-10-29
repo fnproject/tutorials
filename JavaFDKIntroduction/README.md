@@ -1,7 +1,7 @@
 # Introduction to Fn with Java
 
 This tutorial introduces the
-[Fn Java FDK (Function Development Kit)](https://github.com/fnproject/fdk-java).
+[Fn Function Development Kit for Java (FDK for Java)](https://github.com/fnproject/fdk-java).
 If you haven't completed the [Introduction to Fn](../Introduction/README.md)
 tutorial you should head over there before you proceed.
 
@@ -106,7 +106,7 @@ declares a number of properties including:
 class and the method that should be invoked when your `javafn` function is
 called.
 
-The Java function init also generates a Maven `pom.xml` file to build and test your function.  The pom includes the Fn Java FDK runtime and test libraries your function needs.
+The Java function init also generates a Maven `pom.xml` file to build and test your function.  The pom includes the Fn FDK for Java runtime and test libraries your function needs.
 
 
 ## Deploy your Java Function
@@ -460,7 +460,7 @@ editor.
 
 Below is the generated `com.example.fn.HelloFunction` class.  As you can
 see the function is just a method on a POJO that takes a string value
-and returns another string value, but the Java FDK also supports binding
+and returns another string value, but the FDK for Java also supports binding
 input parameters to streams, primitive types, byte arrays and Java POJOs
 unmarshalled from JSON.  Functions can also be static or instance
 methods.
@@ -482,15 +482,15 @@ public class HelloFunction {
 This function returns the string "Hello, world!" unless an input string
 is provided in which case it returns "Hello, &lt;input string&gt;!".  We saw
 this previously when we piped "Bob" into the function.   Notice that
-the Java FDK reads from standard input and automatically puts the
+the FDK for Java reads from standard input and automatically puts the
 content into the string passed to the function.  This greatly simplifies
 the function code.
 
 ## Testing with JUnit
 
 The `fn init` command also generated a JUnit test for the function which uses
-the Java FDK's function test framework.  With this framework you can setup test
-fixtures with various function input values and verify the results.
+the FDK for Java's function test framework.  With this framework you can setup
+test fixtures with various function input values and verify the results.
 
 The generated test confirms that when no input is provided the function returns "Hello, world!".
 
@@ -578,7 +578,7 @@ public class HelloFunction {
 
 We've created a couple of simple Pojos to bind the JSON input and output
 to and changed the function signature to use these Pojos.  The
-Java FDK will automatically bind input data based on the Java arguments
+FDK for Java will automatically bind input data based on the Java arguments
 to the function. JSON support is built-in but input and output binding
 is extensible and you could plug in marshallers for other
 data formats like `protobuf`, `avro` or `xml`.

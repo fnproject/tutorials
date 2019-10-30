@@ -214,6 +214,6 @@ standard input and returned "Hello, Joe!".
 Congratulations! You've just completed this tutorial and created your first Native Java Function.  
 The resulting Docker image is very small because it contains only the native executable instead of the whole JVM.  
 It also has improved cold startup times and reduced memory footprint compared to standard Java functions.  
-You can look at [Java FDK](../JavaFDKIntroduction/README.md) for more detailed usage of Java functions inside Fn.  
+You can look at [FDK for Java](../JavaFDKIntroduction/README.md) for more detailed usage of Java functions inside Fn.  
 
 **Go:** [Back to Contents](../README.md)

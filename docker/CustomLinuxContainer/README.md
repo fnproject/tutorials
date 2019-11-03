@@ -239,4 +239,4 @@ Dockerfiles it's the same user experience as when developing any function.
 Having completed this tutorial you've successfully built a function using
 a custom Dockerfile. Congratulations!
 
-**Go:** [Back to Contents](../README.md)
+**Go:** [Back to Contents](../../README.md)

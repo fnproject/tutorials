@@ -1,8 +1,8 @@
 # Fn Development with Multiple Contexts
-The Fn context stores configuration about your functions, your Fn server and the location of your Docker images. You can configure multiple contexts for your function development. For example, let's do the following:
+The Fn context stores configuration information about your functions, your Fn server and the location of your Docker images. You can configure multiple contexts for your function development. For example, let's do the following:
 
 * For local development, configure the Fn registry with an arbitrary value such as "fndemouser". This will save any docker images locally.
-* For cloud development, configure a new Fn registry and store your images on Docker Hub.
+* For cloud development, configure a new context to store images on Docker Hub and deploy functions to another server.
 
 ## Before you Begin
 

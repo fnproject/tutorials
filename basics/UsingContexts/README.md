@@ -7,7 +7,7 @@ The Fn context stores configuration information about your functions, your Fn se
 ## Before you Begin
 
 * Set aside about 20 minutes to complete this tutorial.
-* Make sure the Fn server is up and running on your computer, see [Install Fn](../install/README.md) for more details.
+* Make sure the Fn server is up and running on your computer, see [Install Fn](../../install/README.md) for more details.
 * Have your Docker Hub credentials handy.
 * Have a second computer or virtual machine you can run Fn server on.
 
@@ -326,7 +326,7 @@ You see a new copy of the node function image stored in your Docker Hub reposito
 With your Function image stored on the Net, you can easily deploy your function to another server. The other server will just pull the image from Docker Hub.
 
 ### Setup the New Machine
-Setup Fn server on a new machine and make sure it is up and running, see [Install Fn](../install/README.md) for more details. **Note:** Make sure your new server is up and running.
+Setup Fn server on a new machine and make sure it is up and running, see [Install Fn](../../install/README.md) for more details. **Note:** Make sure your new server is up and running.
 
 ### Point your Context to the New Machinie
 List your contexts again to make sure your are still using the context you created.

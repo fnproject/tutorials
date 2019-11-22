@@ -24,6 +24,7 @@ Community Supported:
 * [Create a Function with a Docker Container](ContainerAsFunction/README.md) - This tutorial provides a simple example of how to define an Fn function using a custom built Docker container.
 * [Create a Function with a Linux Command and HotWrap](docker/CustomLinuxContainer/README.md) - This tutorial provides an example of how to define an Fn function using Linux commands, HotWrap, and a custom Docker container.
 * [Create a Function from a Docker image that contains a Node.js app with Oracle DB Support](node/custom-db/README.md)
+* [Fn Development with Multiple Contexts](basics/UsingContexts/README.md)
 
 ## Test and Monitor Functions
 

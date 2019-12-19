@@ -115,6 +115,19 @@ the `FN_API_URL` environment variable:
 
 Alternatively, you can also set the `api_url` using Fn [contexts](https://github.com/fnproject/cli/blob/master/CONTEXT.md).
 
+### Enable Fn Server DEBUG Mode
+If you are troubleshooting an issue with a function, enabling the DEBUG log level can be very helpful.  To enable DEBUG log level, start the Fn server with this command.
+
+![user input](images/userinput.png)
+>```sh
+> fn start --log-level DEBUG
+>```
+
+Now detailed information about errors will be displayed in the terminal window where you started the Fn server. 
+
+For more information, see the [Troubleshooting and Logging Tutorial](https://github.com/fnproject/tutorials/blob/master/Troubleshooting/README.md).
+
+
 ## Test the Install
 Let&apos;s verify everything is up and running correctly.
 

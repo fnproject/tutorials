@@ -97,6 +97,20 @@ docker: Error response from daemon: driver failed programming external connectiv
 In this case you can stop the other process and run `fn start` again. Alternatively,
 you can start Fn server on a different port.
 
+
+### Start Fn Server with DEBUG Mode Enabled
+If you are troubleshooting an issue with a function, enabling the DEBUG log level can be very helpful.  To enable DEBUG log level, start the Fn server with this command.
+
+![user input](images/userinput.png)
+>```sh
+> fn start --log-level DEBUG
+>```
+
+Now detailed information about errors will be displayed in the terminal window where you started the Fn server. 
+
+For more information, see the [Troubleshooting and Logging Tutorial](https://github.com/fnproject/tutorials/blob/master/Troubleshooting/README.md).
+
+
 ### Start the Fn Server on a Different Port
 Fn Server starts on port 8080 by default. To use a different port use the `--port` or the `-p` option. For example
 
@@ -114,6 +128,7 @@ the `FN_API_URL` environment variable:
 >```
 
 Alternatively, you can also set the `api_url` using Fn [contexts](https://github.com/fnproject/cli/blob/master/CONTEXT.md).
+
 
 ## Test the Install
 Let&apos;s verify everything is up and running correctly.

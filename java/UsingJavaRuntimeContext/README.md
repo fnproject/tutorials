@@ -381,7 +381,7 @@ funcKey1: funcValue1
 funcKey2: funcValue2
 ```
 
-Voila! Both functions are deployed in one step and the new application variables will be available to any functions in this app.
+Voila! Both functions are deployed in one step and the new application variables will be available to any function in this app.
 
 
 ## Summary

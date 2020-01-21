@@ -1,5 +1,5 @@
-# Using CLI Variables in your Functions
-In addition to the normal variables you use in function creation, Fn allows you to pass configuration data, created with the CLI, into your function.  This data, along with other automatically generated information, is converted into environment variables and are made available to your function's context. This tutorial covers how to set your own configuration variables and how to use them in a function.
+# Using the RuntimeContext with Java Functions
+In addition to the normal variables you use in function creation, Fn allows you to pass variable data, created by you, into your function.  This data, along with other automatically generated information, is converted into environment variables and made available to your function's runtime context. This tutorial covers how to set your own variables and use them in a function.
 
 ## Function Scenario
 In this tutorial, you create a `java-cfg-fn` function that displays configuration data passed to the function. For the example, let's use some database information that we might need in a function.
@@ -41,13 +41,11 @@ For this tutorial, let's set the `DB_HOST_URL` at the application level and the 
 ## Create the Sample Configuration Function.
 Ensure you have the Fn server running to host your function.
 
-### Break this up by variables so we can test each part.
-
 (1) Start the server.
 
 ![User input icon](images/userinput.png)
 ```sh
-% fn start
+% fn start --log-level DEBUG
 ```
 
 (2) Create the `cfg-app` for your function.
@@ -91,14 +89,14 @@ Ensure you have the Fn server running to host your function.
 ![User input icon](images/userinput.png)
 ```sh
 % fn ls cf a cfg-app
-KEY	VALUE
-DB_HOST_URL	//myhost/mydb
+KEY         VALUE
+DB_HOST_URL //myhost/mydb
 ```
 
 
 (8) Modify the "Hello World!" boiler plate example (located in src -> main -> java -> com -> example -> fn -> HelloFunction.java) as described in the next section.
 
-(9) Deploy and invoke your function locally. (**Note:** You must complete the code changes described in the next section to get the output shown.)
+(9) **Deploy** and **invoke** your function locally. (**Note:** You must complete the code changes described in the next section to get the output shown.)
 
 ![User input icon](images/userinput.png)
 ```sh
@@ -116,7 +114,6 @@ Hello world!
 DB Host URL: //myhost/mydb
 DB User: your-db-account
 DB Passwd: your-db-password
-% fn iv cfg-app java-cfg-fn
 ```
 
 ### Adding the Fn Context to your Function
@@ -168,7 +165,7 @@ import com.fnproject.fn.api.FnConfiguration;
 import com.fnproject.fn.api.RuntimeContext;
 ```
 
-The `com.fnproject.fn.api.FnConfiguration` class allows you to annotate methods to be used for configuration. This allows you to setup and configure variables before the `handleRequest` method is run.
+The `com.fnproject.fn.api.FnConfiguration` class allows you to annotate methods to be used for configuration. This allows you to setup and configure variables before the `handleRequest` method is run. **Note:** This annotation can be applied to more than one method if you wish.
 
 The `com.fnproject.fn.api.RuntimeContext` class gives you access to the environment variables set automatically or created by the Fn CLI. We can pass a `RuntimeContext` variable to a method and gain access to all the available environment variables.
 
@@ -188,7 +185,7 @@ public void config(RuntimeContext ctx) {
 }
 ```
 
-The `config` method uses the `RuntimeContext` to initialize the `dbHost`, `dbUser`, and `dbPassword` variables. String optionals are used to set default variables just in case the variables we are looking for are not set. Similar methods could be created if more configuration is required.
+The `config` method uses the `RuntimeContext` to initialize the `dbHost`, `dbUser`, and `dbPassword` variables. String optionals are used to set default variables just in case the variables we are looking for are not set. Additional methods may be annotated this way if more configuration is required.
 
 Completing the code changes above produces the output shown above where `DB_HOST_URL` has been set to `//myhost/mydb`.  
 
@@ -208,8 +205,8 @@ With our function setup and deployed, let's add some function variables to see i
 ![User input icon](images/userinput.png)
 ```sh
 % fn ls cf f cfg-app java-cfg-fn
-KEY	VALUE
-DB_USER	mydbuser
+KEY     VALUE
+DB_USER mydbuser
 ```
 
 (3) Add the `DB_PASSWORD` variable to the `java-cfg-fn` function.
@@ -224,9 +221,9 @@ DB_USER	mydbuser
 ![User input icon](images/userinput.png)
 ```sh
 % fn ls cf f cfg-app java-cfg-fn
-KEY		VALUE
-DB_PASSWORD	mydbpassword
-DB_USER		mydbuser
+KEY             VALUE
+DB_PASSWORD     mydbpassword
+DB_USER         mydbuser
 ```
 
 (9) Invoke your function again.
@@ -245,6 +242,7 @@ DB Passwd: mydbpassword
 ```
 
 Notice your function immediately picks up and uses the variables. You don't need to redeploy the function or make any other modifications. The variables are picked up and injected into the Docker instance when the function is invoked.
+
 
 ## Summary
 You have set variables using the Fn CLI and then accessed them in a Java function using the application context. Fn makes it easy to store configuration data locally and use it in your functions.

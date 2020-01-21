@@ -1,0 +1,4 @@
+name: cfg-app
+config:
+  appKey1: appValue1
+  appKey2: appValue2

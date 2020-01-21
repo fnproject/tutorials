@@ -12,11 +12,11 @@ public class HelloFunction {
         SortedMap<String, String> sortedEnvMap = new TreeMap<>(environmentMap);
         Set<String> keySet = sortedEnvMap.keySet();
         
-        String outStr  = "---";
+        String outStr  = "---\n";
         
         for (String key : keySet) {
         	String value = environmentMap.get(key);
-        	outStr = outStr + ("[" + key + "] " + value + "\n");
+        	outStr = outStr + ( key + ": " + value + "\n");
         }
         
         return outStr;

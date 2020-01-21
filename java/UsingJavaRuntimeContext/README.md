@@ -1,4 +1,4 @@
-# Using the RuntimeContext with Java Functions
+# Using the Fn RuntimeContext with Java Functions
 In addition to the normal variables you use in function creation, Fn allows you to pass variable data, created by you, into your function.  This data, along with other automatically generated information, is converted into environment variables and made available to your function's runtime context. This tutorial covers how to set your own variables and use them in a function.
 
 ## Function Scenario
@@ -109,7 +109,7 @@ DB_HOST_URL //myhost/mydb
 ```
 
 Your output should be similar to:
-```sh
+```yaml
 Hello world!
 DB Host URL: //myhost/mydb
 DB User: your-db-account
@@ -244,7 +244,147 @@ DB Passwd: mydbpassword
 Notice your function immediately picks up and uses the variables. You don't need to redeploy the function or make any other modifications. The variables are picked up and injected into the Docker instance when the function is invoked.
 
 
+## Setting Variables with Fn YAML Files
+In addition to using the CLI to set Fn variables for your `RuntimeContext`, you can set them in Fn YAML configuration files.
+
+### Change the Function Code
+For this example, follow the steps (1) thru (5) above, but this time, name the function `java-envfn`. Be sure the `java-envfn` has the same parent directory as the `java-cfg-fn` function. (The source code for this function is included in the `code` directory for this tutorial.) Update the function with the following Java code:
+
+```java
+package com.example.fn;
+
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+public class HelloFunction {
+
+    public String handleRequest(String input) {
+        Map<String, String> environmentMap = System.getenv();
+        SortedMap<String, String> sortedEnvMap = new TreeMap<>(environmentMap);
+        Set<String> keySet = sortedEnvMap.keySet();
+        
+        String outStr  = "---";
+        
+        for (String key : keySet) {
+        	String value = environmentMap.get(key);
+        	outStr = outStr + ("[" + key + "] " + value + "\n");
+        }
+        
+        return outStr;
+    }
+
+}
+```
+
+This code just displays all of the environment variables set inside the Docker container the function runs in.
+
+### Add key/value pairs to a Function's func.yaml File
+Edit the function's `func.yaml` file for `java-envfn` as follows:
+
+```yaml
+schema_version: 20180708
+name: java-envfn
+version: 0.0.1
+runtime: java
+build_image: fnproject/fn-java-fdk-build:jdk11-1.0.104
+run_image: fnproject/fn-java-fdk:jre11-1.0.104
+cmd: com.example.fn.HelloFunction::handleRequest
+config:
+    funcKey1: funcValue1
+    funcKey2: funcValue2
+```
+
+Save the file. Adding a `config:` section to the `func.yaml` file allows you to specify key value pairs within the file.
+
+**Deploy** and **invoke** your function locally from the `java-envfn` directory.
+
+![User input icon](images/userinput.png)
+```sh
+% fn -v dp --app cfg-app --local
+```
+
+![User input icon](images/userinput.png)
+```sh
+% fn iv cfg-app java-cfg-fn
+```
+
+Your output should be similar to:
+```yaml
+FN_APP_ID: 01DZ564ZT6NG8G00GZJ0000001
+FN_FN_ID: 01DZ565WYGNG8G00GZJ0000002
+FN_FORMAT: http-stream
+FN_LISTENER: unix:/tmp/iofs/lsnr.sock
+FN_MEMORY: 128
+FN_TYPE: sync
+HOME: /home/fn
+HOSTNAME: cd27aa54fd89
+JAVA_BASE_URL: https://github.com/AdoptOpenJDK/openjdk11-upstream-binaries/releases/download/jdk-11.0.5%2B10/OpenJDK11U-jre_
+JAVA_HOME: /usr/local/openjdk-11
+JAVA_URL_VERSION: 11.0.5_10
+JAVA_VERSION: 11.0.5
+LANG: C.UTF-8
+PATH: /usr/local/openjdk-11/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+funcKey1: funcValue1
+funcKey2: funcValue2
+```
+
+Notice the two `funcKey` values we set are at the end of the output.
+
+### Add key/value Pairs to the app.yaml File
+If you put all of your functions under the same parent directory, you can setup an `app.yaml` file to hold configuration data. For example, see the `code` directory stored with this tutorial. The `app.yaml` file looks like this:
+
+```yaml
+name: cfg-app
+config:
+  appKey1: appValue1
+  appKey2: appValue2
+```
+
+Create an `app.yaml` file for your two functions. You can copy the values from the above `app.yaml` file.
+
+**Deploy** and **invoke** your function locally from the parent directory of your functions. Notice the deploy syntax is a little different when using an `app.yaml` file.
+
+![User input icon](images/userinput.png)
+```sh
+% fn -v dp -all --local
+```
+
+The command deploys all functions under the parent directory to the application specified in `app.yaml`. Now invoke the new function.
+
+![User input icon](images/userinput.png)
+```sh
+% fn iv cfg-app java-envfn
+```
+
+Your output should be similar to:
+```yaml
+---
+FN_APP_ID: 01DZ564ZT6NG8G00GZJ0000001
+FN_FN_ID: 01DZ565WYGNG8G00GZJ0000002
+FN_FORMAT: http-stream
+FN_LISTENER: unix:/tmp/iofs/lsnr.sock
+FN_MEMORY: 128
+FN_TYPE: sync
+HOME: /home/fn
+HOSTNAME: cd27aa54fd89
+JAVA_BASE_URL: https://github.com/AdoptOpenJDK/openjdk11-upstream-binaries/releases/download/jdk-11.0.5%2B10/OpenJDK11U-jre_
+JAVA_HOME: /usr/local/openjdk-11
+JAVA_URL_VERSION: 11.0.5_10
+JAVA_VERSION: 11.0.5
+LANG: C.UTF-8
+PATH: /usr/local/openjdk-11/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+appKey1: appValue1
+appKey2: appValue2
+funcKey1: funcValue1
+funcKey2: funcValue2
+```
+
+Voila! Both functions are deployed in one step and the new application variables will be available to any functions in this app.
+
+
 ## Summary
-You have set variables using the Fn CLI and then accessed them in a Java function using the application context. Fn makes it easy to store configuration data locally and use it in your functions.
+You have set variables using the Fn CLI and Fn YAML configuration files. You then accessed application and function variables in a Java function using the Java `RuntimeContext`. Fn makes it easy to store configuration data locally and use it in your functions.
 
 For more information see the [configuration vars documentaion page](https://github.com/fnproject/docs/blob/master/fn/develop/configs.md). See also [Function Configuration and Initialization](https://github.com/fnproject/docs/blob/master/fdks/fdk-java/FunctionConfiguration.md) for other examples of how to access the context in a function.

@@ -247,8 +247,8 @@ Notice your function immediately picks up and uses the variables. You don't need
 ## Setting Variables with Fn YAML Files
 In addition to using the CLI to set Fn variables for your `RuntimeContext`, you can set them in Fn YAML configuration files.
 
-### Change the Function Code
-For this example, follow the steps (1) thru (5) above, but this time, name the function `java-envfn`. Be sure the `java-envfn` has the same parent directory as the `java-cfg-fn` function. (The source code for this function is included in the `code` directory for this tutorial.) Update the function with the following Java code:
+### Create a new Function
+Next, create a new function that will display environment variables. Follow the steps (1) thru (5) above, but this time, name the function `java-envfn`. Be sure the `java-envfn` has the same parent directory as the `java-cfg-fn` function. (The source code for this function is included in the `code` directory for this tutorial.) Update the hello function with the following Java code:
 
 ```java
 package com.example.fn;
@@ -296,7 +296,7 @@ config:
     funcKey2: funcValue2
 ```
 
-Save the file. Adding a `config:` section to the `func.yaml` file allows you to specify key value pairs within the file.
+Save the file. Adding a `config:` section to the `func.yaml` file allows you to specify key/value pairs within the file.
 
 **Deploy** and **invoke** your function locally from the `java-envfn` directory.
 
@@ -342,7 +342,7 @@ config:
   appKey2: appValue2
 ```
 
-Create an `app.yaml` file for your two functions. You can copy the values from the above `app.yaml` file.
+Create an `app.yaml` file in the parent directory of your two functions. You can copy the values from the above `app.yaml` file.
 
 **Deploy** and **invoke** your function locally from the parent directory of your functions. Notice the deploy syntax is a little different when using an `app.yaml` file.
 
@@ -387,4 +387,4 @@ Voila! Both functions are deployed in one step and the new application variables
 ## Summary
 You have set variables using the Fn CLI and Fn YAML configuration files. You then accessed application and function variables in a Java function using the Java `RuntimeContext`. Fn makes it easy to store configuration data locally and use it in your functions.
 
-For more information see the [configuration vars documentaion page](https://github.com/fnproject/docs/blob/master/fn/develop/configs.md). See also [Function Configuration and Initialization](https://github.com/fnproject/docs/blob/master/fdks/fdk-java/FunctionConfiguration.md) for other examples of how to access the context in a function.
+For more information see the [configuration vars documentation page](https://github.com/fnproject/docs/blob/master/fn/develop/configs.md). See also [Function Configuration and Initialization](https://github.com/fnproject/docs/blob/master/fdks/fdk-java/FunctionConfiguration.md) for other examples of how to access the variables and the `RuntimeContext` in a function.

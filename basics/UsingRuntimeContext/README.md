@@ -255,7 +255,7 @@ Next, create a new function that will display environment variables. Follow the 
 ### Create an Java env-fn Function
 Update the hello function with the following Java code:
 
-**Java: env-fn: HelloFunction.java**
+**env-fn: HelloFunction.java**
 ```java
 package com.example.fn;
 

@@ -1,8 +1,8 @@
-# Using the Fn RuntimeContext with Java Functions
+# Using the Fn RuntimeContext with Functions
 In addition to the normal variables you use in function creation, Fn allows you to pass variable data, created by you, into your function.  This data, along with other automatically generated information, is converted into environment variables and made available to your function's runtime context. This tutorial covers how to set your own variables and use them in a function.
 
 ## Function Scenario
-In this tutorial, you create a `java-cfg-fn` function that displays configuration data passed to the function. For the example, let's use some database information that we might need in a function.
+In this tutorial, you create a `cfg-fn` function that displays configuration data passed to the function. For the example, let's use some database information that we might need in a function.
 
 * `DB_HOST_URL` displays the hostname and path to the database.
 * `DB_USER` is the user name used to connect to the database.
@@ -13,28 +13,28 @@ In this tutorial, you create a `java-cfg-fn` function that displays configuratio
 perform an action.
 
 
-## What Variable Spaces are Available for my Function?
-There are several Fn variable spaces where you put and get data for your function.
+## What Config Variable Spaces are Available for my Function?
+There are several Fn variable config spaces where you put and get data for your function.
 
-* **Application space:** Variables stored in an application are available to all functions that are deployed to that application.
-* **Function space:** Variables stored for a function are only available to that function.
-* **Default space:** By default, a number of environment variables are automatically generated in an Fn Docker image. The section that follows details the automatically generated variables.
+* **Application Config Variables:** Variables stored in an application are available to all functions that are deployed to that application.
+* **Function Config Variables:** Variables stored for a function are only available to that function.
+* **Pre-defined environment variables:** By default, a number of environment variables are automatically generated in an Fn Docker image. The section that follows details the automatically generated variables.
 
-#### Default Space Variables
-Here is the list of automatically generated variables in the default space that are available to your functions.
+#### Default Environment Variables
+Here is the list of automatically generated environment variables that are available to your functions.
 
 |Fn Generated Var|Sample Value|Description|
 |----------------|------------|-----------|
-|[FN_APP_ID]|01NNNNNNNNNG8G00GZJ0000001|The application ID for the app the current function is contained in.|
-|[FN_FN_ID]|01DYNNNNNNNG8G00GZJ0000002|The ID of the current function|
-|[FN_FORMAT]|http-stream|(Deprecated). Communications protocol.|
-|[FN_LISTENER]|unix:/tmp/iofs/lsnr.sock|The Unix socket address (prefixed with "unix:") on the file system that the FDK should create to listen for requests. The platform will guarantee that this directory is writable to the function. FDKs must not write any other data than the unix socket to this directory.|
-|[FN_MEMORY]|128|The maximum memory of the function in MB.|
-|[FN_TYPE]|sync|The type of function. Always `sync` currently.|
+|FN_APP_ID|01NNNNNNNNNG8G00GZJ0000001|The application ID for the app the current function is contained in.|
+|FN_FN_ID|01DYNNNNNNNG8G00GZJ0000002|The ID of the current function|
+|FN_FORMAT|http-stream|(Deprecated). Communications protocol.|
+|FN_LISTENER|unix:/tmp/iofs/lsnr.sock|The Unix socket address (prefixed with "unix:") on the file system that the FDK should create to listen for requests. The platform will guarantee that this directory is writable to the function. FDKs must not write any other data than the unix socket to this directory.|
+|FN_MEMORY|128|The maximum memory of the function in MB.|
+|FN_TYPE|sync|The type of function. Always `sync` currently.|
 
 
 
-### Where to set the Variables
+### Where to Set our Config Variables
 For this tutorial, let's set the `DB_HOST_URL` at the application level and the `DB_USER`, and `DB_PASSWORD` variables at the function level. That gives us a little practices setting both types of variables.
 
 
@@ -48,26 +48,26 @@ Ensure you have the Fn server running to host your function.
 % fn start --log-level DEBUG
 ```
 
-(2) Create the `cfg-app` for your function.
+(2) Create the `<lang>-cfg-app` for your function. Replace `<lang>` with the language you are using for your function.
 
 ![User input icon](images/userinput.png)
 
 ```sh
-% fn c a cfg-app
+% fn c a java-cfg-app
 ```
 
-(3) Create a boilerplate `java-cfg-fn` function.
+(3) Create a boilerplate `cfg-fn` function.
 
 ![User input icon](images/userinput.png)
 ```sh
-% fn init --runtime java java-cfg-fn
+% fn init --runtime java cfg-fn
 ```
 
-(4) Change into the `java-cfg-fn` directory.
+(4) Change into the `cfg-fn` directory.
 
 ![User input icon](images/userinput.png)
 ```sh
-% cd java-cfg-fn
+% cd cfg-fn
 ```
 
 (5) Remove the `src/test` directory so we don't have to update our tests.
@@ -77,18 +77,18 @@ Ensure you have the Fn server running to host your function.
 % rm -r src/test
 ```
 
-(6) Add the the `DB_HOST_URL` variable to `cfg-app`.
+(6) Add the the `DB_HOST_URL` variable to `<lang>-cfg-app`.
 
 ![User input icon](images/userinput.png)
 ```sh
-% fn cf a cfg-app DB_HOST_URL //myhost/mydb
+% fn cf a java-cfg-app DB_HOST_URL //myhost/mydb
 ```
 
 (7) Verify the value has been added.
 
 ![User input icon](images/userinput.png)
 ```sh
-% fn ls cf a cfg-app
+% fn ls cf a java-cfg-app
 KEY         VALUE
 DB_HOST_URL //myhost/mydb
 ```
@@ -100,12 +100,12 @@ DB_HOST_URL //myhost/mydb
 
 ![User input icon](images/userinput.png)
 ```sh
-% fn -v dp --app cfg-app --local
+% fn -v dp --app java-cfg-app --local
 ```
 
 ![User input icon](images/userinput.png)
 ```sh
-% fn iv cfg-app java-cfg-fn
+% fn iv cfg-app cfg-fn
 ```
 
 Your output should be similar to:
@@ -116,7 +116,8 @@ DB User: your-db-account
 DB Passwd: your-db-password
 ```
 
-### Adding the Fn Context to your Function
+## Update your Function
+### Adding the Fn RuntimeContext to your Java Function
 Update the `HelloFunction` class as shown below. An explanation of the changes follows below.
 
 ```Java
@@ -191,20 +192,20 @@ Completing the code changes above produces the output shown above where `DB_HOST
 
 
 ## Add the Function Variables and Retest
-With our function setup and deployed, let's add some function variables to see if our output changes. Add the `DB_USER` and `DB_PASSWORD` variables to your function variable space and re-test your function.
+With our function setup and deployed, let's add some function variables to see if our output changes. Add the `DB_USER` and `DB_PASSWORD` variables to your function config and re-test your function.
 
-(1) Add the `DB_USER` variable to the `java-cfg-fn` function.
+(1) Add the `DB_USER` variable to the `cfg-fn` function.
 
 ![User input icon](images/userinput.png)
 ```sh
-% fn cf f cfg-app java-cfg-fn DB_USER mydbuser
+% fn cf f java-cfg-app cfg-fn DB_USER mydbuser
 ```
 
 (2) Verify the value has been added.
 
 ![User input icon](images/userinput.png)
 ```sh
-% fn ls cf f cfg-app java-cfg-fn
+% fn ls cf f java-cfg-app cfg-fn
 KEY     VALUE
 DB_USER mydbuser
 ```
@@ -213,14 +214,14 @@ DB_USER mydbuser
 
 ![User input icon](images/userinput.png)
 ```sh
-% fn cf f cfg-app java-cfg-fn DB_PASSWORD mydbpassword
+% fn cf f java-cfg-app cfg-fn DB_PASSWORD mydbpassword
 ```
 
 (4) Verify the value has been added.
 
 ![User input icon](images/userinput.png)
 ```sh
-% fn ls cf f cfg-app java-cfg-fn
+% fn ls cf f java-cfg-app cfg-fn
 KEY             VALUE
 DB_PASSWORD     mydbpassword
 DB_USER         mydbuser
@@ -230,7 +231,7 @@ DB_USER         mydbuser
 
 ![User input icon](images/userinput.png)
 ```sh
-% fn iv cfg-app java-cfg-fn
+% fn iv java-cfg-app cfg-fn
 ```
 
 Your output should be similar to:
@@ -248,8 +249,12 @@ Notice your function immediately picks up and uses the variables. You don't need
 In addition to using the CLI to set Fn variables for your `RuntimeContext`, you can set them in Fn YAML configuration files.
 
 ### Create a new Function
-Next, create a new function that will display environment variables. Follow the steps (1) thru (5) above, but this time, name the function `java-envfn`. Be sure the `java-envfn` has the same parent directory as the `java-cfg-fn` function. (The source code for this function is included in the `code` directory for this tutorial.) Update the hello function with the following Java code:
+Next, create a new function that will display environment variables. Follow the steps (1) thru (5) above, but this time, name the function `env-fn`. Be sure the `env-fn` has the same parent directory as the `cfg-fn` function. (The source code for this function is included in the `code` directory for this tutorial listed by language.) 
 
+### Create an Java env-fn Function
+Update the hello function with the following Java code:
+
+**Java: env-fn**
 ```java
 package com.example.fn;
 
@@ -281,11 +286,11 @@ public class HelloFunction {
 This code just displays all of the environment variables set inside the Docker container the function runs in.
 
 ### Add key/value pairs to a Function's func.yaml File
-Edit the function's `func.yaml` file for `java-envfn` as follows:
+Edit the function's `func.yaml` file for `env-fn` as follows:
 
 ```yaml
 schema_version: 20180708
-name: java-envfn
+name: env-fn
 version: 0.0.1
 runtime: java
 build_image: fnproject/fn-java-fdk-build:jdk11-1.0.104
@@ -298,16 +303,16 @@ config:
 
 Save the file. Adding a `config:` section to the `func.yaml` file allows you to specify key/value pairs within the file.
 
-**Deploy** and **invoke** your function locally from the `java-envfn` directory.
+**Deploy** and **invoke** your function locally from the `env-fn` directory.
 
 ![User input icon](images/userinput.png)
 ```sh
-% fn -v dp --app cfg-app --local
+% fn -v dp --app java-cfg-app --local
 ```
 
 ![User input icon](images/userinput.png)
 ```sh
-% fn iv cfg-app java-cfg-fn
+% fn iv java-cfg-app cfg-fn
 ```
 
 Your output should be similar to:
@@ -333,10 +338,10 @@ funcKey2: funcValue2
 Notice the two `funcKey` values we set are at the end of the output.
 
 ### Add key/value Pairs to the app.yaml File
-If you put all of your functions under the same parent directory, you can setup an `app.yaml` file to hold configuration data. For example, see the `code` directory stored with this tutorial. The `app.yaml` file looks like this:
+If you put all of your functions under the same parent directory, you can setup an `app.yaml` file to hold configuration data. For example, see one of the lanaguage examples in the `code` directory stored with this tutorial. The `app.yaml` file for Java looks like this:
 
 ```yaml
-name: cfg-app
+name: java-cfg-app
 config:
   appKey1: appValue1
   appKey2: appValue2
@@ -355,7 +360,7 @@ The command deploys all functions under the parent directory to the application 
 
 ![User input icon](images/userinput.png)
 ```sh
-% fn iv cfg-app java-envfn
+% fn iv java-cfg-app env-fn
 ```
 
 Your output should be similar to:

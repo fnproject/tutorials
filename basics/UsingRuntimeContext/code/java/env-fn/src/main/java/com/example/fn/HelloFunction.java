@@ -4,11 +4,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import com.fnproject.fn.api.RuntimeContext;
 
 public class HelloFunction {
 
-    public String handleRequest(String input) {
-        Map<String, String> environmentMap = System.getenv();
+    public String handleRequest(String input, RuntimeContext ctx) {
+        Map<String, String> environmentMap = ctx.getConfiguration();
         SortedMap<String, String> sortedEnvMap = new TreeMap<>(environmentMap);
         Set<String> keySet = sortedEnvMap.keySet();
         

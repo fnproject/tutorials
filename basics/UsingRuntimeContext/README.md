@@ -13,8 +13,8 @@ In this tutorial, you create a `cfg-fn` function that displays configuration dat
 perform an action.
 
 
-## What Config Variable Spaces are Available for my Function?
-There are several Fn variable config spaces where you put and get data for your function.
+## Using Config Variables and Environment Variables
+Fn config variables can be set for applications or functions. In addition, Fn automatically generates a number of environment variables for your use.
 
 * **Application Config Variables:** Variables stored in an application are available to all functions that are deployed to that application.
 * **Function Config Variables:** Variables stored for a function are only available to that function.
@@ -120,7 +120,8 @@ DB Passwd: your-db-password
 ### Adding the Fn RuntimeContext to your Java Function
 Update the `HelloFunction` class as shown below. An explanation of the changes follows below.
 
-```Java
+**cfg-fn: HelloFunction.java**
+```java
 package com.example.fn;
 
 import com.fnproject.fn.api.FnConfiguration;
@@ -254,7 +255,7 @@ Next, create a new function that will display environment variables. Follow the 
 ### Create an Java env-fn Function
 Update the hello function with the following Java code:
 
-**Java: env-fn**
+**Java: env-fn: HelloFunction.java**
 ```java
 package com.example.fn;
 
@@ -262,19 +263,20 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import com.fnproject.fn.api.RuntimeContext;
 
 public class HelloFunction {
 
-    public String handleRequest(String input) {
-        Map<String, String> environmentMap = System.getenv();
+    public String handleRequest(String input, RuntimeContext ctx) {
+        Map<String, String> environmentMap = ctx.getConfiguration();
         SortedMap<String, String> sortedEnvMap = new TreeMap<>(environmentMap);
         Set<String> keySet = sortedEnvMap.keySet();
         
-        String outStr  = "---";
+        String outStr  = "---\n";
         
         for (String key : keySet) {
         	String value = environmentMap.get(key);
-        	outStr = outStr + ("[" + key + "] " + value + "\n");
+        	outStr = outStr + ( key + ": " + value + "\n");
         }
         
         return outStr;
@@ -288,6 +290,7 @@ This code just displays all of the environment variables set inside the Docker c
 ### Add key/value pairs to a Function's func.yaml File
 Edit the function's `func.yaml` file for `env-fn` as follows:
 
+**func.yaml**
 ```yaml
 schema_version: 20180708
 name: env-fn
@@ -340,6 +343,7 @@ Notice the two `funcKey` values we set are at the end of the output.
 ### Add key/value Pairs to the app.yaml File
 If you put all of your functions under the same parent directory, you can setup an `app.yaml` file to hold configuration data. For example, see one of the lanaguage examples in the `code` directory stored with this tutorial. The `app.yaml` file for Java looks like this:
 
+**app.yaml**
 ```yaml
 name: java-cfg-app
 config:

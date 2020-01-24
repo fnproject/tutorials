@@ -1,0 +1,10 @@
+schema_version: 20180708
+name: env-fn
+version: 0.0.6
+runtime: java
+build_image: fnproject/fn-java-fdk-build:jdk11-1.0.104
+run_image: fnproject/fn-java-fdk:jre11-1.0.104
+cmd: com.example.fn.HelloFunction::handleRequest
+config:
+  funcKey1: funcValue1
+  funcKey2: funcValue2

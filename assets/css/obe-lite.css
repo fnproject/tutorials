@@ -101,6 +101,29 @@ hr {
     margin-bottom: 1rem;
 }
 
+table{
+    width: 100%;
+    border-collapse: collapse;
+    margin-left: 1em;
+}
+
+table td{
+    padding:7px; border: gray 1px solid;
+}
+
+table tr{
+    background: white;
+}
+
+table tr:nth-child(odd){
+    background: white;
+}
+
+table tr:nth-child(even){
+    background:#F6F8FA;
+}
+
+
 #content {
 	position: relative;
 	border-right-style:1px solid transparent;

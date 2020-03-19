@@ -396,4 +396,8 @@ Voila! Both functions are deployed in one step and the new application variables
 ## Summary
 You have set variables using the Fn CLI and Fn YAML configuration files. You then accessed application and function variables in a Java function using the Java `RuntimeContext`. Fn makes it easy to store configuration data locally and use it in your functions.
 
-For more information see the [configuration vars documentation page](https://github.com/fnproject/docs/blob/master/fn/develop/configs.md). See also [Function Configuration and Initialization](https://github.com/fnproject/docs/blob/master/fdks/fdk-java/FunctionConfiguration.md) for other examples of how to access the variables and the `RuntimeContext` in a function.
+For more information see:
+
+* [Configuration vars documentation page](https://github.com/fnproject/docs/blob/master/fn/develop/configs.md) 
+* [Function Configuration and Initialization](https://github.com/fnproject/docs/blob/master/fdks/fdk-java/FunctionConfiguration.md) for more examples
+* [Python Examples based on this tutorial](code/py)

@@ -401,3 +401,4 @@ For more information see:
 * [Configuration vars documentation page](https://github.com/fnproject/docs/blob/master/fn/develop/configs.md) 
 * [Function Configuration and Initialization](https://github.com/fnproject/docs/blob/master/fdks/fdk-java/FunctionConfiguration.md) for more examples
 * [Python Examples based on this tutorial](code/py)
+* [Node Examples based on this tutorial](code/node)

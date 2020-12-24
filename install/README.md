@@ -42,7 +42,7 @@ something similar to the following displayed (although likely with a later
 version number):
 
 ```txt
-fn version 0.5.86
+fn version 0.6.1
         ______
        / ____/___
       / /_  / __ \

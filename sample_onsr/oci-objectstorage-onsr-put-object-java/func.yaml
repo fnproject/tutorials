@@ -5,4 +5,3 @@ runtime: java
 build_image: fnproject/fn-java-fdk-build:jdk11-1.0.130
 run_image: fnproject/fn-java-fdk:jre11-1.0.130
 cmd: com.example.fn.ObjectStorageOnsrPutObject::handle
-timeout: 120

@@ -57,8 +57,8 @@ func ObjectStorage_UploadFile(ctx context.Context, bname string) {
 
 	/*
 		// Certs are mounted at this location for ONSR realms
-		cert_file := "/python/certifi/cacert.pem"
-		cert, err := ioutil.ReadFile(cert_file)
+		cert_file_path := "/python/certifi/cacert.pem"
+		cert, err := ioutil.ReadFile(cert_file_path)
 		helpers.FatalIfError(err)
 
 		// Adding extra certs

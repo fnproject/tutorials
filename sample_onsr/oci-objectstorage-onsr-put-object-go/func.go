@@ -12,7 +12,6 @@ import (
 	//"crypto/tls"
 	//"crypto/x509"
 	"encoding/json"
-	"fmt"
 	"io"
 	//"io/ioutil"
 	"os"
@@ -43,7 +42,6 @@ func putObject(ctx context.Context, c objectstorage.ObjectStorageClient, namespa
 		OpcMeta:       metadata,
 	}
 	_, err := c.PutObject(ctx, request)
-	fmt.Println("put object")
 	return err
 }
 

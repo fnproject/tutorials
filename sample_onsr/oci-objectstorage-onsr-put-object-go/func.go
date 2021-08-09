@@ -52,8 +52,8 @@ func ObjectStorage_UploadFile(ctx context.Context, bname string) {
 	provider, err := auth.ResourcePrincipalConfigurationProvider()
 	helpers.FatalIfError(err)
 
-	c, clerr := objectstorage.NewObjectStorageClientWithConfigurationProvider(provider)
-	helpers.FatalIfError(clerr)
+	client, client_err := objectstorage.NewObjectStorageClientWithConfigurationProvider(provider)
+	helpers.FatalIfError(client_err)
 
 	/*
 		// Certs are mounted at this location for ONSR realms
@@ -66,7 +66,7 @@ func ObjectStorage_UploadFile(ctx context.Context, bname string) {
 		pool.AppendCertsFromPEM([]byte(string(cert)))
 
 		//install the certificates to the client
-		if h, ok := c.HTTPClient.(*http.Client); ok {
+		if h, ok := client.HTTPClient.(*http.Client); ok {
 			tr := &http.Transport{TLSClientConfig: &tls.Config{RootCAs: pool}}
 			h.Transport = tr
 		} else {
@@ -75,7 +75,7 @@ func ObjectStorage_UploadFile(ctx context.Context, bname string) {
 	*/
 
 	request := objectstorage.GetNamespaceRequest{}
-	r, err := c.GetNamespace(ctx, request)
+	r, err := client.GetNamespace(ctx, request)
 	helpers.FatalIfError(err)
 
 	namespace := *r.Value
@@ -88,7 +88,7 @@ func ObjectStorage_UploadFile(ctx context.Context, bname string) {
 	defer file.Close()
 	helpers.FatalIfError(e)
 
-	e = putObject(ctx, c, namespace, bname, filename, filesize, file, nil)
+	e = putObject(ctx, client, namespace, bname, filename, filesize, file, nil)
 	helpers.FatalIfError(e)
 }
 

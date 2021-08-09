@@ -99,7 +99,7 @@ func myHandler(ctx context.Context, in io.Reader, out io.Writer) {
 	msg := struct {
 		Msg string `json:"message"`
 	}{
-		Msg: "Request Completed",
+		Msg: filename + " uploaded successfully in bucket " + bucket.Name,
 	}
 	json.NewEncoder(out).Encode(&msg)
 }

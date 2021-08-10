@@ -16,6 +16,7 @@ import com.oracle.bmc.objectstorage.responses.PutObjectResponse;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
+import java.io.File;
 
 public class ObjectStorageOnsrPutObject {
 
@@ -32,11 +33,11 @@ public class ObjectStorageOnsrPutObject {
             System.err.println("OCI_RESOURCE_PRINCIPAL_PRIVATE_PEM " + System.getenv("OCI_RESOURCE_PRINCIPAL_PRIVATE_PEM"));
 
             // Adding certificates to trust store
-            //Path cacertFile = Files.createTempFile("cacerts", null);
-            //Files.write(cacertFile, request.trustStore);
-            //System.setProperty("javax.net.ssl.trustStore", cacertFile.toString());
+            File cacertFile = new File("/etc/oci-pki/customer/customer-cert.pem");
+            if (cacertFile.exists()) {
+                System.setProperty("javax.net.ssl.trustStore", cacertFile.getAbsolutePath());
+            }
             objStoreClient = new ObjectStorageClient(provider);
-
         } catch (Throwable ex) {
             System.err.println("Failed to instantiate ObjectStorage client - " + ex.getMessage());
         }

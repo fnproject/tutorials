@@ -9,11 +9,11 @@ package main
 
 import (
 	"context"
-	//"crypto/tls"
-	//"crypto/x509"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/json"
 	"io"
-	//"io/ioutil"
+	"io/ioutil"
 	"os"
 	"path"
 
@@ -45,6 +45,15 @@ func putObject(ctx context.Context, c objectstorage.ObjectStorageClient, namespa
 	return err
 }
 
+func fileExists(filename string) bool {
+	// fileExists checks if a file exists
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
+}
+
 func ObjectStorage_UploadFile(ctx context.Context, bname string) {
 	// Get auth
 	provider, err := auth.ResourcePrincipalConfigurationProvider()
@@ -53,9 +62,9 @@ func ObjectStorage_UploadFile(ctx context.Context, bname string) {
 	client, client_err := objectstorage.NewObjectStorageClientWithConfigurationProvider(provider)
 	helpers.FatalIfError(client_err)
 
-	/*
-		// Certs are mounted at this location for ONSR realms
-		cert_file_path := "/python/certifi/cacert.pem"
+	// Certs are mounted at this location for ONSR realms
+	cert_file_path := "/etc/oci-pki/customer/customer-cert.pem"
+	if fileExists(cert_file_path) {
 		cert, err := ioutil.ReadFile(cert_file_path)
 		helpers.FatalIfError(err)
 
@@ -70,8 +79,7 @@ func ObjectStorage_UploadFile(ctx context.Context, bname string) {
 		} else {
 			panic("the client dispatcher is not of http.Client type. can not patch the tls config")
 		}
-	*/
-
+	}
 	request := objectstorage.GetNamespaceRequest{}
 	r, err := client.GetNamespace(ctx, request)
 	helpers.FatalIfError(err)

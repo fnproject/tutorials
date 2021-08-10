@@ -8,7 +8,7 @@
 require 'fdk'
 
 # Certs are mounted at this location for ONSR realms
-$cert_file_path = '/etc/ssl/cert.pem'
+$cert_file_path = '/etc/oci-pki/customer/customer-cert.pem'
 # file to upload
 $file_to_upload = "onsr_cert_test"
 $file_to_upload_content = "This is test file for ONSR test"
@@ -20,9 +20,11 @@ def put_object(bucket)
   object_storage_client = OCI::ObjectStorage::ObjectStorageClient.new(signer: principal_signer)
   namespace = object_storage_client.get_namespace.data
 
-  object_storage_client.api_client.request_option_overrides = {
-    ca_file: $cert_file_path
-  }
+  if(File.exist?($cert_file_path))
+    object_storage_client.api_client.request_option_overrides = {
+      ca_file: $cert_file_path
+    }
+  end
   get_object_response = object_storage_client.put_object(namespace, bucket, $file_to_upload, $file_to_upload_content)
   FDK.log(entry: "put_object: exit")
 end

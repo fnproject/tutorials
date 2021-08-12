@@ -32,7 +32,7 @@ def handler(ctx, data: io.BytesIO=None):
     signer = oci.auth.signers.get_resource_principals_signer()
     client = oci.object_storage.ObjectStorageClient(config={}, signer=signer)
     if os.path.exists(cert_file_path):
-        client.base_client.session.cert = cert_file_path
+        client.base_client.session.verify = cert_file_path
 
     resp = put_object(client, bucketName, file_to_upload, file_to_upload_content)
     return response.Response(

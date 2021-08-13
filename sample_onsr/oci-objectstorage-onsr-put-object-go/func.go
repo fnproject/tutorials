@@ -14,6 +14,7 @@ import (
 	"encoding/json"
 	"io"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"path"
 
@@ -54,7 +55,7 @@ func fileExists(filename string) bool {
 	return !info.IsDir()
 }
 
-func ObjectStorage_UploadFile(ctx context.Context, bname string) {
+func ObjectStorage_UploadFile(ctx context.Context, bname string) string {
 	// Get auth
 	provider, err := auth.ResourcePrincipalConfigurationProvider()
 	helpers.FatalIfError(err)
@@ -96,12 +97,13 @@ func ObjectStorage_UploadFile(ctx context.Context, bname string) {
 
 	e = putObject(ctx, client, namespace, bname, filename, filesize, file, nil)
 	helpers.FatalIfError(e)
+	return filename
 }
 
 func myHandler(ctx context.Context, in io.Reader, out io.Writer) {
 	bucket := &ObjectStorage_Bucket{Name: "bucket"}
 	json.NewDecoder(in).Decode(bucket)
-	ObjectStorage_UploadFile(ctx, bucket.Name)
+	filename := ObjectStorage_UploadFile(ctx, bucket.Name)
 	msg := struct {
 		Msg string `json:"message"`
 	}{

@@ -18,6 +18,7 @@ easiest thing to do is install [VirtualBox](https://www.virtualbox.org/)
 and run a free Linux virtual machine.
 2. [Docker](https://www.docker.com/) 17.10 (or higher) needs to be
 installed and running.
+    * **Note:** Version 0.6.12+ of the Fn CLI added Podman support. To use Podman to build Fn images, see: [Using Fn with Podman instead of Docker](https://github.com/fnproject/docs/blob/master/fn/develop/podman.md) 
 
 > As you make your way through this tutorial, look out for this icon.
 ![](images/userinput.png) Whenever you see it, it's time for you to

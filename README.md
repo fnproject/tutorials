@@ -14,9 +14,6 @@ Official:
 * [Node.js](node/intro/README.md)
 * [Ruby](ruby/intro/README.md)
 * [Python](python/intro/README.md)
-
-Community Supported:
-
 * [C#](csharp/intro/README.md)
 
 ## Explore Fn

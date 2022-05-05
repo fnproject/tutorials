@@ -284,16 +284,16 @@ methods and async.
 using Fnproject.Fn.Fdk;
 
 using System.Runtime.CompilerServices;
-[assembly:InternalsVisibleTo("Function.Tests")]
+[assembly:InternalsVisibleTo("Function.Tests")] 
 namespace Function {
-	class Greeter {
-		public string greet(string input) {
-			return string.Format("Hello {0}!",
-				input.Length == 0 ? "World" : input.Trim());
-		}
+  class Greeter {
+    public string greet(string input) {
+      return string.Format("Hello {0}!",
+                           input.Length == 0 ? "World" : input.Trim());
+    }
 
-		static void Main(string[] args) { Fdk.Handle(args[0]); }
-	}
+    static void Main(string[] args) { Fdk.Handle(args[0]); }
+  }
 }
 ```
 
@@ -313,21 +313,21 @@ using Function;
 using NUnit.Framework;
 
 namespace Function.Tests {
-	public class GreeterTest {
-		[Test]
-		public void TestGreetValid() {
-			Greeter greeter = new Greeter();
-			string response = greeter.greet("Dotnet");
-			Assert.AreEqual("Hello Dotnet!", response);
-		}
+  public class GreeterTest {
+    [Test]
+    public void TestGreetValid() {
+      Greeter greeter = new Greeter();
+      string response = greeter.greet("Dotnet");
+      Assert.AreEqual("Hello Dotnet!", response);
+    }
 
-		[Test]
-		public void TestGreetEmpty() {
-			Greeter greeter = new Greeter();
-			string response = greeter.greet("");
-			Assert.AreEqual("Hello World!", response);
-		}
-	}
+    [Test]
+    public void TestGreetEmpty() {
+      Greeter greeter = new Greeter();
+      string response = greeter.greet("");
+      Assert.AreEqual("Hello World!", response);
+    }
+  }
 }
 ```
 
@@ -343,10 +343,10 @@ Building image fndemouser/dotnetfn:0.0.2 .......
 Function fndemouser/dotnetfn:0.0.2 built successfully.
 ```
 
-## Accepting JSON Input
+## Working with JSON
 
 Let's convert this function to use JSON for its input and output.
-Replace the definition of `HelloFunction` with the following:
+Replace the content of `Program.cs` with the following:
 
 ```csharp
 using Fnproject.Fn.Fdk;
@@ -354,22 +354,31 @@ using System;
 
 using System.Runtime.CompilerServices;
 [assembly:InternalsVisibleTo("Function.Tests")] namespace Function {
-    class Input {
-        public string name {
-            get;
-            set;
-        }
+  class Input {
+    public string name {
+      get;
+      set;
+    }
+  }
+
+  class Output {
+    public string message {
+      get;
+      set;
     }
 
-    class Greeter {
-        public string greet(Input input) {
-            return string.Format("Hello {0}!", string.IsNullOrEmpty(input.name)
-                                                   ? "World"
-                                                   : input.name.Trim());
-        }
+    public Output(string message) { this.message = message; }
+  }
 
-        static void Main(string[] args) { Fdk.Handle(args[0]); }
+  class Greeter {
+    public Output greet(Input input) {
+      return new Output(string.Format(
+          "Hello {0}!",
+          string.IsNullOrEmpty(input.name) ? "World" : input.name.Trim()));
     }
+
+    static void Main(string[] args) { Fdk.Handle(args[0]); }
+  }
 }
 ```
 
@@ -380,24 +389,24 @@ using Function;
 using NUnit.Framework;
 
 namespace Function.Tests {
-    public class GreeterTest {
-        [Test]
-        public void TestGreetEmpty() {
-            Greeter greeter = new Greeter();
-            Input input = new Input();
-            string response = greeter.greet(input);
-            Assert.AreEqual("Hello World!", response);
-        }
-
-        [Test]
-        public void TestGreetValid() {
-            Greeter greeter = new Greeter();
-            Input input = new Input();
-            input.name = "Dotnet";
-            string response = greeter.greet(input);
-            Assert.AreEqual("Hello Dotnet!", response);
-        }
+  public class GreeterTest {
+    [Test]
+    public void TestGreetEmpty() {
+      Greeter greeter = new Greeter();
+      Input input = new Input();
+      Output output = greeter.greet(input);
+      Assert.AreEqual("Hello World!", output.message);
     }
+
+    [Test]
+    public void TestGreetValid() {
+      Greeter greeter = new Greeter();
+      Input input = new Input();
+      input.name = "Dotnet";
+      Output output = greeter.greet(input);
+      Assert.AreEqual("Hello Dotnet!", output.message);
+    }
+  }
 }
 ```
 
@@ -454,13 +463,13 @@ Use `curl` to invoke the function:
 
 ![user input](images/userinput.png)
 >```sh
-> curl -X "POST" -H "Content-Type: application/json" http://localhost:8080/invoke/01G1ZZMSA7NG8G00GZJ0000002
+> curl -X "POST" -H "Content-Type: application/json" http://localhost:8080/invoke/01G1ZZMSA7NG8G00GZJ0000002 --data-raw '{"name":"Dotnet"}'
 >```
 
 The result is now in a JSON format.
 
 ```
-Hello World!
+{"message":"Hello Dotnet!"}
 ```
 
 ## Wrap Up

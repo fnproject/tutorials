@@ -39,7 +39,7 @@ func.yaml created.
 >cd dotnetfn
 >```
 
-The `fn init` command creates an simple function with a bit of boilerplate to get you
+The `fn init` command creates a simple function with a bit of boilerplate to get you
 started. The `--runtime` option is used to indicate that the function
 we're going to develop will be written in C# and will work on dotnet core 3.1, 
 the default version as of this writing.
@@ -332,8 +332,8 @@ namespace Function.Tests {
 ```
 
 You can run the tests by building your function with `fn build`.  This
-will cause Dotnet to add both Source and Test project to `Function.sln`. 
-The code will be build and tests will be run on creating a new function.
+will cause Dotnet to add both Source and Test projects to `Function.sln`. 
+The code will be built and tests will be run on creating a new function.
 
 ![](images/userinput.png)
 >`fn build`
@@ -350,43 +350,64 @@ Replace the definition of `HelloFunction` with the following:
 
 ```csharp
 using Fnproject.Fn.Fdk;
+using System;
 
 using System.Runtime.CompilerServices;
-[assembly:InternalsVisibleTo("Function.Tests")]
-namespace Function {
-  class Input {
-    public string name;
-  }
+[assembly:InternalsVisibleTo("Function.Tests")] namespace Function {
+    class Input {
+        public string name {
+            get;
+            set;
+        }
+    }
 
-	class Greeter {
-		public string greet(Input input) {
-			return string.Format("Hello {0}!",
-				input.name.Length == 0 ? "World" : input.name.Trim());
-		}
+    class Greeter {
+        public string greet(Input input) {
+            return string.Format("Hello {0}!", string.IsNullOrEmpty(input.name)
+                                                   ? "World"
+                                                   : input.name.Trim());
+        }
 
-		static void Main(string[] args) { Fdk.Handle(args[0]); }
-	}
+        static void Main(string[] args) { Fdk.Handle(args[0]); }
+    }
 }
 ```
 
-Since we modified the `Program.cs` and changes the function format, we need to modify the `ProgramTest.cs` class.
+Since we modified the `Program.cs` and changed the function format, we need to modify the `ProgramTest.cs` class.
 
 ```csharp
 using Function;
 using NUnit.Framework;
 
 namespace Function.Tests {
-	public class GreeterTest {
-		[Test]
-		public void TestGreetEmpty() {
-			Greeter greeter = new Greeter();
-			Input input = new Input();
+    public class GreeterTest {
+        [Test]
+        public void TestGreetEmpty() {
+            Greeter greeter = new Greeter();
+            Input input = new Input();
+            string response = greeter.greet(input);
+            Assert.AreEqual("Hello World!", response);
+        }
+
+        [Test]
+        public void TestGreetValid() {
+            Greeter greeter = new Greeter();
+            Input input = new Input();
             input.name = "Dotnet";
-			string response = greeter.greet(input);
-			Assert.AreEqual("Hello Dotnet!", response);
-		}
-	}
+            string response = greeter.greet(input);
+            Assert.AreEqual("Hello Dotnet!", response);
+        }
+    }
 }
+```
+
+![user input](images/userinput.png)
+>```sh
+> echo '{"name":"Dotnet"}' | fn invoke dotnet-app dotnetfn 
+>```
+
+```sh
+Hello Dotnet!
 ```
 
 ## Invoke with Curl

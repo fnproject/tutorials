@@ -316,7 +316,7 @@ The steps are for Linux/MacOS but the steps on Windows should be similar. The sy
 
 **Note:** We are using rsyslog/rsyslog container here. For detailed documentation, please check here: https://www.rsyslog.com/doc/getting_started/index.html
 
-1. Create a local directory to host the config and log files
+First, create a local directory to host the config and log files
 
 ![user input](images/userinput.png)
 >```
@@ -325,9 +325,9 @@ The steps are for Linux/MacOS but the steps on Windows should be similar. The sy
 >mkdir logs
 >```
 
-2. Prepare the syslog config file
-- Create a file called `my-syslog.conf` under `mysyslog` with the following content
-```
+Then prepare the syslog config file. Create a file called `my-syslog.conf` under `mysyslog` with the following content
+
+~~~
 # Load module
 module(load="imtcp")
 input(type="imtcp" port="601")
@@ -337,8 +337,9 @@ $WorkDirectory /var/log
 
 # Log all UDP messages to /var/log/syslog/syslog.log
 action(type="omfile" file="/var/log/syslog")
-```
-3. Run the rsyslog docker container
+~~~
+
+Now you can run the rsyslog docker container
 
 ![user input](images/userinput.png)
 >```sh
@@ -348,9 +349,8 @@ action(type="omfile" file="/var/log/syslog")
 You should have the container up and running
 ![Syslog container](images/syslogcontainer.jpg)
 
-4. Update app with the syslog url
+Then update app with the syslog url. You need to check your host IP and then run the following.
 
-Check your host IP and run the following.
 ![user input](images/userinput.png)
 >```sh
 >fn update app tutorial --syslog-url tcp://<your host ip>:601

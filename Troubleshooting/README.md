@@ -324,6 +324,7 @@ The steps are for Linux/MacOS but the steps on Windows should be similar. The sy
 >cd mysyslog
 >mkdir logs
 >```
+
 2. Prepare the syslog config file
 - Create a file called `my-syslog.conf` under `mysyslog` with the following content
 ```
@@ -343,6 +344,7 @@ action(type="omfile" file="/var/log/syslog")
 >```sh
 >docker run --rm -it -v /<your path to mysyslog>/my-syslog.conf:/etc/rsyslog.d/my-syslog.conf -v /<your path to mysyslog>/logs:/var/log -p 601:601 --name=syslogng rsyslog/rsyslog:latest
 >```
+
 You should have the container up and running
 ![Syslog container](images/syslogcontainer.jpg)
 

@@ -297,37 +297,64 @@ app or after it's been created.
 When creating a new app you can specify the URL using the `--syslog-url` option
 as in:
 
-```sh
-fn create app tutorial --syslog-url tcp://mysyslogserver.com
+![user input](images/userinput.png)
+>```sh
+>fn create app tutorial --syslog-url tcp://mysyslogserver.com
+>```
+
+**Note:** As of the time of writing, Podman Desktop does not support syslog log driver. The syslog option is only supported when you are running Fn Server in Docker Desktop and Rancher Desktop.
+
+
+If you have already created an app, you will have to update it using
+`fn update app`.  But before you do that you will need a syslog server ready to receive log data.
+
+There are multiple options to setup a syslog server for testing. The easiest way is to start up a local syslog server.
+
+### Run local syslog docker container
+
+The steps are for Linux/MacOS but the steps on Windows should be similar. The syslog container works for both.
+
+**Note:** We are using rsyslog/rsyslog container here. For detailed documentation, please check here: https://www.rsyslog.com/doc/getting_started/index.html
+
+1. Create a local directory to host the config and log files
+
+![user input](images/userinput.png)
+>```
+>mkdir mysyslog
+>cd mysyslog
+>mkdir logs
+>```
+2. Prepare the syslog config file
+- Create a file called `my-syslog.conf` under `mysyslog` with the following content
 ```
+# Load module
+module(load="imtcp")
+input(type="imtcp" port="601")
 
-Since we've already created the 'tutorial' app, we'll have to update it using
-`fn update app`.  But before we do that we'll need
-a syslog server ready to receive log data.  For the purposes of this
-tutorial we'll setup and use a free [Papertrail](https://papertrailapp.com/)
-account. Papertrail is a cloud log management service. To get setup:
+# Ensure directory exists
+$WorkDirectory /var/log
 
-1. Sign up for a [free Papertrail account](https://papertrailapp.com/signup?plan=free)
-2. On the Papertrail website, go to 'Settings' (top right hand corner), click on
-'Log Destinations', and click 'Create a Log Destination'.
-![Settings Dialog](images/settings.jpg)
-3. In the create dialog, under TCP unselect 'TLS' and under both TCP and UDP
-select 'Plain Text'
-![Create Dialog](images/createdialog.jpg)
-4. Click 'Create'
-5. You'll see the address of your log destination displayed at the top of the
-page looking something like `logs7.papertrailapp.com:<PORT>`. Copy this value
-to your clipboard for use in a minute.
-![Log Destination](images/logdestination.jpg)
-
-Ok, now that we have a log destination we can update the syslog url of our
-application:
+# Log all UDP messages to /var/log/syslog/syslog.log
+action(type="omfile" file="/var/log/syslog")
+```
+3. Run the rsyslog docker container
 
 ![user input](images/userinput.png)
 >```sh
-> fn update app tutorial --syslog-url tcp://[your Papertrail destination]
+>docker run --rm -it -v /<your path to mysyslog>/my-syslog.conf:/etc/rsyslog.d/my-syslog.conf -v /<your path to mysyslog>/logs:/var/log -p 601:601 --name=syslogng rsyslog/rsyslog:latest
+>```
+You should have the container up and running
+![Syslog container](images/syslogcontainer.jpg)
+
+4. Update app with the syslog url
+
+Check your host IP and run the following.
+![user input](images/userinput.png)
+>```sh
+>fn update app tutorial --syslog-url tcp://<your host ip>:601
 >```
 
+You could see that the app is updated.
 ```sh
 app tutorial updated
 ```
@@ -347,28 +374,21 @@ Which will return JSON looking something like:
 	"created_at": "2019-10-13T14:54:45.459Z",
 	"id": "01CT1QZFJ7NG8G00GZJ0000001",
 	"name": "tutorial",
-	"syslog_url": "tcp://logs7.papertrailapp.com:NNNN",
+	"syslog_url": "tcp://<your host ip>:601",
 	"updated_at": "2019-10-13T15:55:50.628Z"
 }
 ```
 
-`syslog_url` looks to be pointing to Papertrail so let's rerun our failing
-function:
+`syslog_url` is now pointing to our syslog container so let's rerun our failing function:
 
 ![user input](images/userinput.png)
 >```sh
 > fn invoke tutorial trouble
 >```
 
-Of course it still fails.  Let's go over to the Papertrail Dashboard and
-click on our "System" to open a page with the log showing our exception.
+Of course it still fails. Let's check the syslog container log under `/<your path to mysyslog>/logs`.
 
-![Dashboard](images/dashboard.jpg)
-
-![Logs](images/logs.jpg)
-
-You can leave the Papertrail log view open while debugging to monitor the log
-output in near realtime.  Give it a try!
+![Log](images/log.jpg)
 
 
 ## Viewing HTTP Headers with DEBUG=1
@@ -402,7 +422,7 @@ Content-Type: application/json; charset=utf-8
 Date: Sun, 13 Oct 2019 16:45:56 GMT
 
 
-{"items":[{"id":"01DQ2STN6KNG8G00GZJ000001Q","name":"tutorial","syslog_url":"tcp://logs3.papertrailapp.com:NNNN","created_at":"2019-10-13T14:54:45.459Z","updated_at":"2019-10-13T15:55:50.628Z"}]}
+{"items":[{"id":"01DQ2STN6KNG8G00GZJ000001Q","name":"tutorial","syslog_url":"tcp://xxx.xxx.xxx.xxx:NNNN","created_at":"2019-10-13T14:54:45.459Z","updated_at":"2019-10-13T15:55:50.628Z"}]}
 NAME		ID
 tutorial	01DQ2STN6KNG8G00GZJ000001Q
 ```

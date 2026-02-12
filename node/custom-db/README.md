@@ -33,12 +33,12 @@ As a first step, let's create and run our initial Docker image.
 Here is the dockerfile for the application.
 
 ```txt
-FROM oraclelinux:7-slim
+FROM oraclelinux:9-slim
 
-RUN  yum -y install oracle-release-el7 oracle-nodejs-release-el7 && \
-     yum-config-manager --disable ol7_developer_EPEL && \
-     yum -y install oracle-instantclient19.3-basiclite nodejs && \
-     rm -rf /var/cache/yum
+RUN microdnf update && \
+    microdnf install -y oracle-instantclient-release-26ai-el9 && \
+    microdnf install -y oracle-instantclient-basiclite nodejs && \
+    microdnf clean all
 
 WORKDIR /myapp
 ADD package.json /myapp/
@@ -65,7 +65,7 @@ The application is made of two parts. First, the `package.json` file defines any
     "myapp"
   ],
   "dependencies": {
-    "oracledb" : "^3.1"
+    "oracledb" : "^6.10.0"
   },
   "author": "Fn Example",
   "license": "MIT"
@@ -100,7 +100,7 @@ We are now ready to build the Docker image.
 
 (4) This returns the version of the Oracle DB driver:
 ```txt
-3.1.2
+6.10.0
 ```
 
 That's it. You have a working Docker image.
@@ -114,12 +114,12 @@ Now let's convert that working Docker image into a function.
 The first step is some changes to the docker file.
 
 ```txt
-FROM oraclelinux:7-slim
+FROM oraclelinux:9-slim
 
-RUN  yum -y install oracle-release-el7 oracle-nodejs-release-el7 && \
-     yum-config-manager --disable ol7_developer_EPEL && \
-     yum -y install oracle-instantclient19.3-basiclite nodejs && \
-     rm -rf /var/cache/yum
+RUN microdnf update && \
+    microdnf install -y oracle-instantclient-release-26ai-el9 && \
+    microdnf install -y oracle-instantclient-basiclite nodejs && \
+    microdnf clean all
 
 WORKDIR /function
 ADD . /function/
@@ -146,12 +146,12 @@ Next, we update the `package.json` file.
 ```js
 {
 	"name": "hellodb",
-    "version": "1.0.0",
+  "version": "1.0.0",
 	"description": "Node DB Test function",
 	"main": "func.js",
 	"dependencies": {
-		"@fnproject/fdk": ">=0.0.13",
-		"oracledb" : "^3.1"
+		"@fnproject/fdk": ">=0.0.88",
+		"oracledb" : "^6.10.0"
 	},
     "author": "Fn Example",
 	"license": "Apache-2.0"
@@ -206,7 +206,7 @@ This deploys the function locally.
 This returns the version of the Oracle DB driver in JSON format:
 
 ```js
-{"version":"3.1.2"}
+{"version":"6.10.0"}
 ```
 
 That's it. You have converted a Node Docker image into a function.

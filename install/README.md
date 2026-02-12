@@ -13,12 +13,10 @@ Setting up a working Fn installation involves these three simple steps:
 
 Before we can install Fn you'll need:
 
-1. A computer running Linux or MacOS.  If you have a Windows machine the
-easiest thing to do is install [VirtualBox](https://www.virtualbox.org/)
-and run a free Linux virtual machine.
-2. [Docker](https://www.docker.com/) 17.10 (or higher) needs to be
+1. A computer running Linux, MacOS or Windows.
+2. [Docker](https://www.docker.com/) 17.10 (or higher), Podman (5.7.0 or higher) or Rancher Desktop (1.22.0 or higher) needs to be
 installed and running.
-    * **Note:** Version 0.6.12+ of the Fn CLI added Podman support. To use Podman to build Fn images, see: [Using Fn with Podman instead of Docker](https://github.com/fnproject/docs/blob/master/fn/develop/podman.md) 
+    * **Note:** For Fn to work with Podman, please check out: [Using Fn with Podman instead of Docker](https://github.com/fnproject/docs/blob/master/fn/develop/podman.md) 
 
 > As you make your way through this tutorial, look out for this icon.
 ![](images/userinput.png) Whenever you see it, it's time for you to
@@ -38,12 +36,14 @@ Or, alternatively for Linux/Unix/MacOS from a terminal type the following:
 > curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
 >```
 
+For Windows, you could download the binary from the release page: https://github.com/fnproject/cli/releases
+
 Once installed you'll see the Fn CLI version printed out.  You should see
 something similar to the following displayed (although likely with a later
 version number):
 
 ```txt
-fn version 0.5.86
+fn version 0.6.48
         ______
        / ____/___
       / /_  / __ \
@@ -145,8 +145,8 @@ You should see the version of the Fn CLI (client) and server displayed (your
 version will likely differ):
 
 ```txt
-Client version:  0.5.86
-Server version:  0.3.728
+Client version:  0.6.48
+Server version:  0.3.768
 ```
 
 **Note:**
@@ -318,10 +318,6 @@ Open the Fn project release directory in your browser: <https://github.com/fnpro
 You can confirm using the `which fn` command, the output should look like `/Users/<your-user>/lbin/fn`. Beyond this point you can use Fn directly.
 
 (Alternatively, you can use `~/lbin/fn` if you don't want to add to your `PATH` environment variable.)
-
-
-#### For Windows Systems
-The best way for Windows users is to run Fn inside a Linux virtual machine either in the cloud or using [VirtualBox](https://www.virtualbox.org/) locally.
 
 
 ## Learn More

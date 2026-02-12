@@ -171,14 +171,19 @@ images are as small as possible--which is beneficial for a number of reasons.
 
 ## Custom Node.js Function Dockerfile
 
-The `fnproject/node` container image is built on Alpine so we'll need to install
+The `fnproject/node` container image is built on OracleLinux 9 so we'll need to install
 the
-[ImageMagick Alpine package](https://pkgs.alpinelinux.org/packages?name=imagemagick&branch=edge)
-using the `apk` package management utility.  You can do this with a Dockerfile
+[ImageMagick package in OracleLinux9 EPEL repository](https://yum.oracle.com/repo/OracleLinux/OL9/developer/EPEL/x86_64/index.html)
+using the `microdnf` package management utility.  You can do this with a Dockerfile
 `RUN` command:
 
 ```Dockerfile
-RUN apk add --no-cache imagemagick
+RUN microdnf update && \
+  microdnf install -y oracle-epel-release-el9 && \
+  microdnf install -y yum-utils && \
+  yum-config-manager --enable ol9_developer_EPEL && \
+  microdnf install -y ImageMagick && \
+  microdnf clean all
 ```
 
 We want to install ImageMagick into the runtime image, not the build image,
@@ -189,17 +194,23 @@ so we need to add the `RUN` command after the `FROM fnproject/node` command.
 `Dockerfile` and copy/paste the following as its content:
 
 ```Dockerfile
-FROM fnproject/node:dev as build-stage
+FROM fnproject/node:22-dev as build-stage
 WORKDIR /function
 ADD package.json /function/
 RUN npm install
 
-FROM fnproject/node
-RUN apk add --no-cache imagemagick
+FROM fnproject/node:22
+RUN microdnf update && \
+  microdnf install -y oracle-epel-release-el9 && \
+  microdnf install -y yum-utils && \
+  yum-config-manager --enable ol9_developer_EPEL && \
+  microdnf install -y ImageMagick && \
+  microdnf clean all
 WORKDIR /function
 ADD . /function/
 COPY --from=build-stage /function/node_modules/ /function/node_modules/
 ENTRYPOINT ["node", "func.js"]
+
 ```
 
 With this Dockerfile, the Node.js function, it's dependencies 
@@ -220,20 +231,18 @@ your function.  Give it a try:
 You should see output similar to:
 
 ```shell
-Building image imagedims:0.0.1
-Current Context:  default
-Sending build context to Docker daemon  27.65kB
-Step 1/10 : FROM fnproject/node:dev as build-stage
+Building image node-imagemagick:0.0.1 
+Dockerfile content
+-----------------------------------
+FROM fnproject/node:22-dev as build-stage
  ---> 016382f39a51
 ...
-Step 6/10 : RUN apk add --no-cache imagemagick
- ---> Using cache
- ---> 5c4a1e19767c
+[2/2] STEP 2/6: RUN microdnf update &&   microdnf install -y oracle-epel-release-el9 &&
 ...
-Successfully built 8f199b0bef00
-Successfully tagged imagedims:0.0.1
+Successfully tagged localhost/node-imagemagick:0.0.1
+1b78040d2468be947d08db185a684a756e2b329a769ee07f35f4e93e60cd2d22
 
-Function imagedims:0.0.1 built successfully.
+Function node-imagemagick:0.0.1 built successfully.
 ```
 
 Just like with a default build, the output is a container image.  From this

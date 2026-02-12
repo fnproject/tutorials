@@ -1,9 +1,9 @@
-FROM oraclelinux:7-slim
+FROM oraclelinux:9-slim
 
-RUN  yum -y install oracle-release-el7 oracle-nodejs-release-el7 && \
-     yum-config-manager --disable ol7_developer_EPEL && \
-     yum -y install oracle-instantclient19.3-basiclite nodejs && \
-     rm -rf /var/cache/yum
+RUN microdnf update && \
+    microdnf install -y oracle-instantclient-release-26ai-el9 && \
+    microdnf install -y oracle-instantclient-basiclite nodejs && \
+    microdnf clean all
 
 WORKDIR /function
 ADD . /function/

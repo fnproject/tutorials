@@ -10,7 +10,7 @@
         "myapp"
     ],
     "dependencies": {
-        "oracledb" : "^3.1"
+        "oracledb" : "^6.10.0"
     },
     "author": "Fn Example",
     "license": "MIT"

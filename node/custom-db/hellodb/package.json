@@ -4,8 +4,8 @@
 	"description": "Node DB Test function",
 	"main": "func.js",
 	"dependencies": {
-		"@fnproject/fdk": ">=0.0.13",
-		"oracledb" : "^3.1"
+		"@fnproject/fdk": ">=0.0.88",
+		"oracledb" : "^6.10.0"
 	},
     "author": "Fn Example",
 	"license": "Apache-2.0"

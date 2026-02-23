@@ -94,10 +94,23 @@ Check the output of the following docker command. This is used in subsequent doc
 
 <div>
 <blockquote>
-<code>docker network inspect bridge -f '&#123;&#123;range .IPAM.Config&#125;&#125;&#123;&#123;.Gateway&#125;&#125;&#123;&#123;end&#125;&#125;'</code>
+<code>docker network ls</code>
 </blockquote>
 </div>
 
+For Podman
+<div>
+<blockquote>
+<code>docker network inspect &lt;network name&gt; -f "&#123;&#123;range .Subnets&#125;&#125;&#123;&#123;.Gateway&#125;&#125;&#123;&#123;end&#125;&#125;"</code>
+</blockquote>
+</div>
+
+For Docker
+<div>
+<blockquote>
+<code>docker network inspect &lt;network name&gt; -f "&#123;&#123;range .IPAM.Config&#125;&#125;&#123;&#123;.Gateway&#125;&#125;&#123;&#123;end&#125;&#125;"</code>
+</blockquote>
+</div>
 <!-- Original command
 docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}'
 -->
@@ -116,7 +129,7 @@ Now start Prometheus, specifying the above config file.
 <blockquote>
 <code>docker run --rm --name=prometheus -d -p 9090:9090
  -v &#96;pwd&#96;/prometheus.yml:/etc/prometheus/prometheus.yml
- --add-host=&quot;fnserver:&#96;docker network inspect bridge -f &apos;&#123;&#123;range .IPAM.Config&#125;&#125;&#123;&#123;.Gateway&#125;&#125;&#123;&#123;end&#125;&#125;&apos;&#96;&quot; prom/prometheus</code>
+ --add-host=&quot;fnserver:&lt;gateway IP&gt;&quot; prom/prometheus</code>
 </blockquote>
 </div>
 
@@ -151,7 +164,7 @@ From the same terminal window and the same directory as above, start Grafana on 
 <div>
 <blockquote>
 <code>docker run --name=grafana -d -p 5000:3000 
---add-host=&quot;prometheus:&#96;docker network inspect bridge -f &apos;&#123;&#123;range .IPAM.Config&#125;&#125;&#123;&#123;.Gateway&#125;&#125;&#123;&#123;end&#125;&#125;&apos;&#96;&quot; grafana/grafana</code>
+--add-host=&quot;prometheus:&lt;gateway IP&gt;&quot; grafana/grafana</code>
 </blockquote>
 </div>
 
@@ -181,8 +194,7 @@ Create a datasource to obtain metrics from Prometheus:
 >In the form that opens:
 >* Set **Name** to `PromDS`
 >* Set **Type** to `Prometheus`
->* Set **URL** to `http://prometheus:9090` 
->* Set **Access** to `proxy`
+>* Set **URL** to `http://<your host IP address>:9090` 
 >* Click **Add**
 >* Click **Save and test**
 
@@ -275,7 +287,7 @@ To view the available `Fn docker stats` metrics:
 
 >![user input](../images/userinput.png)
 >```shell
->curl  --silent http://localhost:8080/metrics | grep 'Metric fn_docker_stats'
+>curl  --silent http://localhost:8080/metrics | grep 'fn_docker_stats'
 >```
 
 And you will see the following metrics:

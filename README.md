@@ -29,6 +29,7 @@ Official:
 
 * [Monitor Fn metrics with Grafana and Prometheus](grafana/README.md) - Learn how to view Fn server metrics with Prometheus and Grafana.
 * [Troubleshoot and Log functions](Troubleshooting/README.md) - Resolve issues at both development and deployment time.
+* [Debug functions locally](LocalDebug/README.md) - Deploy functions locally and debug.
 
 ## Orchestrate with Fn Flow
 

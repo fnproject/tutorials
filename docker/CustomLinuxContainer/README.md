@@ -202,7 +202,7 @@ expected.
 
 ![](images/userinput.png)
 >```sh
-> echo "Hello World" | fn invoke revapp rev-func
+> echo "Hello World" | fn invoke revapp revfunc
 >```
 
 For this command you should see the following output:

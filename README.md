@@ -24,12 +24,12 @@ Official:
 * [Fn Development with Multiple Contexts](basics/UsingContexts/README.md) - Shows how to setup and use multiple Fn configuration contexts for development.
 * [Using Fn RuntimeContext with a Function](basics/UsingRuntimeContext/README.md) - See how to set Fn Application and Function variables and access them in your function using the Runtime Context.
 
-
 ## Test and Monitor Functions
 
 * [Monitor Fn metrics with Grafana and Prometheus](grafana/README.md) - Learn how to view Fn server metrics with Prometheus and Grafana.
 * [Troubleshoot and Log functions](Troubleshooting/README.md) - Resolve issues at both development and deployment time.
 * [Debug functions locally](LocalDebug/README.md) - Deploy functions locally and debug.
+* [Enable Hot Reload when developing OCI Functions locally](HotReload/README.md) - Enable hot reload when developing Functions locally with Fn Server
 
 ## Orchestrate with Fn Flow
 

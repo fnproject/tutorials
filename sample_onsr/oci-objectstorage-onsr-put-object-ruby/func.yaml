@@ -1,0 +1,9 @@
+schema_version: 20180708
+name: oci-objectstorage-onsr-put-object-ruby
+version: 0.0.3
+runtime: ruby
+build_image: fnproject/ruby:2.7-dev
+run_image: fnproject/ruby:2.7
+entrypoint: ruby func.rb
+memory: 1024
+timeout: 300

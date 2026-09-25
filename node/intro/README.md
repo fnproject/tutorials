@@ -29,7 +29,7 @@ In the terminal type the following.
 
 ![user input](images/userinput.png)
 >```
-> fn init --runtime node nodefn
+> fn init --runtime node22 nodefn
 >```
 
 The output will be
@@ -104,7 +104,7 @@ configuration file. Let's look at the contents:
 schema_version: 20180708
 name: nodefn
 version: 0.0.1
-runtime: node
+runtime: node22
 entrypoint: node func.js
 ```
 
@@ -186,47 +186,24 @@ In your terminal type the following:
 > fn --verbose deploy --app nodeapp --local
 >```
 
-You should see output similar to:
+An abbreviated example of the output is shown below. Image versions can vary with the Fn CLI version:
 
-```yaml
+```text
 Deploying nodefn to app: nodeapp
 Bumped to version 0.0.2
-Building image fndemouser/nodefn:0.0.2 
+Building image fndemouser/nodefn:0.0.2
 FN_REGISTRY:  fndemouser
 Current Context:  default
-Sending build context to Docker daemon   5.12kB
-Step 1/9 : FROM fnproject/node:dev as build-stage
- ---> b557a05fec78
-Step 2/9 : WORKDIR /function
- ---> Using cache
- ---> ea3ae80dbec2
-Step 3/9 : ADD package.json /function/
- ---> Using cache
- ---> e7d319e022d2
-Step 4/9 : RUN npm install
- ---> Using cache
- ---> bf5b6313c055
-Step 5/9 : FROM fnproject/node
- ---> c8da69259495
-Step 6/9 : WORKDIR /function
- ---> Using cache
- ---> 1fe19c6ca66c
-Step 7/9 : ADD . /function/
- ---> 229045a70217
-Step 8/9 : COPY --from=build-stage /function/node_modules/ /function/node_modules/
- ---> 59b17163fe37
-Step 9/9 : ENTRYPOINT ["node", "func.js"]
- ---> Running in b0d793dd39bb
-Removing intermediate container b0d793dd39bb
- ---> 7160364dec30
-Successfully built 7160364dec30
+Step 1/9 : FROM container-registry.oracle.com/oci_functions/node:22-dev as build-stage
+...
+Step 5/9 : FROM container-registry.oracle.com/oci_functions/node:22
+...
 Successfully tagged fndemouser/nodefn:0.0.2
-
 Updating function nodefn using image fndemouser/nodefn:0.0.2...
 Successfully created function: nodefn with fndemouser/nodefn:0.0.2
 ```
 
-All the steps to load the current language Docker image are displayed.
+The full verbose output includes the image pulls and build steps omitted above.
 
 Specifying `--app nodeapp` explicitly puts the function in the application "nodeapp".
 

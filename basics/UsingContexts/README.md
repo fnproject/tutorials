@@ -134,7 +134,7 @@ In a terminal type the following:
 
 ![user input](images/userinput.png)
 >```
-> fn init --runtime node nodefn
+> fn init --runtime node22 nodefn
 >```
 
 ```txt
@@ -187,7 +187,7 @@ Updating function nodefn using image fnlocal/nodefn:0.0.2...
 Successfully created function: nodefn with fnlocal/nodefn:0.0.2
 ```
 
-**Note:** Fn is based on Docker and when you first run the `fn start` command the Fn server docker image (fnproject/fnserver) is downloaded and started. When you run the deploy command, a new image is created to store your function and it resides on your computer. In this case, the function was packaged in the `fnlocal/nodefn:0.0.2` image.
+**Note:** Fn is based on Docker and when you first run the `fn start` command the Fn server docker image (container-registry.oracle.com/oci_functions/fnserver:latest) is downloaded and started. When you run the deploy command, a new image is created to store your function and it resides on your computer. In this case, the function was packaged in the `fnlocal/nodefn:0.0.2` image.
 
 You may have a number of Docker images so use the following command to see only those created by `fnlocal`:
 
@@ -254,49 +254,18 @@ Fn associates your function with the specified application. This time, your func
 >```
 > fn --verbose deploy --app nodeapp
 >```
-```txt
+```text
 Deploying nodefn to app: nodeapp
 Bumped to version 0.0.3
 Building image <your-docker-username>/nodefn:0.0.3
 FN_REGISTRY:  <your-docker-username>
 Current Context:  default
-Sending build context to Docker daemon   5.12kB
-Step 1/9 : FROM fnproject/node:dev as build-stage
- ---> b557a05fec78
-Step 2/9 : WORKDIR /function
- ---> Using cache
- ---> c8eb883935a7
-Step 3/9 : ADD package.json /function/
- ---> Using cache
- ---> 757b892bca3f
-Step 4/9 : RUN npm install
- ---> Using cache
- ---> f892f58a35d1
-Step 5/9 : FROM fnproject/node
- ---> c8da69259495
-Step 6/9 : WORKDIR /function
- ---> Using cache
- ---> 242b3edcc9ce
-Step 7/9 : ADD . /function/
- ---> aea48b1226fe
-Step 8/9 : COPY --from=build-stage /function/node_modules/ /function/node_modules/
- ---> af7480fb140d
-Step 9/9 : ENTRYPOINT ["node", "func.js"]
- ---> Running in 3ac9dd811f3a
-Removing intermediate container 3ac9dd811f3a
- ---> 6b4fc7b57c9e
-Successfully built 6b4fc7b57c9e
+Step 1/9 : FROM container-registry.oracle.com/oci_functions/node:22-dev as build-stage
+...
+Step 5/9 : FROM container-registry.oracle.com/oci_functions/node:22
+...
 Successfully tagged <your-docker-username>/nodefn:0.0.3
-Parts:  [<your-docker-username> nodefn:0.0.3]
 Pushing <your-docker-username>/nodefn:0.0.3 to docker registry...The push refers to repository [docker.io/<your-docker-username>/nodefn]
-3a49149033c6: Pushed
-98a742988717: Pushed
-631d3e0bcdc8: Layer already exists
-a0d7b4199dce: Layer already exists
-8aed3db29123: Layer already exists
-9c85c117f8f6: Layer already exists
-a464c54f93a9: Layer already exists
-0.0.3: digest: sha256:aa5f44a916ba91237e584ec7accf455692e8fb7e52610b6bbd12573b7e836d0b size: 1781
 Updating function nodefn using image <your-docker-username>/nodefn:0.0.3...
 ```
 

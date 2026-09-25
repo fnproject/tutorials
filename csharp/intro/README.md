@@ -24,7 +24,7 @@ perform an action.
 Let's start by creating a new function.  In a terminal type the following:
 
 ![](images/userinput.png)
->`fn init --runtime dotnet dotnetfn`
+>`fn init --runtime dotnet8.0 dotnetfn`
 
 The output will be:
 
@@ -41,8 +41,7 @@ func.yaml created.
 
 The `fn init` command creates a simple function with a bit of boilerplate to get you
 started. The `--runtime` option is used to indicate that the function
-we're going to develop will be written in C# and will work on dotnet core 3.1, 
-the default version as of this writing.
+we're going to develop will be written in C# and will use .NET 8.0.
 
 __If__ you have the `tree` utility installed
 you can see the directory structure that the `init` command has created.
@@ -79,9 +78,9 @@ Take a look at the contents of the generated func.yaml file.
 ```yaml
 name: dotnetfn
 version: 0.0.1
-runtime: dotnet
-build_image: fnproject/dotnet:3.1-1.0.1-dev
-run_image: fnproject/dotnet:3.1-1.0.1
+runtime: dotnet8.0
+build_image: container-registry.oracle.com/oci_functions/dotnet:8.0-1.0.64-dev
+run_image: container-registry.oracle.com/oci_functions/dotnet:8.0-1.0.64
 cmd: Function:Greeter:greet
 entrypoint: dotnet Function.dll
 ```
@@ -143,74 +142,21 @@ Docker images. The `--verbose` option allows you to see this process.
 > fn --verbose deploy --app dotnet-app --local
 >```
 
-```yaml
+```text
 Deploying dotnetfn to app: dotnet-app
 Bumped to version 0.0.2
-Using Container engine docker
-Building image fndemouser/dotnetfn:0.0.2 
-Dockerfile content
------------------------------------
-FROM fnproject/dotnet:3.1-1.0.1-dev as build-stage
-WORKDIR /function
-COPY . .
-RUN dotnet sln add src/Function/Function.csproj tests/Function.Tests/Function.Tests.csproj
-RUN dotnet build -c Release
-RUN dotnet test -c Release
-RUN dotnet publish src/Function/Function.csproj -c Release -o out
-FROM fnproject/dotnet:3.1-1.0.1
-WORKDIR /function
-COPY --from=build-stage /function/out/ /function/
-ENTRYPOINT ["dotnet", "Function.dll"]
-CMD ["Function:Greeter:greet"]
------------------------------------
+Building image fndemouser/dotnetfn:0.0.2
+FROM container-registry.oracle.com/oci_functions/dotnet:8.0-1.0.64-dev as build-stage
+...
+FROM container-registry.oracle.com/oci_functions/dotnet:8.0-1.0.64
+...
 FN_REGISTRY:  fndemouser
 Current Context:  default
-[+] Building 42.0s (17/17) FINISHED                                                                                                                                                                         
- => [internal] load build definition from Dockerfile2136271709                                                                                                                                         0.0s
- => => transferring dockerfile: 513B                                                                                                                                                                   0.0s
- => [internal] load .dockerignore                                                                                                                                                                      0.0s
- => => transferring context: 2B                                                                                                                                                                        0.0s
- => [internal] load metadata for docker.io/fnproject/dotnet:3.1-1.0.1                                                                                                                                  3.5s
- => [internal] load metadata for docker.io/fnproject/dotnet:3.1-1.0.1-dev                                                                                                                              3.5s
- => [auth] fnproject/dotnet:pull token for registry-1.docker.io                                                                                                                                        0.0s
- => [build-stage 1/7] FROM docker.io/fnproject/dotnet:3.1-1.0.1-dev@sha256:10a817c5dc72c6f593c55d114755fc5c3b66a860f7674ee52e2afb1a6da048bf                                                           18.2s
- => => resolve docker.io/fnproject/dotnet:3.1-1.0.1-dev@sha256:10a817c5dc72c6f593c55d114755fc5c3b66a860f7674ee52e2afb1a6da048bf                                                                        0.0s
- => => sha256:10a817c5dc72c6f593c55d114755fc5c3b66a860f7674ee52e2afb1a6da048bf 742B / 742B                                                                                                             0.0s
- => => sha256:455c8008f5642117a25f434009af0181609b2eef703b262c81cd121b51551f45 1.88kB / 1.88kB                                                                                                         0.0s
- => => sha256:e4430e06691f65e516df7d62db0ee5393acea9ade644cc6bc620efef0956dd17 42.11MB / 42.11MB                                                                                                       1.9s
- => => sha256:b899d482eac32e4cef25fba11edd4ab6213ea48fc48dd1a5d855f1dcb9b6834c 130.23MB / 130.23MB                                                                                                    12.3s
- => => extracting sha256:e4430e06691f65e516df7d62db0ee5393acea9ade644cc6bc620efef0956dd17                                                                                                              2.4s
- => => extracting sha256:b899d482eac32e4cef25fba11edd4ab6213ea48fc48dd1a5d855f1dcb9b6834c                                                                                                              5.7s
- => [internal] load build context                                                                                                                                                                      0.0s
- => => transferring context: 3.22kB                                                                                                                                                                    0.0s
- => [stage-1 1/3] FROM docker.io/fnproject/dotnet:3.1-1.0.1@sha256:e621d26f008176d1a26663cdce46d024323e38aad397ab9db05c6dec01d15bd7                                                                   11.8s
- => => resolve docker.io/fnproject/dotnet:3.1-1.0.1@sha256:e621d26f008176d1a26663cdce46d024323e38aad397ab9db05c6dec01d15bd7                                                                            0.0s
- => => sha256:bba59524aa1202b0b8e932ab2b1db46083658ceab75f8c3014a7435194be0e6e 2.00kB / 2.00kB                                                                                                         0.0s
- => => sha256:e4430e06691f65e516df7d62db0ee5393acea9ade644cc6bc620efef0956dd17 42.11MB / 42.11MB                                                                                                       1.9s
- => => sha256:ae9a010054f7e0dc053356770bd073288cfd60746801d5c8afde0f0651a034df 61.16MB / 61.16MB                                                                                                       8.4s
- => => sha256:e621d26f008176d1a26663cdce46d024323e38aad397ab9db05c6dec01d15bd7 741B / 741B                                                                                                             0.0s
- => => extracting sha256:e4430e06691f65e516df7d62db0ee5393acea9ade644cc6bc620efef0956dd17                                                                                                              2.4s
- => => extracting sha256:ae9a010054f7e0dc053356770bd073288cfd60746801d5c8afde0f0651a034df                                                                                                              3.0s
- => [stage-1 2/3] WORKDIR /function                                                                                                                                                                    0.1s
- => [build-stage 2/7] WORKDIR /function                                                                                                                                                                0.1s
- => [build-stage 3/7] COPY . .                                                                                                                                                                         0.0s
- => [build-stage 4/7] RUN dotnet sln add src/Function/Function.csproj tests/Function.Tests/Function.Tests.csproj                                                                                       0.9s
- => [build-stage 5/7] RUN dotnet build -c Release                                                                                                                                                     13.4s
- => [build-stage 6/7] RUN dotnet test -c Release                                                                                                                                                       3.7s 
- => [build-stage 7/7] RUN dotnet publish src/Function/Function.csproj -c Release -o out                                                                                                                1.7s 
- => [stage-1 3/3] COPY --from=build-stage /function/out/ /function/                                                                                                                                    0.1s 
- => exporting to image                                                                                                                                                                                 0.1s 
- => => exporting layers                                                                                                                                                                                0.1s 
- => => writing image sha256:dfc4f9133b232b5e337e7b6ec23024619872d648b040ba1a64429f9427f3e7fc                                                                                                           0.0s 
- => => naming to docker.io/fndemouser/dotnetfn:0.0.2                                                                                                                                                   0.0s
-
-Use 'docker scan' to run Snyk tests against images to find vulnerabilities and learn how to fix them
-
 Updating function dotnetfn using image fndemouser/dotnetfn:0.0.2...
 Successfully created function: dotnetfn with fndemouser/dotnetfn:0.0.2
 ```
 
-All the steps to load the current language Docker image are displayed.
+The full verbose output includes the image pulls and build steps omitted above.
 
 Specifying `--app dotnet-app` explicitly puts the function in the application "dotnet-app".
 

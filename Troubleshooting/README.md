@@ -18,7 +18,7 @@ type:
 
 ![user input](images/userinput.png)
 >```sh
-> fn init --runtime java trouble
+> fn init --runtime java11 trouble
 >```
 
 This will create a boilerplate Java hello world function in the `trouble`
@@ -127,8 +127,7 @@ Now we see details of the build and the failure (output abbreviated):
 ```sh
 Building image trouble:0.0.1
 Sending build context to Docker daemon  10.24kB
-Step 1/11 : FROM fnproject/fn-java-fdk-build:jdk11-1.0.102 as build-stage
- ---> cc41c56dd693
+Step 1/11 : FROM container-registry.oracle.com/oci_functions/fn-java-fdk-build:jdk11-1.1.28 as build-stage
 ...
 [INFO] --- maven-compiler-plugin:3.3:compile (default-compile) @ hello ---
 [INFO] Changes detected - recompiling the module!

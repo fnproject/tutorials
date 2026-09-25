@@ -23,6 +23,9 @@ installed and running.
 perform an action.
 
 ## Download and Install the Fn CLI
+
+Use Fn CLI **0.6.67 or later** for these tutorials. These versions pull FDK and Fn Server images from Oracle Container Registry (OCR). Existing `func.yaml` files and custom Dockerfiles must also reference OCR to use those images.
+
 For a MacOS installation you can use Homebrew:
 
 >```sh
@@ -43,7 +46,7 @@ something similar to the following displayed (although likely with a later
 version number):
 
 ```txt
-fn version 0.6.48
+fn version 0.6.67
         ______
        / ____/___
       / /_  / __ \

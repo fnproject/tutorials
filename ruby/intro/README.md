@@ -27,7 +27,7 @@ In the terminal type the following.
 
 ![user input](images/userinput.png)
 >```sh
-> fn init --runtime ruby rubyfn
+> fn init --runtime ruby3.3 rubyfn
 >```
 
 The output will be
@@ -101,7 +101,7 @@ configuration file. Let's look at the contents:
 schema_version: 20180708
 name: rubyfn
 version: 0.0.1
-runtime: ruby
+runtime: ruby3.3
 entrypoint: ruby func.rb
 ```
 
@@ -178,79 +178,24 @@ In your terminal type the following:
 > fn --verbose deploy --app rubyapp --local
 >```
 
-You should see output similar to:
+An abbreviated example of the output is shown below. Image versions can vary with the Fn CLI version:
 
-```yaml
+```text
 Deploying rubyfn to app: rubyapp
 Bumped to version 0.0.2
 Building image fndemouser/rubyfn:0.0.2
 FN_REGISTRY:  fndemouser
 Current Context:  default
-Sending build context to Docker daemon   5.12kB
-Step 1/9 : FROM fnproject/ruby:dev as build-stage
-dev: Pulling from fnproject/ruby
-8e402f1a9c57: Pull complete
-130243e17afe: Pull complete
-6c9c3bad0e4b: Pull complete
-975485ddf10f: Pull complete
-ff91390ffeaa: Pull complete
-e131fd4f74d4: Pull complete
-Digest: sha256:5ac41003591b935641de791945fdbf15bcb926cecf6ecdb1daf2158b5de7e6d5
-Status: Downloaded newer image for fnproject/ruby:dev
- ---> 37ecabff3a24
-Step 2/9 : WORKDIR /function
- ---> Running in d950c6c534e2
-Removing intermediate container d950c6c534e2
- ---> 823a90c41257
-Step 3/9 : ADD Gemfile* /function/
- ---> 316c7eab8ab6
-Step 4/9 : RUN bundle install
- ---> Running in 1cd8c41d3863
-Don't run Bundler as root. Bundler can ask for sudo if it is needed, and
-installing your bundle as root will break this application for all non-root
-users on this machine.
-Fetching gem metadata from https://rubygems.org/..
-Resolving dependencies...
-Using bundler 2.0.1
-Fetching json 2.2.0
-Installing json 2.2.0 with native extensions
-Fetching webrick 1.4.2
-Installing webrick 1.4.2
-Fetching fdk 0.0.20
-Installing fdk 0.0.20
-Bundle complete! 1 Gemfile dependency, 4 gems now installed.
-Use `bundle info [gemname]` to see where a bundled gem is installed.
-Removing intermediate container 1cd8c41d3863
- ---> 9bf1d44c3c3f
-Step 5/9 : FROM fnproject/ruby
-latest: Pulling from fnproject/ruby
-8e402f1a9c57: Already exists
-130243e17afe: Already exists
-6c9c3bad0e4b: Already exists
-975485ddf10f: Already exists
-Digest: sha256:46e981c2e093a87b98c05f21d4a7701d5c53f5e1aed1be64eea8ab0a935c9ddb
-Status: Downloaded newer image for fnproject/ruby:latest
- ---> f5452b336752
-Step 6/9 : WORKDIR /function
- ---> Running in f1a2c9206a03
-Removing intermediate container f1a2c9206a03
- ---> 88a1389a388e
-Step 7/9 : COPY --from=build-stage /usr/lib/ruby/gems/ /usr/lib/ruby/gems/
- ---> 0cdd932b123a
-Step 8/9 : ADD . /function/
- ---> 51f09786d6b2
-Step 9/9 : ENTRYPOINT ["ruby", "func.rb"]
- ---> Running in 19e5cf8f4523
-Removing intermediate container 19e5cf8f4523
- ---> 43d04792b080
-Successfully built 43d04792b080
+Step 1/9 : FROM container-registry.oracle.com/oci_functions/ruby:3.3-dev as build-stage
+...
+Step 5/9 : FROM container-registry.oracle.com/oci_functions/ruby:3.3
+...
 Successfully tagged fndemouser/rubyfn:0.0.2
-
 Updating function rubyfn using image fndemouser/rubyfn:0.0.2...
 Successfully created function: rubyfn with fndemouser/rubyfn:0.0.2
 ```
 
-All the steps to load the current language Docker image are displayed.
+The full verbose output includes the image pulls and build steps omitted above.
 
 Specifying `--app rubyapp` explicitly puts the function in the application `rubyapp`.
 

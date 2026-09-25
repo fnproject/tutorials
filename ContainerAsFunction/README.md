@@ -152,59 +152,53 @@ The Dockerfile that `fn build` would normally generate to build a Node.js
 function container image looks like this:
 
 ```Dockerfile
-FROM fnproject/node:dev as build-stage
+FROM container-registry.oracle.com/oci_functions/node:22-dev as build-stage
 WORKDIR /function
 ADD package.json /function/
 RUN npm install
 
-FROM fnproject/node
+FROM container-registry.oracle.com/oci_functions/node:22
 WORKDIR /function
 ADD . /function/
 COPY --from=build-stage /function/node_modules/ /function/node_modules/
 ENTRYPOINT ["node", "func.js"]
 ```
 
-It's a two stage build with the `fnproject/node:dev` image containing `npm` and
-other build tools, and the `fnproject/node` image containing just the Node
+It's a two stage build with the `container-registry.oracle.com/oci_functions/node:22-dev` image containing `npm` and
+other build tools, and the `container-registry.oracle.com/oci_functions/node:22` image containing just the Node
 runtime.  This approach is designed to ensure that deployable function container
 images are as small as possible--which is beneficial for a number of reasons.
 
 ## Custom Node.js Function Dockerfile
 
-The `fnproject/node` container image is built on OracleLinux 9 so we'll need to install
+The `container-registry.oracle.com/oci_functions/node:22` container image is built on OracleLinux 9 so we'll need to install
 the
 [ImageMagick package in OracleLinux9 EPEL repository](https://yum.oracle.com/repo/OracleLinux/OL9/developer/EPEL/x86_64/index.html)
 using the `microdnf` package management utility.  You can do this with a Dockerfile
 `RUN` command:
 
 ```Dockerfile
-RUN microdnf update && \
-  microdnf install -y oracle-epel-release-el9 && \
-  microdnf install -y yum-utils && \
-  yum-config-manager --enable ol9_developer_EPEL && \
-  microdnf install -y ImageMagick && \
+RUN microdnf install -y oracle-epel-release-el9 && \
+  microdnf install -y --enablerepo=ol9_developer_EPEL ImageMagick && \
   microdnf clean all
 ```
 
 We want to install ImageMagick into the runtime image, not the build image,
-so we need to add the `RUN` command after the `FROM fnproject/node` command.
+so we need to add the `RUN` command after the `FROM container-registry.oracle.com/oci_functions/node:22` command.
 
 ![](images/userinput.png)
 > In the folder containing the previously created files, create a file named
 `Dockerfile` and copy/paste the following as its content:
 
 ```Dockerfile
-FROM fnproject/node:22-dev as build-stage
+FROM container-registry.oracle.com/oci_functions/node:22-dev as build-stage
 WORKDIR /function
 ADD package.json /function/
 RUN npm install
 
-FROM fnproject/node:22
-RUN microdnf update && \
-  microdnf install -y oracle-epel-release-el9 && \
-  microdnf install -y yum-utils && \
-  yum-config-manager --enable ol9_developer_EPEL && \
-  microdnf install -y ImageMagick && \
+FROM container-registry.oracle.com/oci_functions/node:22
+RUN microdnf install -y oracle-epel-release-el9 && \
+  microdnf install -y --enablerepo=ol9_developer_EPEL ImageMagick && \
   microdnf clean all
 WORKDIR /function
 ADD . /function/
@@ -215,7 +209,7 @@ ENTRYPOINT ["node", "func.js"]
 
 With this Dockerfile, the Node.js function, it's dependencies 
 (including the "imagemagick" wrapper), and the "imagemagick" Alpine package
-will be included in an image derived from the base `fnproject/node` image. We
+will be included in an image derived from the base `container-registry.oracle.com/oci_functions/node:22` image. We
 should be good to go!
 
 ## Building and Deploying
@@ -234,13 +228,11 @@ You should see output similar to:
 Building image node-imagemagick:0.0.1 
 Dockerfile content
 -----------------------------------
-FROM fnproject/node:22-dev as build-stage
- ---> 016382f39a51
+FROM container-registry.oracle.com/oci_functions/node:22-dev as build-stage
 ...
-[2/2] STEP 2/6: RUN microdnf update &&   microdnf install -y oracle-epel-release-el9 &&
+[2/2] STEP 2/6: RUN microdnf install -y oracle-epel-release-el9 && ...
 ...
 Successfully tagged localhost/node-imagemagick:0.0.1
-1b78040d2468be947d08db185a684a756e2b329a769ee07f35f4e93e60cd2d22
 
 Function node-imagemagick:0.0.1 built successfully.
 ```

@@ -1,9 +1,9 @@
 schema_version: 20180708
 name: myfunc
 version: 0.0.7
-runtime: go
-build_image: fnproject/go:1.24-dev
-run_image: fnproject/go:1.24
+runtime: go1.24
+build_image: container-registry.oracle.com/oci_functions/go:1.24-dev
+run_image: container-registry.oracle.com/oci_functions/go:1.24
 entrypoint: ./func
 triggers:
 - name: myfunc

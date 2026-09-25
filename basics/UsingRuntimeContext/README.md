@@ -60,7 +60,7 @@ Ensure you have the Fn server running to host your function.
 
 ![User input icon](images/userinput.png)
 ```sh
-% fn init --runtime java cfg-fn
+% fn init --runtime java11 cfg-fn
 ```
 
 (4) Change into the `cfg-fn` directory.
@@ -295,9 +295,9 @@ Edit the function's `func.yaml` file for `env-fn` as follows:
 schema_version: 20180708
 name: env-fn
 version: 0.0.1
-runtime: java
-build_image: fnproject/fn-java-fdk-build:jdk11-1.0.104
-run_image: fnproject/fn-java-fdk:jre11-1.0.104
+runtime: java11
+build_image: container-registry.oracle.com/oci_functions/fn-java-fdk-build:jdk11-1.1.28
+run_image: container-registry.oracle.com/oci_functions/fn-java-fdk:jre11-1.1.28
 cmd: com.example.fn.HelloFunction::handleRequest
 config:
     funcKey1: funcValue1

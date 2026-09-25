@@ -28,7 +28,7 @@ In the terminal type the following:
 
 ![User Input Icon](images/userinput.png)
 >```sh
-> fn init --runtime go gofn
+> fn init --runtime go1.24 gofn
 >```
 
 The output will be
@@ -121,7 +121,7 @@ configuration file. Let's look at the contents:
 schema_version: 20180708
 name: gofn
 version: 0.0.1
-runtime: go
+runtime: go1.24
 entrypoint: ./func
 ```
 
@@ -197,53 +197,24 @@ In your terminal type the following:
 > fn --verbose deploy --app goapp --local
 >```
 
-You should see output similar to:
+An abbreviated example of the output is shown below. Image versions can vary with the Fn CLI version:
 
-```yaml
+```text
 Deploying gofn to app: goapp
 Bumped to version 0.0.2
 Building image fndemouser/gofn:0.0.2
 FN_REGISTRY:  fndemouser
 Current Context:  default
-Sending build context to Docker daemon   5.12kB
-Step 1/10 : FROM fnproject/go:dev as build-stage
- ---> 96c8fb94a8e1
-Step 2/10 : WORKDIR /function
- ---> Using cache
- ---> bee171e861d4
-Step 3/10 : WORKDIR /go/src/func/
- ---> Using cache
- ---> d0102d3148a1
-Step 4/10 : ENV GO111MODULE=on
- ---> Using cache
- ---> 22ecbf50c559
-Step 5/10 : COPY . .
- ---> 0a2992d2d99a
-Step 6/10 : RUN cd /go/src/func/ && go build -o func
- ---> Running in e480baa937d4
-go: finding github.com/fnproject/fdk-go latest
-go: downloading github.com/fnproject/fdk-go v0.0.0-20190716163646-1458ca84e01d
-Removing intermediate container e480baa937d4
- ---> d8cc615e1e64
-Step 7/10 : FROM fnproject/go
- ---> bc635796c9df
-Step 8/10 : WORKDIR /function
- ---> Using cache
- ---> b853b5d6b840
-Step 9/10 : COPY --from=build-stage /go/src/func/func /function/
- ---> Using cache
- ---> ee3af55a0670
-Step 10/10 : ENTRYPOINT ["./func"]
- ---> Using cache
- ---> 3e41594de5c8
-Successfully built 3e41594de5c8
+Step 1/10 : FROM container-registry.oracle.com/oci_functions/go:1.24-dev as build-stage
+...
+Step 7/10 : FROM container-registry.oracle.com/oci_functions/go:1.24
+...
 Successfully tagged fndemouser/gofn:0.0.2
-
 Updating function gofn using image fndemouser/gofn:0.0.2...
 Successfully created function: gofn with fndemouser/gofn:0.0.2
 ```
 
-All the steps to load the current language Docker image are displayed.
+The full verbose output includes the image pulls and build steps omitted above.
 
 Specifying `--app goapp` explicitly puts the function in the application `goapp`.
 

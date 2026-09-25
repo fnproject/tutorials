@@ -104,7 +104,7 @@ build flags to enabling debugging.
 
 Here is an example for Go function:
 ```
-FROM fnproject/go:1.24-dev as build-stage
+FROM container-registry.oracle.com/oci_functions/go:1.24-dev as build-stage
 WORKDIR /function
 WORKDIR /go/src/func/
 ENV GO111MODULE=on
@@ -113,7 +113,7 @@ RUN go mod tidy
 RUN go build -gcflags="all=-N -l" -o func -v
 RUN go install github.com/go-delve/delve/cmd/dlv@latest
 
-FROM fnproject/go:1.24
+FROM container-registry.oracle.com/oci_functions/go:1.24
 WORKDIR /function
 COPY --from=build-stage /go/src/func/func /function/
 COPY --from=build-stage /go/bin/dlv /function
